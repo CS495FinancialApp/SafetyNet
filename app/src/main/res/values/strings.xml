@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SafetyNet</string>
+    <string name="sign_out_button">Sign out</string>
 </resources>

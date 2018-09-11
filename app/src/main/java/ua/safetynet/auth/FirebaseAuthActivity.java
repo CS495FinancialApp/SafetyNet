@@ -16,14 +16,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
 public class FirebaseAuthActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
+    private static final int RC_SIGN_IN = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.firebase.ui.auth.AuthUI.R.layout.activity_firebase_ui);
+        setContentView(R.layout.activity_main);
     }
 
     public void createSignInIntent() {
