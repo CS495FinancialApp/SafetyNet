@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">SafetyNet</string>
     <string name="sign_out_button">Sign out</string>
+    <string name="logoutBtn">logout</string>
+    <string name="login_user_cancelled">Login Cancelled</string>
+    <string name="login_no_network">No Network Connection</string>
 </resources>

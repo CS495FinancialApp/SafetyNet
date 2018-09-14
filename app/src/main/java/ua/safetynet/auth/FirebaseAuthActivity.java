@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -16,54 +17,53 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
 
-public class FirebaseAuthActivity extends AppCompatActivity {
+import ua.safetynet.R;
+import ua.safetynet.user.MainPageActivity;
+
+
+public class FirebaseAuthActivity extends AppCompatActivity
+{
 
     private static final int RC_SIGN_IN = 100;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
-    public void createSignInIntent() {
-        // [START auth_fui_create_intent]
-        // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.PhoneBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
 
-        // Create and launch sign-in intent
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .build(),
                 RC_SIGN_IN);
-        // [END auth_fui_create_intent]
     }
+
 
     // [START auth_fui_result]
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-            }
+        if (resultCode == RESULT_OK)
+        {
+            // Successfully signed in
+            Intent in = new Intent(this, MainPageActivity.class);
+            in.putExtra("EXTRA_IDP_RESPONSE", IdpResponse.fromResultIntent(data));
+        }
+        if(resultCode == RESULT_CANCELED)
+        {
+            Toast.makeText(getApplicationContext(),R.string.login_user_cancelled,Toast.LENGTH_LONG).show();
         }
     }
-    // [END auth_fui_result]
 }
+
+
