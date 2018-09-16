@@ -41,4 +41,9 @@ public class MainPageActivity extends AppCompatActivity
 
 
     }
+
+    private void setToggleListener()
+    {
+        Button logoutBtn = findViewById(R.)
+    }
 }
