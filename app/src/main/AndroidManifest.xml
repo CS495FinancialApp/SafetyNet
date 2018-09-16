@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".auth.FirebaseAuthActivity" />
         <activity
             android:name=".auth.SplashScreenActivity"
             android:theme="@style/SplashScreen">
@@ -19,6 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".user.MainPageActivity"/>
+        <activity android:name=".auth.FirebaseAuthActivity"/>
     </application>
 
 </manifest>
