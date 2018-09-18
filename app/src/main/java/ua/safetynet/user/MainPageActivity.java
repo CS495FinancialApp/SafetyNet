@@ -36,6 +36,7 @@ public class MainPageActivity extends AppCompatActivity
             //User isnt signed in, launch sign in activity
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
+        updateUI();
     }
 
     @Override
@@ -70,9 +71,7 @@ public class MainPageActivity extends AppCompatActivity
                         @Override
                         public void onComplete(@NonNull Task<Void> task)
                         {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
+                            recreate();
                         }
                     });
             }
@@ -83,9 +82,11 @@ public class MainPageActivity extends AppCompatActivity
     {
         TextView username =  findViewById(R.id.username);
         TextView useremail = findViewById(R.id.useremail);
-
+        if(firebaseUser != null)
+        {
             username.setText(firebaseUser.getDisplayName());
             useremail.setText(firebaseUser.getEmail());
+        }
 
     }
 }

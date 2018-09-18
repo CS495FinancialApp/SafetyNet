@@ -54,11 +54,16 @@ public class FirebaseAuthActivity extends AppCompatActivity
             // Successfully signed in
             Intent in = new Intent(this, MainPageActivity.class);
             in.putExtra("EXTRA_IDP_RESPONSE", IdpResponse.fromResultIntent(data));
+            startActivity(in);
+            finish();
+            return;
         }
         if(resultCode == RESULT_CANCELED)
         {
             Toast.makeText(getApplicationContext(),R.string.login_user_cancelled,Toast.LENGTH_LONG).show();
+            return;
         }
+
     }
 }
 
