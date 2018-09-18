@@ -36,6 +36,7 @@ public class MainPageActivity extends AppCompatActivity
             //User isnt signed in, launch sign in activity
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
+
         updateUI();
     }
 
