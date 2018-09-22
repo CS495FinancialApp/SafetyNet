@@ -37,5 +37,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
     implementation 'com.google.firebase:firebase-firestore:17.1.0'
+
+
+    implementation 'com.braintreepayments.api:drop-in:3.6.1'
 }
 apply plugin: 'com.google.gms.google-services'

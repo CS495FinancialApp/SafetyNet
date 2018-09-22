@@ -11,4 +11,8 @@
     <style name="SplashScreen" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
+
+    <style name="braintree_fix">
+        <item name="textColorError">@color/colorPrimary</item>
+    </style>
 </resources>

@@ -31,6 +31,7 @@ public class MainPageActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
+
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
