@@ -1,0 +1,5 @@
+//below are links to various firebase resources
+
+https://www.tutorialspoint.com/firebase/firebase_environment_setup.htm
+
+https://firebase.google.com/docs/android/setup
