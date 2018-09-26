@@ -4,4 +4,7 @@
     <string name="logoutBtn">logout</string>
     <string name="login_user_cancelled">Login Cancelled</string>
     <string name="login_no_network">No Network Connection</string>
+    <string name="menu_drawer_logout">Logout</string>
+    <string name="menu_drawer_groups">Groups</string>
+    <string name="menu_drawer_settings">Settings</string>
 </resources>

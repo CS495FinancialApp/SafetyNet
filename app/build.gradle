@@ -40,5 +40,11 @@ dependencies {
 
 
     implementation 'com.braintreepayments.api:drop-in:3.6.1'
+
+    def nav_version = "1.0.0-alpha06"
+
+    implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
+
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,13 +1,16 @@
 package ua.safetynet.user;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +26,8 @@ public class MainPageActivity extends AppCompatActivity
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onStart()
@@ -48,8 +53,18 @@ public class MainPageActivity extends AppCompatActivity
 
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
+        //Sets toolbar to Current action bar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //Set Action bar button
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
+        //Set drawer layout for menu button
+        //mDrawerLayout = findViewById(R.id.main_drawer_view);
         updateUI();
         setLogoutListener(); //Set listener for logout button
+
 
     }
 
