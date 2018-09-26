@@ -3,10 +3,12 @@ package ua.safetynet.user;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,9 +52,11 @@ public class MainPageActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
+
+        //Set mDrawerLayout
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
         //Sets toolbar to Current action bar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,11 +66,25 @@ public class MainPageActivity extends AppCompatActivity
         actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
         //Set drawer layout for menu button
         //mDrawerLayout = findViewById(R.id.main_drawer_view);
+
+
         updateUI();
         setLogoutListener(); //Set listener for logout button
 
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     /**
      * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
