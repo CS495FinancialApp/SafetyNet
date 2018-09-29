@@ -35,6 +35,12 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="120dp"
                     android:text="@string/logoutBtn" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -43,8 +49,7 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -52,7 +57,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/main_drawer_view"/>
+        app:menu="@menu/main_drawer_view"
+        app:headerLayout="@layout/main_nav_header"/>
 
 
 </android.support.v4.widget.DrawerLayout>

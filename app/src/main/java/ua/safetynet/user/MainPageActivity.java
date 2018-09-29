@@ -62,10 +62,16 @@ public class MainPageActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //Set Action bar button
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
+        if(actionbar != null)
+        {
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setLogo(R.drawable.ic_launcher_foreground);
+            actionbar.setDisplayUseLogoEnabled(true);
+        }
+
         //Set drawer layout for menu button
-        //mDrawerLayout = findViewById(R.id.main_drawer_view);
+        mDrawerLayout = findViewById(R.id.main_drawer_layout);
 
 
         updateUI();
@@ -84,7 +90,7 @@ public class MainPageActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
 
     /**
      * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
