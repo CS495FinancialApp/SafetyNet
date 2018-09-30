@@ -3,9 +3,12 @@ package ua.safetynet.user;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
+import ua.safetynet.group.CreateGroupFragment;
 
 public class MainPageActivity extends AppCompatActivity
 {
@@ -30,7 +34,7 @@ public class MainPageActivity extends AppCompatActivity
     private FirebaseUser firebaseUser;
 
     private DrawerLayout mDrawerLayout;
-
+    ActionBarDrawerToggle toggle;
     @Override
     protected void onStart()
     {
@@ -62,27 +66,35 @@ public class MainPageActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //Set Action bar button
         ActionBar actionbar = getSupportActionBar();
-        if(actionbar != null)
-        {
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
-            actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setLogo(R.drawable.ic_launcher_foreground);
-            actionbar.setDisplayUseLogoEnabled(true);
-        }
-
-        //Set drawer layout for menu button
-        mDrawerLayout = findViewById(R.id.main_drawer_layout);
-
-
+        actionbar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setTitle("SafetyNet");
         updateUI();
         setLogoutListener(); //Set listener for logout button
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        switch (menuItem.getItemId())
+                        {
+                            case R.id.nav_groups:
+                                CreateGroupFragment groupFragment = new CreateGroupFragment();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_create_group, groupFragment, groupFragment.getClass().getSimpleName()).addToBackStack(null).commit();
+                        }
+                        return false;
+                    }
+                }
+        );
 
 
     }
 
+
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -90,7 +102,8 @@ public class MainPageActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
+
 
     /**
      * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
