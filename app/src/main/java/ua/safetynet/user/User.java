@@ -11,8 +11,8 @@ public class User
     private String email;
     private String name;
 
-    private ArrayList<String> transactions = new ArrayList<String>();
-    private ArrayList<String> groups = new ArrayList<String>();
+    private ArrayList<String> transactions = new ArrayList<>();
+    private ArrayList<String> groups = new ArrayList<>();
 
     public User()
     {
@@ -21,6 +21,14 @@ public class User
         name = null;
         transactions.clear();
         groups.clear();
+    }
+    
+    public User(String userId, String email, String name, ArrayList<String> transactions, ArrayList<String> groups) {
+        this.userId = userId;
+        this.email = email;
+        this.name = name;
+        this.transactions = transactions;
+        this.groups = groups;
     }
 
     String getUserId()
