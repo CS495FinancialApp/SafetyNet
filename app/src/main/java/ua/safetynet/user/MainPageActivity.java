@@ -2,9 +2,11 @@ package ua.safetynet.user;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -27,7 +29,7 @@ import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
 
-public class MainPageActivity extends AppCompatActivity
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -66,7 +68,7 @@ public class MainPageActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //Set Action bar button
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setTitle("SafetyNet");
         updateUI();
@@ -81,7 +83,7 @@ public class MainPageActivity extends AppCompatActivity
                         {
                             case R.id.nav_groups:
                                 CreateGroupFragment groupFragment = new CreateGroupFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_create_group, groupFragment, groupFragment.getClass().getSimpleName()).addToBackStack(null).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.main_drawer_layout, groupFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
                         }
                         return false;
                     }
@@ -94,7 +96,8 @@ public class MainPageActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -103,7 +106,11 @@ public class MainPageActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onFragmentInteraction(Uri uri)
+    {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
 
     /**
      * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
