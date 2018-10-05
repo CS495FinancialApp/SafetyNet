@@ -51,7 +51,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
 
-        updateUI();
     }
 
     @Override
@@ -63,16 +62,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        //Sets toolbar to Current action bar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //Set Action bar button
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setTitle("SafetyNet");
-        updateUI();
-        setLogoutListener(); //Set listener for logout button
+        
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
@@ -83,7 +73,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                         {
                             case R.id.nav_groups:
                                 CreateGroupFragment groupFragment = new CreateGroupFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.main_drawer_layout, groupFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, groupFragment).addToBackStack(null).commit();
                         }
                         return false;
                     }
@@ -112,42 +102,5 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    /**
-     * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
-     * and restarts main activity, thus prompting them to login again.
-     */
-    private void setLogoutListener()
-    {
-        setContentView(R.layout.activity_main_page);
-        Button logoutBtn = findViewById(R.id.logoutButton);
-        logoutBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                    AuthUI.getInstance()
-                            .signOut(getApplicationContext())
-                            .addOnCompleteListener(new OnCompleteListener<Void>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                            recreate();
-                        }
-                    });
-            }
-        });
-    }
 
-    private void updateUI()
-    {
-        TextView username =  findViewById(R.id.username);
-        TextView useremail = findViewById(R.id.useremail);
-        if(firebaseUser != null)
-        {
-            username.setText(firebaseUser.getDisplayName());
-            useremail.setText(firebaseUser.getEmail());
-        }
-
-    }
 }
