@@ -29,7 +29,7 @@ import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -60,9 +60,13 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
 
+        //Start the main view fragment
+        MainViewFragment mainViewFragment = new MainViewFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainViewFragment).commit();
+
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
@@ -73,7 +77,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                         {
                             case R.id.nav_groups:
                                 CreateGroupFragment groupFragment = new CreateGroupFragment();
-                                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, groupFragment).addToBackStack(null).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, groupFragment).addToBackStack(null).commit();
                         }
                         return false;
                     }
