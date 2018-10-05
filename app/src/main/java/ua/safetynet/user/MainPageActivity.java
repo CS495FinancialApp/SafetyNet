@@ -62,7 +62,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        
+
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
