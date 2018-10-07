@@ -63,7 +63,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         //Start the main view fragment
         MainViewFragment mainViewFragment = new MainViewFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainViewFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainViewFragment).addToBackStack(null).commit();
 
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
@@ -93,7 +93,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                         }
                         if(fragment != null)
                         {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
