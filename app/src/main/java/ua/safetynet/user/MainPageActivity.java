@@ -81,14 +81,20 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        Fragment fragment = null;
                         switch (menuItem.getItemId())
                         {
                             case R.id.nav_home:
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MainViewFragment()).addToBackStack(null).commit();
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                fragment = new MainViewFragment();
+                                break;
                             case R.id.nav_groups:
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateGroupFragment()).commit();
-                                mDrawerLayout.closeDrawer(GravityCompat.START);
+                                fragment = new CreateGroupFragment();
+                                break;
+                        }
+                        if(fragment != null)
+                        {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
                     }
