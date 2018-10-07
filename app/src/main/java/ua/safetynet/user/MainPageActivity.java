@@ -36,7 +36,8 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     private FirebaseUser firebaseUser;
 
     private DrawerLayout mDrawerLayout;
-    ActionBarDrawerToggle toggle;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     protected void onStart()
     {
@@ -66,8 +67,15 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setupDrawerToggle();
+        setupNavigationDrawer();
 
+
+
+
+    }
+    private void setupNavigationDrawer()
+    {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -83,11 +91,13 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                     }
                 }
         );
-
+    }
+    private void setupDrawerToggle()
+    {
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
