@@ -83,15 +83,19 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         switch (menuItem.getItemId())
                         {
+                            case R.id.nav_home:
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MainViewFragment()).addToBackStack(null).commit();
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
                             case R.id.nav_groups:
-                                CreateGroupFragment groupFragment = new CreateGroupFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, groupFragment).addToBackStack(null).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateGroupFragment()).commit();
+                                mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
                     }
                 }
         );
     }
+
     private void setupDrawerToggle()
     {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
