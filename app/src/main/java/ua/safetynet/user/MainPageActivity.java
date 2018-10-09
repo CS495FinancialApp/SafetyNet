@@ -67,6 +67,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
+
         setupDrawerToggle();
         setupNavigationDrawer();
 
@@ -104,9 +105,13 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     private void setupDrawerToggle()
     {
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        }
     }
 
     @Override
