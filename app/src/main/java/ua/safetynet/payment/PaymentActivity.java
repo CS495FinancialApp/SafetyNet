@@ -2,10 +2,19 @@ package ua.safetynet.payment;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.braintreepayments.api.dropin.DropInRequest;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import ua.safetynet.R;
+import cz.msebera.android.httpclient.Header;
 
 public class PaymentActivity extends AppCompatActivity
 {
@@ -16,7 +25,37 @@ public class PaymentActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        pay();
+
+        final Button button = findViewById(R.id.payment_test_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeRequest();
+            }
+        });
+        //pay();
+    }
+    private void makeRequest()
+    {
+        String url = "http://192.168.1.200:8080/hello";
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("name", "Android");
+        client.get(url, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                String err = "Failed to get response";
+                EditText editText  = findViewById(R.id.payment_test_response);
+                editText.setText(err,TextView.BufferType.NORMAL);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                EditText editText  = findViewById(R.id.payment_test_response);
+                editText.setText(responseString,TextView.BufferType.NORMAL);
+                Log.d("PaymentActivityResponse",responseString );
+            }
+        });
     }
     private void pay()
     {

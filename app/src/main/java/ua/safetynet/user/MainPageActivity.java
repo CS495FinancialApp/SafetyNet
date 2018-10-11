@@ -28,15 +28,17 @@ import com.google.firebase.auth.FirebaseUser;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
+import ua.safetynet.payment.PaymentActivity;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
     private DrawerLayout mDrawerLayout;
-    ActionBarDrawerToggle toggle;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     protected void onStart()
     {
@@ -51,7 +53,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
 
-        updateUI();
     }
 
     @Override
@@ -61,39 +62,64 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
 
+        //Start the main view fragment
+        MainViewFragment mainViewFragment = new MainViewFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainViewFragment).addToBackStack(null).commit();
+
         //Set mDrawerLayout
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
-        //Sets toolbar to Current action bar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //Set Action bar button
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setTitle("SafetyNet");
-        updateUI();
-        setLogoutListener(); //Set listener for logout button
 
+        setupDrawerToggle();
+        setupNavigationDrawer();
+
+
+
+
+    }
+    private void setupNavigationDrawer()
+    {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        Fragment fragment = null;
                         switch (menuItem.getItemId())
                         {
+                            case R.id.nav_home:
+                                fragment = new MainViewFragment();
+                                break;
                             case R.id.nav_groups:
-                                CreateGroupFragment groupFragment = new CreateGroupFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.main_drawer_layout, groupFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                                fragment = new CreateGroupFragment();
+                                break;
+                            case R.id.nav_payment:
+                                startPayment();
+                                break;
+                        }
+                        if(fragment != null)
+                        {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
                     }
                 }
         );
-
-
     }
-
-
+    private void startPayment()
+    {
+        startActivity(new Intent(this, ua.safetynet.payment.PaymentActivity.class));
+    }
+    private void setupDrawerToggle()
+    {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -112,42 +138,5 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    /**
-     * Sets listener for logout button. Upon press signs user out using Firebase AuthUI
-     * and restarts main activity, thus prompting them to login again.
-     */
-    private void setLogoutListener()
-    {
-        setContentView(R.layout.activity_main_page);
-        Button logoutBtn = findViewById(R.id.logoutButton);
-        logoutBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                    AuthUI.getInstance()
-                            .signOut(getApplicationContext())
-                            .addOnCompleteListener(new OnCompleteListener<Void>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                            recreate();
-                        }
-                    });
-            }
-        });
-    }
 
-    private void updateUI()
-    {
-        TextView username =  findViewById(R.id.username);
-        TextView useremail = findViewById(R.id.useremail);
-        if(firebaseUser != null)
-        {
-            username.setText(firebaseUser.getDisplayName());
-            useremail.setText(firebaseUser.getEmail());
-        }
-
-    }
 }

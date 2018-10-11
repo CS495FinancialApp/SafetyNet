@@ -4,13 +4,20 @@
     <string name="logoutBtn">logout</string>
     <string name="login_user_cancelled">Login Cancelled</string>
     <string name="login_no_network">No Network Connection</string>
+    <string name="menu_drawer_home">Home</string>
     <string name="menu_drawer_logout">Logout</string>
     <string name="menu_drawer_groups">Groups</string>
     <string name="menu_drawer_settings">Settings</string>
+    <string name="menu_drawer_payment">Payment</string>
     <string name="main_nav_header">SafetyNet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groupName">Group Name</string>
     <string name="createGroupButton">Create Group</string>
+
+    <string name="navigation_drawer_open">open drawer</string>
+    <string name="navigation_drawer_close">close drawer</string>
+    <string name="payment_test_response">Response</string>
+    <string name="payment_test_button">Make Request</string>
 </resources>
