@@ -17,10 +17,7 @@
 
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">close drawer</string>
-
-    <string name="confirm">Confirm</string>
-    <string name="withdrawal_question">How much to withdrawal?</string>
-    <string name="withdrawal_hint">Dollar amount for withdrawl</string>
-    <string name="deposit_question">How much to deposit?</string>
-    <string name="deposit_hint">Dollar amount for deposit</string>
+    <string name="payment_test_input">Input</string>
+    <string name="payment_test_response">Response</string>
+    <string name="payment_test_button">Make Request</string>
 </resources>

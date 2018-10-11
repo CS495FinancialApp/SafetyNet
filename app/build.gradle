@@ -42,5 +42,7 @@ dependencies {
     // use -ktx for Kotlin
     implementation "android.arch.navigation:navigation-ui:$nav_version"
     // use -ktx for Kotlin
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+
 }
 apply plugin: 'com.google.gms.google-services'
