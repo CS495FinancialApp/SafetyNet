@@ -7,18 +7,6 @@
     tools:context=".payment.PaymentActivity">
 
     <EditText
-        android:id="@+id/payment_test_input"
-        android:layout_width="226dp"
-        android:layout_height="52dp"
-        android:layout_alignStart="@+id/payment_test_response"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="39dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/payment_test_input"
-        android:importantForAutofill="no" />
-
-    <EditText
         android:id="@+id/payment_test_response"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

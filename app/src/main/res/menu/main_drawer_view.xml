@@ -13,6 +13,9 @@
         android:id="@+id/nav_settings"
         android:title="@string/menu_drawer_settings" />
     <item
+        android:id="@+id/nav_payment"
+        android:title="@string/menu_drawer_payment"/>
+    <item
         android:id="@+id/nav_logout"
         android:title="@string/menu_drawer_logout" />
 </menu>

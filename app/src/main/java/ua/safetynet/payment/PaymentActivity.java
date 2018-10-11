@@ -2,6 +2,7 @@ package ua.safetynet.payment;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +37,7 @@ public class PaymentActivity extends AppCompatActivity
     }
     private void makeRequest()
     {
-        String url = "http://192.168.1.200/hello";
+        String url = "http://192.168.1.200:8080/hello";
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("name", "Android");
@@ -52,6 +53,7 @@ public class PaymentActivity extends AppCompatActivity
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 EditText editText  = findViewById(R.id.payment_test_response);
                 editText.setText(responseString,TextView.BufferType.NORMAL);
+                Log.d("PaymentActivityResponse",responseString );
             }
         });
     }
