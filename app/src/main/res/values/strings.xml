@@ -17,4 +17,7 @@
 
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">close drawer</string>
+    <string name="payment_test_input">Input</string>
+    <string name="payment_test_response">Response</string>
+    <string name="payment_test_button">Make Request</string>
 </resources>
