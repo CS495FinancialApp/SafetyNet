@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
+import ua.safetynet.payment.PaymentActivity;
 
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener
 {
@@ -91,6 +92,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                             case R.id.nav_groups:
                                 fragment = new CreateGroupFragment();
                                 break;
+                            case R.id.nav_payment:
+                                startPayment();
+                                break;
                         }
                         if(fragment != null)
                         {
@@ -102,7 +106,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 }
         );
     }
-
+    private void startPayment()
+    {
+        startActivity(new Intent(this, ua.safetynet.payment.PaymentActivity.class));
+    }
     private void setupDrawerToggle()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
