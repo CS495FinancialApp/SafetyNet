@@ -32,7 +32,6 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".payment.PaymentActivity"></activity>
     </application>
 
 </manifest>
