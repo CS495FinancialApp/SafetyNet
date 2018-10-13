@@ -126,5 +126,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
 
 }
