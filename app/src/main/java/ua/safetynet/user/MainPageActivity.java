@@ -6,31 +6,23 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
-import ua.safetynet.payment.PaymentActivity;
+import ua.safetynet.payment.PaymentFragment;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -93,7 +85,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 fragment = new CreateGroupFragment();
                                 break;
                             case R.id.nav_payment:
-                                startPayment();
+                                fragment = new PaymentFragment();
                                 break;
                         }
                         if(fragment != null)
@@ -105,10 +97,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                     }
                 }
         );
-    }
-    private void startPayment()
-    {
-        startActivity(new Intent(this, ua.safetynet.payment.PaymentActivity.class));
     }
     private void setupDrawerToggle()
     {
