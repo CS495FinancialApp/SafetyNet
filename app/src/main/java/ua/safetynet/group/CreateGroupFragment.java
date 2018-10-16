@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import ua.safetynet.Database;
 import ua.safetynet.R;
 
 /**
@@ -69,11 +71,24 @@ public class CreateGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView =  inflater.inflate(R.layout.fragment_create_group, container, false);
+        //button for submitting a group
         Button bttn_Create_Group = (Button) rootView.findViewById(R.id.bttn_Create_Group);
+        //text box for group name
+        final EditText groupName = (EditText) rootView.findViewById(R.id.txtGroupName);
+        //group submition button listener
         bttn_Create_Group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Toasty!!", Toast.LENGTH_LONG).show();
+                //create the database connection
+                Database database = new Database();
+                //create a blank entry and return its id, then create a blank group
+                String id = database.makeGroupKey();
+                Group group = new Group();
+                //set only the name for now
+                group.setGroup_name(groupName.getText().toString().trim());
+                //send the data after getting data from the blanks
+                database.updateGroups(id, group);
+                Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
             }
         });
         return rootView;
