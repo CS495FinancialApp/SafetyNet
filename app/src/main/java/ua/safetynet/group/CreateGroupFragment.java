@@ -82,12 +82,12 @@ public class CreateGroupFragment extends Fragment {
                 //create the database connection
                 Database database = new Database();
                 //create a blank entry and return its id, then create a blank group
-                String id = database.makeGroupKey();
+                //String id = database.makeGroupKey();
                 Group group = new Group();
                 //set only the name for now
                 group.setGroup_name(groupName.getText().toString().trim());
                 //send the data after getting data from the blanks
-                database.updateGroups(id, group);
+                //database.updateGroups(id, group);
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
             }
         });
