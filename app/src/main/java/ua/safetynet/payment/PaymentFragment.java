@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import java.math.BigDecimal;
 import cz.msebera.android.httpclient.Header;
 
 
-public class PaymentFragment extends Fragment implements PaymentMethodNonceCreatedListener, View.OnClickListener {
+public class PaymentFragment extends Fragment implements PaymentMethodNonceCreatedListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "PAYMENT ACTIVITY";
     private static final String AMOUNT = "amount";
@@ -69,8 +70,20 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_payment, container, false);
+        View view =  inflater.inflate(R.layout.fragment_payment, container, false);
+        Button checkoutButton = view.findViewById(R.id.checkout_button);
+        EditText text = view.findViewById(R.id.payment_amount);
+        //amount = new BigDecimal(Double.parseDouble(text.getText().toString()));
+        checkoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getClientToken();
+                launchDropIn();
+            }
+        });
+        return view;
     }
 
 
@@ -79,14 +92,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             mListener.onFragmentInteraction(uri);
         }
     }
-    @Override
-    public void onClick(View v) {
-        EditText text = v.findViewById(R.id.payment_amount);
-        amount = new BigDecimal(Double.parseDouble(text.getText().toString()));
 
-        getClientToken();
-        launchDropIn();
-    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -110,6 +116,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     }
 
     private void getClientToken(){
+        Toast.makeText(getContext(), "Testing",Toast.LENGTH_LONG ).show();
         AsyncHttpClient client = new AsyncHttpClient(true,80,443);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
@@ -122,6 +129,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 clientToken = responseString;
+                Toast.makeText(getContext(), clientToken,Toast.LENGTH_LONG ).show();
             }
         });
     }
