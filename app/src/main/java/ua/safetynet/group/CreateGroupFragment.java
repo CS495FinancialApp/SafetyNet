@@ -87,7 +87,7 @@ public class CreateGroupFragment extends Fragment {
                 //set only the name for now
                 group.setGroup_name(groupName.getText().toString().trim());
                 //send the data after getting data from the blanks
-                //database.updateGroups(id, group);
+                database.createGroup(group);
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
             }
         });

@@ -1,13 +1,18 @@
 package ua.safetynet;
 
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.Context;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.group.Group;
+import ua.safetynet.user.MainPageActivity;
 import ua.safetynet.user.User;
 
 
@@ -40,6 +45,32 @@ public class Database {
     public void setUser(User user) {
         databaseUsers.document(user.getUserId()).set(user);
     }
+
+    public void updateUsers(){
+
+    }
+
+    //creates a new group entry in firestore using the passed in group class
+    public void createGroup(Group group){
+        this.databaseGroups.add(group);
+    }
+
+    //creates a new user entry in firestore using the passed in user class
+    public void createUser(User user){
+        this.databaseUsers.add(user);
+    }
+
+    //updates a group to match the passed in group that matches the given string id
+    public void updateGroup(Group group, String id){
+        this.databaseGroups.document(id).set(group);
+    }
+
+    //updates a user to match the passed in user that matches the given string id
+    public void updateUser(User user, String id){
+        this.databaseUsers.document(id).set(user);
+    }
+
+
     /*public String makeUserKey() {
         return this.databaseUsers.push().getKey();
     }
