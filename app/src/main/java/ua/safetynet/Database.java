@@ -33,6 +33,11 @@ public class Database {
         this.databaseGroups = FirebaseFirestore.getInstance().collection("Groups");
     }
 
+    /***
+     * Takes in userId and database listener. Database listener passes in the User object from firestore
+     * @param userId User ID from firebase auth. User ID is the key for the user data in Firestore
+     * @param dbListener Listener is called when Firebase returns with the User object. Passes the user object as a parameter
+     */
     public void getUser(String userId, final Database.DatabaseUserListener dbListener) {
         databaseUsers.document("userId").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
