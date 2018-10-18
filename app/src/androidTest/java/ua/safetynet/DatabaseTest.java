@@ -3,15 +3,25 @@ package ua.safetynet;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 import ua.safetynet.user.User;
 
@@ -29,13 +39,15 @@ public class DatabaseTest {
     @Before
     public void dbSetup(){
         FirebaseApp.initializeApp(InstrumentationRegistry.getContext());
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build();
+        FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         db = new Database();
     }
 
     @Test
     public void testUserSet() {
         //Make a new user and add him to the db
-        User user = new User("1",
+        final User user = new User("1",
                 "email@local.com",
                 "Alan Turing",
                 new ArrayList<String>(),
@@ -46,16 +58,15 @@ public class DatabaseTest {
 
         db.getUser("1", new Database.DatabaseUserListener() {
             @Override
-            public void onUserRetrieval(User user) {
+            public void onUserRetrieval(User dbUser) {
+                Log.d("TESTING","DB userId is: " + dbUser.getName());
                 Assert.assertEquals(user.getUserId(), dbUser.getUserId());
                 Assert.assertEquals(user.getName(),dbUser.getName());
                 Assert.assertEquals(user.getEmail(),dbUser.getEmail());
             }
         });
 
-
     }
-
     public void setDbUser( User user) {
         dbUser = user;
     }
