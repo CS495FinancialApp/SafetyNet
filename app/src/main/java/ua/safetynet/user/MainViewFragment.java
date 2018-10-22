@@ -1,6 +1,8 @@
 package ua.safetynet.user;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import ua.safetynet.R;
@@ -81,15 +84,12 @@ public class MainViewFragment extends Fragment {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-<<<<<<< HEAD
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         // specify an adapter (see also next example)
         mAdapter = new GroupRecyclerAdapter(groupList);
-=======
 
         // specify an adapter (see also next example)
-        mAdapter = new GroupRecyclerAdapter();
->>>>>>> main_recyclerview
+        mAdapter = new GroupRecyclerAdapter(groupList);
         mRecyclerView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
@@ -136,6 +136,17 @@ public class MainViewFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void makeGroupList() {
+        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux_36);
+        Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
+        Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_flame);
+        Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
+        Group group2 = new Group("Johnson Family", "2", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
+        Group group3 = new Group("Roomates!", "3", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
 
+        groupList.add(group1);
+        groupList.add(group2);
+        groupList.add(group3);
+    }
 
 }
