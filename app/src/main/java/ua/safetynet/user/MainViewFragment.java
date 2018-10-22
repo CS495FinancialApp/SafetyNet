@@ -3,6 +3,7 @@ package ua.safetynet.user;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -84,6 +86,12 @@ public class MainViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
+
+        TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
+        mainBalance.setText("$55.27");
+        mainBalance.setTextSize(30);
+        mainBalance.setTextColor(Color.RED);
+
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
