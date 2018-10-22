@@ -70,7 +70,7 @@ public class Database {
                     //error toast message goes here
                 }
             }
-        })
+        });
         return userList;
     }
     /***
