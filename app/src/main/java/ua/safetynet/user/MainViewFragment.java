@@ -4,7 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+<<<<<<< HEAD
 import android.support.v7.widget.DefaultItemAnimator;
+=======
+>>>>>>> main_recyclerview
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +17,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import ua.safetynet.R;
+<<<<<<< HEAD
 import ua.safetynet.group.Group;
+=======
+>>>>>>> main_recyclerview
 import ua.safetynet.group.GroupRecyclerAdapter;
 
 /**
@@ -33,9 +39,14 @@ public class MainViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+<<<<<<< HEAD
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Group> groupList;
+=======
+    private RecyclerView.LayoutManager mLayoutManager
+
+>>>>>>> main_recyclerview
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -81,9 +92,15 @@ public class MainViewFragment extends Fragment {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+<<<<<<< HEAD
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         // specify an adapter (see also next example)
         mAdapter = new GroupRecyclerAdapter(groupList);
+=======
+
+        // specify an adapter (see also next example)
+        mAdapter = new GroupRecyclerAdapter();
+>>>>>>> main_recyclerview
         mRecyclerView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
