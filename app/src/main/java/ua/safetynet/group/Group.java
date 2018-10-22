@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Group {
@@ -27,8 +28,8 @@ public class Group {
     private String Group_name;
     private String Group_ID;
     private Bitmap groupImage;
-    private Integer Funds;
-    private Integer Withdrawal_Limit;
+    private BigDecimal Funds;
+    private BigDecimal Withdrawal_Limit;
 
     private ArrayList<String> Withdrawals = new ArrayList<>();
     private ArrayList<String> Admins = new ArrayList<>();
@@ -37,8 +38,8 @@ public class Group {
     public Group() {
         this.Group_name = null;
         this.Group_ID = null;
-        this.Funds = 0;
-        this.Withdrawal_Limit = 0;
+        this.Funds = new BigDecimal(0);
+        this.Withdrawal_Limit = new BigDecimal(0);
 
         this.Withdrawals.clear();
         this.Admins.clear();
@@ -47,7 +48,7 @@ public class Group {
         fetchGroupImage();
     }
 
-    public Group(String group_name,String group_id, Integer funds, Integer withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
+    public Group(String group_name,String group_id, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
         this.Group_name = group_name;
         this.Group_ID = group_id;
         this.Funds = funds;
@@ -59,7 +60,7 @@ public class Group {
         fetchGroupImage();
     }
 
-    public Group(String group_name,String group_id, Bitmap groupImage, Integer funds, Integer withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
+    public Group(String group_name,String group_id, Bitmap groupImage, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
         this.Group_name = group_name;
         this.Group_ID = group_id;
         this.Funds = funds;
@@ -78,11 +79,11 @@ public class Group {
         return Group_ID;
     }
 
-    public Integer getFunds() {
+    public BigDecimal getFunds() {
         return this.Funds;
     }
 
-    public Integer getWithdrawal_Limit() {
+    public BigDecimal getWithdrawal_Limit() {
         return this.Withdrawal_Limit;
     }
 
@@ -106,11 +107,11 @@ public class Group {
         this.Group_ID = group_ID;
     }
 
-    public void setFunds(Integer funds) {
+    public void setFunds(BigDecimal funds) {
         this.Funds = funds;
     }
 
-    public void setWithdrawal_Limit(Integer withdrawal_Limit) {
+    public void setWithdrawal_Limit(BigDecimal withdrawal_Limit) {
         this.Withdrawal_Limit = withdrawal_Limit;
     }
 
