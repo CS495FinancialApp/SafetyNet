@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -90,9 +92,9 @@ public class MainViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
 
         TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
-        mainBalance.setText("$55.27");
-        mainBalance.setTextSize(30);
-        mainBalance.setTextColor(Color.RED);
+        String text = "<font color=#ad3535>-</font> <font color=#000000>$55.27</font>";
+        mainBalance.setText(Html.fromHtml(text,0));
+        mainBalance.setTextSize(45);
 
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
@@ -105,8 +107,6 @@ public class MainViewFragment extends Fragment {
         mAdapter = new GroupRecyclerAdapter(groupList);
         mRecyclerView.setAdapter(mAdapter);
 
-        FrameLayout frame = rootView.findViewById(R.id.main_view_header);
-        frame.setBackgroundColor(Color.parseColor("#31729E"));
         // Inflate the layout for this fragment
         return rootView;
 
@@ -154,13 +154,15 @@ public class MainViewFragment extends Fragment {
     private void makeGroupList() {
         Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
         Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
-        Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_flame);
+        Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_rent);
         Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
         Group group2 = new Group("Johnson Family", "2", bmp2 , new BigDecimal(305.52), new BigDecimal(100), null,null,null);
         Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
         groupList = new ArrayList<Group>();
-
-        groupList.add(group1);
+        Group[] tmpList = {group1,group2,group3};
+        groupList.addAll(Arrays.asList(tmpList));
+        groupList.addAll(Arrays.asList(tmpList));
+        groupList.addAll(Arrays.asList(tmpList));
         groupList.add(group2);
         groupList.add(group3);
     }
