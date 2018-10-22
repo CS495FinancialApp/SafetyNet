@@ -106,6 +106,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+            getSupportActionBar().setTitle("SafetyNet");
         }
     }
 

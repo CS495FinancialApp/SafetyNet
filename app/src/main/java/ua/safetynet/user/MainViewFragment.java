@@ -1,6 +1,7 @@
 package ua.safetynet.user;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -103,6 +105,8 @@ public class MainViewFragment extends Fragment {
         mAdapter = new GroupRecyclerAdapter(groupList);
         mRecyclerView.setAdapter(mAdapter);
 
+        FrameLayout frame = rootView.findViewById(R.id.main_view_header);
+        frame.setBackgroundColor(Color.parseColor("#31729E"));
         // Inflate the layout for this fragment
         return rootView;
 
