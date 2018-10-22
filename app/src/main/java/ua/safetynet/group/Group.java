@@ -1,10 +1,22 @@
 package ua.safetynet.group;
 
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -12,6 +24,7 @@ public class Group {
 
     private String Group_name;
     private String Group_ID;
+    private Bitmap groupImage;
     private Integer Funds;
     private Integer Withdrawal_Limit;
 
@@ -94,5 +107,42 @@ public class Group {
 
     public void setUsers(ArrayList<String> users) {
         this.Users = users;
+    }
+
+    public void setGroupImage(Bitmap image) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroup_ID() + ".jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = groupImageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Group", "Couldnt upload picture");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
+            }
+        });
+    }
+
+    public Bitmap getGroupImage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroup_ID() + ".jpg");
+        File localFile = File.createTempFile("images","jpg");
+
+        groupImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                
+            }
+        })
+
     }
 }
