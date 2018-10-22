@@ -14,7 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import ua.safetynet.R;
 import ua.safetynet.group.GroupRecyclerAdapter;
@@ -79,21 +83,20 @@ public class MainViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRecyclerView = container.findViewById(R.id.main_recyclerview);
+        View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
+        mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        // specify an adapter (see also next example)
-        mAdapter = new GroupRecyclerAdapter(groupList);
-
+        makeGroupList();
         // specify an adapter (see also next example)
         mAdapter = new GroupRecyclerAdapter(groupList);
         mRecyclerView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_view, container, false);
+        return rootView;
 
     }
 
@@ -137,12 +140,13 @@ public class MainViewFragment extends Fragment {
     }
 
     private void makeGroupList() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux_36);
+        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
         Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
         Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_flame);
         Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
-        Group group2 = new Group("Johnson Family", "2", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
-        Group group3 = new Group("Roomates!", "3", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
+        Group group2 = new Group("Johnson Family", "2", bmp2 , new BigDecimal(305.52), new BigDecimal(100), null,null,null);
+        Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
+        groupList = new ArrayList<Group>();
 
         groupList.add(group1);
         groupList.add(group2);
