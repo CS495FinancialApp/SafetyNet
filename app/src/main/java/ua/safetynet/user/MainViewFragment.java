@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import ua.safetynet.R;
+import ua.safetynet.group.GroupRecyclerAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +26,10 @@ public class MainViewFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,8 +71,19 @@ public class MainViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mRecyclerView = container.findViewById(R.id.main_recyclerview);
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(container.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new GroupRecyclerAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main_view, container, false);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
