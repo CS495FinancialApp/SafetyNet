@@ -1,6 +1,7 @@
 package ua.safetynet.group;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -41,6 +43,8 @@ public class Group {
         this.Withdrawals.clear();
         this.Admins.clear();
         this.Users.clear();
+
+        fetchGroupImage();
     }
 
     public Group(String group_name,String group_id, Integer funds, Integer withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
@@ -51,8 +55,21 @@ public class Group {
         this.Withdrawals = withdrawals;
         this.Admins = admins;
         this.Users = users;
+
+        fetchGroupImage();
     }
 
+    public Group(String group_name,String group_id, Bitmap groupImage, Integer funds, Integer withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
+        this.Group_name = group_name;
+        this.Group_ID = group_id;
+        this.Funds = funds;
+        this.Withdrawal_Limit = withdrawal_Limit;
+        this.Withdrawals = withdrawals;
+        this.Admins = admins;
+        this.Users = users;
+        this.groupImage = groupImage;
+        fetchGroupImage();
+    }
     public String getGroup_name() {
         return this.Group_name;
     }
@@ -110,6 +127,7 @@ public class Group {
     }
 
     public void setGroupImage(Bitmap image) {
+        groupImage = image;
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroup_ID() + ".jpg");
@@ -131,18 +149,26 @@ public class Group {
         });
     }
 
-    public Bitmap getGroupImage() {
+    public void fetchGroupImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroup_ID() + ".jpg");
-        File localFile = File.createTempFile("images","jpg");
+        final long ONE_MEGABYTE = 1024 * 1024;
 
-        groupImageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        groupImageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                
+            public void onSuccess(byte[] bytes) {
+                setGroupImage(BitmapFactory.decodeByteArray(bytes, 0 , bytes.length));
             }
-        })
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Group","Couldn't fetch group image "+e.toString());
+            }
+        });
+    }
 
+    public Bitmap getGroupImage() {
+        return groupImage;
     }
 }
