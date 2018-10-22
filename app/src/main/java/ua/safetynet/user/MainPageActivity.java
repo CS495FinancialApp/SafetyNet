@@ -87,6 +87,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                             case R.id.nav_payment:
                                 fragment = new PaymentFragment();
                                 break;
+                            case R.id.nav_logout:
+                                FirebaseAuth.getInstance().signOut();
+                                break;
                         }
                         if(fragment != null)
                         {
