@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import ua.safetynet.R;
 
@@ -49,9 +51,10 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Group group = groupList.get(position);
-        holder.mPicture.setImageBitmap(group.getBitmap());
+        holder.mPicture.setImageBitmap(group.getGroupImage());
         holder.mGroupName.setText(group.getGroup_name());
-        holder.mAmount.setText(group.getFunds());
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        holder.mAmount.setText(format.format(group.getFunds()));
     }
 
     @Override
