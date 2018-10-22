@@ -4,12 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-<<<<<<< HEAD
-import android.support.v7.widget.DefaultItemAnimator;
-=======
->>>>>>> main_recyclerview
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +14,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import ua.safetynet.R;
-<<<<<<< HEAD
-import ua.safetynet.group.Group;
-=======
->>>>>>> main_recyclerview
 import ua.safetynet.group.GroupRecyclerAdapter;
+import ua.safetynet.group.Group;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,16 +31,11 @@ public class MainViewFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private List<Group> groupList;
+
+    private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-<<<<<<< HEAD
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private List<Group> groupList;
-=======
-    private RecyclerView.LayoutManager mLayoutManager
-
->>>>>>> main_recyclerview
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
