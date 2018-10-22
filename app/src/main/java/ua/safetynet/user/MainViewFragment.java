@@ -4,13 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import ua.safetynet.R;
+import ua.safetynet.group.Group;
 import ua.safetynet.group.GroupRecyclerAdapter;
 
 /**
@@ -29,8 +33,9 @@ public class MainViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager
+    private RecyclerView.LayoutManager mLayoutManager;
 
+    private List<Group> groupList;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -76,9 +81,9 @@ public class MainViewFragment extends Fragment {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         // specify an adapter (see also next example)
-        mAdapter = new GroupRecyclerAdapter();
+        mAdapter = new GroupRecyclerAdapter(groupList);
         mRecyclerView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
@@ -124,6 +129,7 @@ public class MainViewFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 
 
 }
