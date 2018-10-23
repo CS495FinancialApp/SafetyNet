@@ -2,9 +2,11 @@ package ua.safetynet;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
 
 public class Deposit extends AppCompatActivity {
 
@@ -25,5 +27,6 @@ public class Deposit extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+
     }
 }

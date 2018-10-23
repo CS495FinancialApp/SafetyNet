@@ -8,6 +8,7 @@
     <string name="menu_drawer_logout">Logout</string>
     <string name="menu_drawer_groups">Groups</string>
     <string name="menu_drawer_settings">Settings</string>
+    <string name="menu_drawer_payment">Payment</string>
     <string name="main_nav_header">SafetyNet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -18,9 +19,23 @@
     <string name="navigation_drawer_open">open drawer</string>
     <string name="navigation_drawer_close">close drawer</string>
 
+    <string name="payment_test_response">Response</string>
+    <string name="payment_test_button">Make Request</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="amount">Dollar Amount</string>
+    <string name="withdrawal_question">How much to withdrawal?</string>
+    <string name="deposit_question">How much to deposit?</string>
+    <string name="group_withdrawal">Withdrawal</string>
+    <string name="group_deposit">Deposit</string>
+    <string name="welcome_message">Welcome to SafetyNet!</string>
+    <string name="group_balance">Group Balance</string>
+
+
     <string name="confirm">Confirm</string>
     <string name="withdrawal_question">How much to withdrawal?</string>
     <string name="withdrawal_hint">Dollar amount for withdrawl</string>
     <string name="deposit_question">How much to deposit?</string>
     <string name="deposit_hint">Dollar amount for deposit</string>
+
 </resources>
