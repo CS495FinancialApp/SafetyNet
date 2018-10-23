@@ -45,5 +45,5 @@ before_script:
 #  - adb shell input keyevent 82 &
    - chmod +x gradlew  
 script:
-    - yes | $HOME ./gradlew clean build --stacktrace
-    - yes | $HOME ./gradlew connectedCheck
+    - yes | ./$HOME/gradlew clean build --stacktrace
+    - yes | ./$HOME/gradlew connectedCheck
