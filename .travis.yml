@@ -46,5 +46,5 @@ before_install:
 #  - adb shell input keyevent 82 &
   
 script:
-    - "./gradlew clean build --stacktrace"
-    - "./gradlew connectedCheck"
+    - yes | "./gradlew clean build --stacktrace"
+    - yes| "./gradlew connectedCheck"
