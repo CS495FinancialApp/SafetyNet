@@ -22,8 +22,11 @@
     <string name="payment_test_button">Make Request</string>
 
     <string name="confirm">Confirm</string>
+    <string name="amount">Dollar Amount</string>
     <string name="withdrawal_question">How much to withdrawal?</string>
-    <string name="withdrawal_hint">Dollar amount for withdrawl</string>
     <string name="deposit_question">How much to deposit?</string>
-    <string name="deposit_hint">Dollar amount for deposit</string>
+    <string name="group_withdrawal">Withdrawal</string>
+    <string name="group_deposit">Deposit</string>
+    <string name="welcome_message">Welcome to SafetyNet!</string>
+    <string name="group_balance">Group Balance</string>
 </resources>
