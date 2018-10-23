@@ -7,42 +7,43 @@
     tools:context=".Withdrawal">
 
     <TextView
-        android:id="@+id/textWithdrawal"
+        android:id="@+id/textViewWithdrawal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="79dp"
-        android:layout_marginBottom="475dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="111dp"
+        android:layout_marginEnd="111dp"
         android:text="@string/withdrawal_question"
+        android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:textSize="24sp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editWithdrawalAmount"
+        android:id="@+id/editTextWithdrawal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="85dp"
         android:ems="10"
-        android:hint="@string/withdrawal_hint"
-        android:importantForAutofill="no"
+        android:hint="@string/amount"
         android:inputType="number"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textWithdrawal" tools:targetApi="o"/>
+        app:layout_constraintTop_toBottomOf="@+id/textViewWithdrawal" />
 
     <Button
-        android:id="@+id/buttonWithdrawalConfirmation"
+        android:id="@+id/buttonWithdrawalConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
-        android:layout_marginBottom="296dp"
+        android:layout_marginStart="147dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="149dp"
         android:text="@string/confirm"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editWithdrawalAmount" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextWithdrawal" />
 </android.support.constraint.ConstraintLayout>

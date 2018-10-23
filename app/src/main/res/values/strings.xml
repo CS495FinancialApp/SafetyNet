@@ -20,4 +20,13 @@
     <string name="navigation_drawer_close">close drawer</string>
     <string name="payment_test_response">Response</string>
     <string name="payment_test_button">Make Request</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="amount">Dollar Amount</string>
+    <string name="withdrawal_question">How much to withdrawal?</string>
+    <string name="deposit_question">How much to deposit?</string>
+    <string name="group_withdrawal">Withdrawal</string>
+    <string name="group_deposit">Deposit</string>
+    <string name="welcome_message">Welcome to SafetyNet!</string>
+    <string name="group_balance">Group Balance</string>
 </resources>
