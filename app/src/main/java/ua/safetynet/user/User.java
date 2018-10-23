@@ -31,42 +31,42 @@ public class User
         this.groups = groups;
     }
 
-    public String getUserId()
+    String getUserId()
     {
         return this.userId;
     }
 
-    public void setUserId(String userId)
+    void setUserId(String userId)
     {
         this.userId = userId;
     }
 
-    public String getEmail()
+    String getEmail()
     {
         return this.email;
     }
 
-    public void setEmail(String email)
+    void setEmail(String email)
     {
         this.email = email;
     }
 
-    public String getName()
+    String getName()
     {
         return this.name;
     }
 
-    public void setName(String name)
+    void setName(String name)
     {
         this.name = name;
     }
 
-    public ArrayList<String> getTransactions()
+    ArrayList<String> getTransactions()
     {
         return this.transactions;
     }
 
-    public ArrayList<String> getGroups()
+    ArrayList<String> getGroups()
     {
         return this.groups;
     }

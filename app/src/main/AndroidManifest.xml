@@ -9,13 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".user.MainPageActivity">
+        <activity
+            android:name=".user.MainPageActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".auth.FirebaseAuthActivity" />
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
@@ -29,9 +32,7 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".Withdrawal" />
-        <activity android:name=".Deposit" />
-        <activity android:name=".Group_home2"></activity>
+        <activity android:name=".payment.PaymentActivity"></activity>
     </application>
 
 </manifest>

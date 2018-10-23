@@ -1,34 +1,14 @@
 package ua.safetynet.user;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import ua.safetynet.R;
-import ua.safetynet.group.GroupRecyclerAdapter;
-import ua.safetynet.group.Group;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,11 +24,6 @@ public class MainViewFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private List<Group> groupList;
-
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -89,27 +64,8 @@ public class MainViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
-
-        TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
-        String text = "<font color=#ad3535>-</font> <font color=#000000>$55.27</font>";
-        mainBalance.setText(Html.fromHtml(text,0));
-        mainBalance.setTextSize(45);
-
-        mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
-        mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(container.getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        makeGroupList();
-        // specify an adapter (see also next example)
-        mAdapter = new GroupRecyclerAdapter(groupList);
-        mRecyclerView.setAdapter(mAdapter);
-
         // Inflate the layout for this fragment
-        return rootView;
-
+        return inflater.inflate(R.layout.fragment_main_view, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -151,20 +107,5 @@ public class MainViewFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void makeGroupList() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
-        Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
-        Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_rent);
-        Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
-        Group group2 = new Group("Johnson Family", "2", bmp2 , new BigDecimal(305.52), new BigDecimal(100), null,null,null);
-        Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
-        groupList = new ArrayList<Group>();
-        Group[] tmpList = {group1,group2,group3};
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.add(group2);
-        groupList.add(group3);
-    }
 
 }
