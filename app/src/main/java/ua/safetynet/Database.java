@@ -34,6 +34,16 @@ public class Database {
     public interface DatabaseGroupListener {
         void onGroupRetrieval(Group group);
     }
+
+    public interface DatabaseGroupsListener {
+        void onGroupsRetrieval(ArrayList<Group> groups);
+    }
+
+    /* template
+    public interface DatabaseUsersListener {
+        void onUsersRetrieval(ArrayList<User> users);
+    } */
+
     private CollectionReference databaseUsers;
     private CollectionReference databaseGroups;
 
@@ -50,7 +60,8 @@ public class Database {
     //returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
     //this can be used with recycler views and will likely be part of how we obtain group membership
     //this is a template for querying multiple things and can be modified easily
-    public ArrayList<User> queryUser(){
+    /* template
+    public void queryUser(final Database.DatabaseUsersListener dbListener){
         final ArrayList<User> userList = new ArrayList<>();
         Query userQuery = databaseUsers
                 .whereEqualTo("userID", FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -65,21 +76,48 @@ public class Database {
                         //add user to an arraylist
                         userList.add(user);
                     }
+                    dbListener.onUsersRetrieval(userList);
                 }
                 else{
                     //error toast message goes here
                 }
             }
         });
-        return userList;
+    } */
+
+    //query the firestore and return an arraylist of the groups the current user is in
+    //Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible
+    public void queryGroups(final Database.DatabaseGroupsListener dbListener){
+        final ArrayList<Group> groupList = new ArrayList<>();
+        Query groupQuery = databaseGroups
+                .whereArrayContains("Users", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Group group = document.toObject(Group.class);
+                        //add user to an arraylist
+                        groupList.add(group);
+                    }
+                    dbListener.onGroupsRetrieval(groupList);
+                }
+                else{
+                    //error toast message goes here
+                }
+            }
+        })
     }
+
     /***
      * Takes in userId and database listener. Database listener passes in the User object from firestore
      * @param userId User ID from firebase auth. User ID is the key for the user data in Firestore
      * @param dbListener Listener is called when Firebase returns with the User object. Passes the user object as a parameter
      */
     public void getUser(String userId, final Database.DatabaseUserListener dbListener) {
-        databaseUsers.document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        databaseUsers.document("userId").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
@@ -89,7 +127,7 @@ public class Database {
     }
 
     public void getGroup(String groupID, final Database.DatabaseGroupListener dbListener) {
-        databaseGroups.document("groupID").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        databaseGroups.document(groupID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Group group = documentSnapshot.toObject(Group.class);
