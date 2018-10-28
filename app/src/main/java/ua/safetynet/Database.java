@@ -1,28 +1,28 @@
 package ua.safetynet;
 
-import android.support.annotation.NonNull;
-import android.widget.Toast;
+        import android.support.annotation.NonNull;
+        import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.api.Context;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+        import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.android.gms.tasks.OnSuccessListener;
+        import com.google.android.gms.tasks.Task;
+        import com.google.api.Context;
+        import com.google.firebase.FirebaseApp;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.firestore.CollectionReference;
+        import com.google.firebase.firestore.DocumentReference;
+        import com.google.firebase.firestore.DocumentSnapshot;
+        import com.google.firebase.firestore.FirebaseFirestore;
+        import com.google.firebase.firestore.Query;
+        import com.google.firebase.firestore.QueryDocumentSnapshot;
+        import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
-import ua.safetynet.group.CreateGroupFragment;
-import ua.safetynet.group.Group;
-import ua.safetynet.user.MainPageActivity;
-import ua.safetynet.user.User;
+        import ua.safetynet.group.CreateGroupFragment;
+        import ua.safetynet.group.Group;
+        import ua.safetynet.user.MainPageActivity;
+        import ua.safetynet.user.User;
 
 
 
@@ -108,7 +108,7 @@ public class Database {
                     //error toast message goes here
                 }
             }
-        })
+        });
     }
 
     /***
@@ -182,5 +182,5 @@ public class Database {
         User user = new User(incoming information);     create a new user to push
         databaseUsers.child(id).setValue(user);         push information onto the entry with matching id
     */
-    }
+}
 
