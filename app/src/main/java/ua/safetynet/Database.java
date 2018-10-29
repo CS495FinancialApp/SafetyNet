@@ -34,16 +34,17 @@ public class Database {
     public interface DatabaseGroupListener {
         void onGroupRetrieval(Group group);
     }
-
     public interface DatabaseGroupsListener {
         void onGroupsRetrieval(ArrayList<Group> groups);
     }
 
-    /* template
+    /** template
     public interface DatabaseUsersListener {
         void onUsersRetrieval(ArrayList<User> users);
     } */
 
+    private DocumentReference databaseUser;
+    private DocumentReference databaseGroup;
     private CollectionReference databaseUsers;
     private CollectionReference databaseGroups;
 
@@ -57,10 +58,10 @@ public class Database {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    //returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
-    //this can be used with recycler views and will likely be part of how we obtain group membership
-    //this is a template for querying multiple things and can be modified easily
-    /* template
+    /**returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
+    this can be used with recycler views and will likely be part of how we obtain group membership
+    this is a template for querying multiple things and can be modified easily
+     template
     public void queryUser(final Database.DatabaseUsersListener dbListener){
         final ArrayList<User> userList = new ArrayList<>();
         Query userQuery = databaseUsers
@@ -83,10 +84,10 @@ public class Database {
                 }
             }
         });
-    } */
+    }*/
 
-    //query the firestore and return an arraylist of the groups the current user is in
-    //Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible
+    /**query the firestore and return an arraylist of the groups the current user is in
+    Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible*/
     public void queryGroups(final Database.DatabaseGroupsListener dbListener){
         final ArrayList<Group> groupList = new ArrayList<>();
         Query groupQuery = databaseGroups
@@ -146,41 +147,18 @@ public class Database {
         this.databaseGroups.document(group.getGroup_ID()).set(group);
     }
 
-    //creates a new user entry in firestore using the passed in user class
+    //creates a new user entry in firestore. userId is set here.  Other values must be set before calling createGroup.
     public void createUser(User user){
-        this.databaseUsers.add(user);
+        this.databaseUser = FirebaseFirestore.getInstance().collection("Users").document();
+        user.setUserId(databaseUser.getId());
+        databaseGroup.set(user);
     }
 
-    //creates a new group entry in firestore using the passed in group class
+    //creates a new group entry in firestore. group_ID is set here.  Other values must be set before calling createGroup.
     public void createGroup(Group group){
-        this.databaseGroups.add(group);
+        this.databaseGroup = FirebaseFirestore.getInstance().collection("Groups").document();
+        group.setGroup_ID(databaseGroup.getId());
+        databaseGroup.set(group);
     }
-
-
-
-    /*LEGACY CODE BELOW
-    NOT TO BE USED
-
-    public String makeUserKey() {
-        return this.databaseUsers.push().getKey();
-    }
-
-    public String makeGroupKey() {
-        return this.databaseGroups.push().getKey();
-    }
-
-    public void updateUsers(String id, User user) {
-        this.databaseGroups.child(id).setValue(user);
-    }
-
-    public void updateGroups(String id, Group group) {
-        this.databaseGroups.child(id).setValue(group);
-    }
-
-    Code reference for future use:
-        String id = databaseUsers.push().getKey()       this creates a blank entry in firebase and returns its autogen id
-        User user = new User(incoming information);     create a new user to push
-        databaseUsers.child(id).setValue(user);         push information onto the entry with matching id
-    */
 }
 

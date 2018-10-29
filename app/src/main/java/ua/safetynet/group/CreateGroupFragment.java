@@ -83,10 +83,7 @@ public class CreateGroupFragment extends Fragment {
             public void onClick(View v) {
                 //create the database connection
                 Database database = new Database();
-                //create a blank entry and return its id, then create a blank group
-                //String id = database.makeGroupKey();
                 Group group = new Group();
-                //set only the name for now
                 group.setGroup_name(groupName.getText().toString().trim());
                 group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
