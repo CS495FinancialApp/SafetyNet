@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import ua.safetynet.Database;
 import ua.safetynet.R;
 
@@ -86,6 +88,8 @@ public class CreateGroupFragment extends Fragment {
                 Group group = new Group();
                 //set only the name for now
                 group.setGroup_name(groupName.getText().toString().trim());
+                group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 //send the data after getting data from the blanks
                 database.createGroup(group);
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();

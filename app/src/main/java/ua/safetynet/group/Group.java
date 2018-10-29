@@ -28,8 +28,8 @@ public class Group {
     private String Group_name;
     private String Group_ID;
     private Bitmap groupImage;
-    private BigDecimal Funds;
-    private BigDecimal Withdrawal_Limit;
+    private double Funds;
+    private double Withdrawal_Limit;
 
     private ArrayList<String> Withdrawals = new ArrayList<>();
     private ArrayList<String> Admins = new ArrayList<>();
@@ -38,8 +38,8 @@ public class Group {
     public Group() {
         this.Group_name = null;
         this.Group_ID = null;
-        this.Funds = new BigDecimal(0);
-        this.Withdrawal_Limit = new BigDecimal(0);
+        this.Funds = 0;
+        this.Withdrawal_Limit = 50;
 
         this.Withdrawals.clear();
         this.Admins.clear();
@@ -48,7 +48,7 @@ public class Group {
         fetchGroupImage();
     }
 
-    public Group(String group_name,String group_id, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
+    public Group(String group_name,String group_id, double funds, double withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
         this.Group_name = group_name;
         this.Group_ID = group_id;
         this.Funds = funds;
@@ -60,7 +60,7 @@ public class Group {
         fetchGroupImage();
     }
 
-    public Group(String group_name,String group_id, Bitmap groupImage, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
+    public Group(String group_name,String group_id, Bitmap groupImage, double funds, double withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
         this.Group_name = group_name;
         this.Group_ID = group_id;
         this.Funds = funds;
@@ -79,11 +79,11 @@ public class Group {
         return Group_ID;
     }
 
-    public BigDecimal getFunds() {
+    public double getFunds() {
         return this.Funds;
     }
 
-    public BigDecimal getWithdrawal_Limit() {
+    public double getWithdrawal_Limit() {
         return this.Withdrawal_Limit;
     }
 
@@ -107,11 +107,11 @@ public class Group {
         this.Group_ID = group_ID;
     }
 
-    public void setFunds(BigDecimal funds) {
+    public void setFunds(double funds) {
         this.Funds = funds;
     }
 
-    public void setWithdrawal_Limit(BigDecimal withdrawal_Limit) {
+    public void setWithdrawal_Limit(double withdrawal_Limit) {
         this.Withdrawal_Limit = withdrawal_Limit;
     }
 
@@ -148,6 +148,14 @@ public class Group {
                 Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
             }
         });
+    }
+
+    public void addAdmins(String item){
+        this.Admins.add(item);
+    }
+
+    public void addUsers(String item){
+        this.Users.add(item);
     }
 
     public void fetchGroupImage() {
