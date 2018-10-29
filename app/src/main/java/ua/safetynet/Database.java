@@ -115,10 +115,34 @@ public class Database {
         });
     }
 
-    public void queryTransactions(final Database.DatabaseTransactionsListener dbListener){
+    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
                 .whereArrayContains("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Transaction transaction = document.toObject(Transaction.class);
+                        //add Transaction to an arraylist
+                        transactionList.add(transaction);
+                    }
+                    dbListener.onTransactionsRetrieval(transactionList);
+                }
+                else{
+                    //error toast message goes here
+                }
+            }
+        });
+    }
+
+    public void queryGroupTransactions(String Id, final Database.DatabaseTransactionsListener dbListener){
+        final ArrayList<Transaction> transactionList = new ArrayList<>();
+        Query transactionQuery = databaseTransactions
+                .whereArrayContains("groupId", Id);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
