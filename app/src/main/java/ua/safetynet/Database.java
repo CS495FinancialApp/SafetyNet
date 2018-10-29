@@ -24,8 +24,6 @@ package ua.safetynet;
         import ua.safetynet.user.MainPageActivity;
         import ua.safetynet.user.User;
 
-
-
 public class Database {
     public interface DatabaseUserListener {
         void onUserRetrieval(User user);
@@ -37,6 +35,9 @@ public class Database {
     public interface DatabaseGroupsListener {
         void onGroupsRetrieval(ArrayList<Group> groups);
     }
+    public interface DatabaseTransactionsListener {
+        void onTransactionsRetrieval(ArrayList<Transaction> transactions);
+    }
 
     /** template
     public interface DatabaseUsersListener {
@@ -47,10 +48,12 @@ public class Database {
     private DocumentReference databaseGroup;
     private CollectionReference databaseUsers;
     private CollectionReference databaseGroups;
+    private CollectionReference databaseTransactions;
 
     public Database() {
         this.databaseUsers = FirebaseFirestore.getInstance().collection("Users");
         this.databaseGroups = FirebaseFirestore.getInstance().collection("Groups");
+        this.databaseTransactions = FirebaseFirestore.getInstance().collection("Transactions");
     }
 
     //returns the user ID of the user currently logged in to the device (via firebaseAuth)
@@ -61,7 +64,7 @@ public class Database {
     /**returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
     this can be used with recycler views and will likely be part of how we obtain group membership
     this is a template for querying multiple things and can be modified easily
-     template
+     /////////////////////template/////////////////////////////////
     public void queryUser(final Database.DatabaseUsersListener dbListener){
         final ArrayList<User> userList = new ArrayList<>();
         Query userQuery = databaseUsers
@@ -104,6 +107,30 @@ public class Database {
                         groupList.add(group);
                     }
                     dbListener.onGroupsRetrieval(groupList);
+                }
+                else{
+                    //error toast message goes here
+                }
+            }
+        });
+    }
+
+    public void queryTransactions(final Database.DatabaseTransactionsListener dbListener){
+        final ArrayList<Transaction> transactionList = new ArrayList<>();
+        Query transactionQuery = databaseTransactions
+                .whereArrayContains("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Transaction transaction = document.toObject(Transaction.class);
+                        //add Transaction to an arraylist
+                        transactionList.add(transaction);
+                    }
+                    dbListener.onTransactionsRetrieval(transactionList);
                 }
                 else{
                     //error toast message goes here
