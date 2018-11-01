@@ -122,15 +122,15 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         AsyncHttpClient client = new AsyncHttpClient(4567);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
-        client.get(APPENGINEURL + APPENGINETOKEN, params, new TextHttpResponseHandler() {
+        client.get(APPENGINEURL + APPENGINETOKEN, params, new AsyncHttpResponseHandler() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
                 Log.d(TAG,"Failed to fetch client token");
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                clientToken = responseString;
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                clientToken = new String(responseBody);
                 Toast.makeText(getContext(), clientToken,Toast.LENGTH_LONG ).show();
             }
         });
