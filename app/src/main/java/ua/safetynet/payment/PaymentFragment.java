@@ -36,7 +36,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String AMOUNT = "amount";
     private static final String GROUPID = "groupId";
     private static int REQUEST_CODE;
-    private static final String APPENGINEURL = "http://safetynet-f2326.appspot.com/";
+    private static final String APPENGINEURL = "http://192.168.1.200/";
     private static final String APPENGINETOKEN = "client_token";
     private static final String APPENGINETRANS = "checkout";
     private BigDecimal amount;
@@ -117,7 +117,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
 
     private void getClientToken(){
         Toast.makeText(getContext(), "Testing",Toast.LENGTH_LONG ).show();
-        AsyncHttpClient client = new AsyncHttpClient(true,80,443);
+        AsyncHttpClient client = new AsyncHttpClient(true,4567,443);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
         client.get(APPENGINEURL + APPENGINETOKEN, params, new TextHttpResponseHandler() {
