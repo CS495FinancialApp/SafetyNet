@@ -70,7 +70,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     }
     private void setupNavigationDrawer()
     {
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -89,6 +89,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 break;
                             case R.id.nav_logout:
                                 FirebaseAuth.getInstance().signOut();
+                                fragment = new MainViewFragment();
                                 break;
                         }
                         if(fragment != null)
