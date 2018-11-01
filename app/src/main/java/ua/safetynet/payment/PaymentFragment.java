@@ -35,6 +35,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String TAG = "PAYMENT ACTIVITY";
     private static final String AMOUNT = "amount";
     private static final String GROUPID = "groupId";
+    private static final String USERID = "userId";
     private static int REQUEST_CODE;
     private static final String APPENGINEURL = "http://192.168.1.200/";
     private static final String APPENGINETOKEN = "client_token";
@@ -64,7 +65,9 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         if (getArguments() != null) {
             amount = new BigDecimal(getArguments().getDouble(AMOUNT));
             groupId = getArguments().getString(GROUPID);
+            userId = getArguments().getString(USERID);
         }
+        getClientToken();
     }
 
     @Override
@@ -79,7 +82,6 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getClientToken();
                 launchDropIn();
             }
         });
@@ -117,7 +119,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
 
     private void getClientToken(){
         Toast.makeText(getContext(), "Testing",Toast.LENGTH_LONG ).show();
-        AsyncHttpClient client = new AsyncHttpClient(true,4567,443);
+        AsyncHttpClient client = new AsyncHttpClient(4567);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
         client.get(APPENGINEURL + APPENGINETOKEN, params, new TextHttpResponseHandler() {
