@@ -114,11 +114,10 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
 
     private void launchDropIn() {
         DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken);
-        startActivityForResult(dropInRequest.getIntent(getContext()), REQUEST_CODE);
+        startActivityForResult(dropInRequest.getIntent(this.getContext()), REQUEST_CODE);
     }
 
     private void getClientToken(){
-        Toast.makeText(getContext(), "Testing",Toast.LENGTH_LONG ).show();
         AsyncHttpClient client = new AsyncHttpClient(4567);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
@@ -131,7 +130,6 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 clientToken = new String(responseBody);
-                Toast.makeText(getContext(), clientToken,Toast.LENGTH_LONG ).show();
             }
         });
     }
@@ -157,6 +155,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "Returned from Braintree Drop-In");
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
@@ -166,6 +165,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             } else {
                 // handle errors here, an exception may be available in
                 Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d(TAG, error.toString());
             }
         }
     }
