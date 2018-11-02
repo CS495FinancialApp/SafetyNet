@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ua.safetynet.R;
@@ -134,19 +135,22 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         });
     }
     private void createTransaction(PaymentMethodNonce nonce) {
-        AsyncHttpClient client = new AsyncHttpClient(true,80,443);
+        AsyncHttpClient client = new AsyncHttpClient(4567);
         RequestParams params = new RequestParams();
-        params.put("payment_method_nonce", nonce);
+        params.put("payment_method_nonce", nonce.getNonce());
+        TextView amountView= this.getView().findViewById(R.id.payment_amount);
+        amount = new BigDecimal(amountView.getText().toString());
         params.put("amount", amount);
-        client.post(APPENGINEURL + APPENGINETRANS, params, new TextHttpResponseHandler() {
+        client.post(APPENGINEURL + APPENGINETRANS, params, new AsyncHttpResponseHandler() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d(TAG,"Failed to send nonce to server");
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
+                Log.d(TAG,"Failed to send nonce to server. Status Code: " + statusCode);
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                if(responseString != null && responseString.startsWith("created"))
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
+                String responseString = new String(responseBytes);
+                if(responseString.startsWith("created"))
                     Toast.makeText(getContext(),"Transaction Complete", Toast.LENGTH_LONG).show();
             }
         });
