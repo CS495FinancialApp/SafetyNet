@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ua.safetynet.Database;
 import ua.safetynet.R;
 
 import com.braintreepayments.api.dropin.DropInActivity;
@@ -25,6 +26,9 @@ import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -32,8 +36,11 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import ua.safetynet.group.Group;
+import ua.safetynet.user.User;
 
 
 public class PaymentFragment extends Fragment implements PaymentMethodNonceCreatedListener {
@@ -48,11 +55,13 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String SERVERTRANS = "checkout";
     private static final int SERVERPORT = 443;
     private BigDecimal amount= new BigDecimal(0);
-    private String groupId =null;
+    private String groupId = null;
     private String userId = null;
+    private User user = null;
     private String clientToken = null;
     private OnFragmentInteractionListener mListener;
     private EditText amountText;
+    MaterialSpinner spinner;
 
     public PaymentFragment() {
         // Required empty public constructor
@@ -75,6 +84,8 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
         }
+        if(userId == null)
+            userId = FirebaseAuth.getInstance().getUid();
         getClientToken();
     }
 
@@ -91,6 +102,8 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         amountText.setText(formatted);
         //Set onTextChanged Listener for amount Edit text to help with formatting
         setupAmountEditTextListener();
+        //Setup spinner for group list
+        setupGroupSpinner();
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +234,27 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             }
         });
     }
+
+    public void setupGroupSpinner() {
+        spinner = this.getView().findViewById(R.id.payment_group_spinner);
+        Database db = new Database();
+        db.queryGroups(new Database.DatabaseGroupsListener() {
+            @Override
+            public void onGroupsRetrieval(ArrayList<Group> groups) {
+                spinner.setItems(groups);
+            }
+        });
+        if(groupId == null)
+            spinner.setSelected(false);
+        else {
+            //Create group to compare to and set to passed in groupID
+            Group compGroup = new Group();
+            compGroup.setGroup_ID(groupId);
+            int index = spinner.getItems().indexOf(compGroup);
+            spinner.setSelectedIndex(index);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
