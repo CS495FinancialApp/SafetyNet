@@ -38,9 +38,10 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String GROUPID = "groupId";
     private static final String USERID = "userId";
     private static int REQUEST_CODE;
-    private static final String APPENGINEURL = "http://192.168.1.200/";
-    private static final String APPENGINETOKEN = "client_token";
-    private static final String APPENGINETRANS = "checkout";
+    private static final String SERVERURL = "https://safetynet-495.herokuapp.com/";
+    private static final String SERVERTOKEN = "client_token";
+    private static final String SERVERTRANS = "checkout";
+    private static final int SERVERPORT = 443;
     private BigDecimal amount;
     private String groupId = null;
     private String userId = null;
@@ -119,10 +120,10 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     }
 
     private void getClientToken(){
-        AsyncHttpClient client = new AsyncHttpClient(4567);
+        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("userId", userId);
-        client.get(APPENGINEURL + APPENGINETOKEN, params, new AsyncHttpResponseHandler() {
+        client.get(SERVERURL + SERVERTOKEN, params, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
                 Log.d(TAG,"Failed to fetch client token");
@@ -135,13 +136,13 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         });
     }
     private void createTransaction(PaymentMethodNonce nonce) {
-        AsyncHttpClient client = new AsyncHttpClient(4567);
+        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
         TextView amountView= this.getView().findViewById(R.id.payment_amount);
         amount = new BigDecimal(amountView.getText().toString());
         params.put("amount", amount);
-        client.post(APPENGINEURL + APPENGINETRANS, params, new AsyncHttpResponseHandler() {
+        client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
                 Log.d(TAG,"Failed to send nonce to server. Status Code: " + statusCode);
