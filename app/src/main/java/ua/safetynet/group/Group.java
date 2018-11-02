@@ -180,4 +180,14 @@ public class Group {
     public Bitmap getGroupImage() {
         return groupImage;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this)
+            return true;
+        if(!(o instanceof Group))
+            return false;
+        Group grp = (Group)o;
+        return Group_ID.equals(grp.getGroup_ID());
+    }
 }
