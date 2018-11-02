@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +31,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+
 import cz.msebera.android.httpclient.Header;
 
 
@@ -42,11 +47,12 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String SERVERTOKEN = "client_token";
     private static final String SERVERTRANS = "checkout";
     private static final int SERVERPORT = 443;
-    private BigDecimal amount;
-    private String groupId = null;
+    private BigDecimal amount= new BigDecimal(0);
+    private String groupId =null;
     private String userId = null;
     private String clientToken = null;
     private OnFragmentInteractionListener mListener;
+    private EditText amountText;
 
     public PaymentFragment() {
         // Required empty public constructor
@@ -79,8 +85,12 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_payment, container, false);
         Button checkoutButton = view.findViewById(R.id.checkout_button);
-        EditText text = view.findViewById(R.id.payment_amount);
-        //amount = new BigDecimal(Double.parseDouble(text.getText().toString()));
+        //Set amount edittext and set it to initial value;
+        amountText = view.findViewById(R.id.payment_amount);
+        String formatted = NumberFormat.getCurrencyInstance().format(amount);
+        amountText.setText(formatted);
+        //Set onTextChanged Listener for amount Edit text to help with formatting
+        setupAmountEditTextListener();
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,8 +149,6 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
-        TextView amountView= this.getView().findViewById(R.id.payment_amount);
-        amount = new BigDecimal(amountView.getText().toString());
         params.put("amount", amount);
         client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
@@ -178,6 +186,40 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
 
+    }
+
+    public void setupAmountEditTextListener() {
+        amountText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            private String current = "";
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals(current)){
+                    //Throws an error if backspacing with all 0's, check for this and return if so
+                    String emptyTest = s.toString().replaceAll("[^1-9]", "");
+                    if(emptyTest.isEmpty())
+                        return;
+                    amountText.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[^0-9]", "");
+                    BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                    amount = parsed;
+                    String formatted = NumberFormat.getCurrencyInstance().format(parsed);
+                    current = formatted;
+                    amountText.setText(formatted);
+                    amountText.setSelection(formatted.length());
+
+                    amountText.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
     /**
      * This interface must be implemented by activities that contain this
