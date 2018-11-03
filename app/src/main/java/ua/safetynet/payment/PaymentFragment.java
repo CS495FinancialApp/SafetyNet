@@ -51,7 +51,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String USERID = "userId";
     private static int REQUEST_CODE;
     private static final String SERVERURL = "https://safetynet-495.herokuapp.com/";
-    private static final String SERVERTOKEN = "client_token";
+    private static final String SERVERTOKEN = "client_token/";
     private static final String SERVERTRANS = "checkout";
     private static final int SERVERPORT = 443;
     private BigDecimal amount= new BigDecimal(0);
@@ -144,10 +144,8 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     }
 
     private void getClientToken(){
-        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
-        RequestParams params = new RequestParams();
-        params.put("userId", userId);
-        client.get(SERVERURL + SERVERTOKEN, params, new AsyncHttpResponseHandler() {
+        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);;
+        client.get(SERVERURL + SERVERTOKEN + userId, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
                 Log.d(TAG,"Failed to fetch client token");
