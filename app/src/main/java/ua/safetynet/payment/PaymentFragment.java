@@ -161,6 +161,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
+        params.put("groupId", groupId);
         params.put("amount", amount);
         client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
