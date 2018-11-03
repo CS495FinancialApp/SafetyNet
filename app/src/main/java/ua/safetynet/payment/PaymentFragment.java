@@ -103,6 +103,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         //Set onTextChanged Listener for amount Edit text to help with formatting
         setupAmountEditTextListener();
         //Setup spinner for group list
+        spinner = view.findViewById(R.id.payment_group_spinner);
         setupGroupSpinner();
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +237,6 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     }
 
     public void setupGroupSpinner() {
-        spinner = this.getView().findViewById(R.id.payment_group_spinner);
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
