@@ -43,7 +43,13 @@ import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
 
-public class PaymentFragment extends Fragment implements PaymentMethodNonceCreatedListener {
+public class PaymentFragment extends Fragment {
+    //Interface to define callback in which transaction Id will be returned
+    public interface OnPaymentCompleteListener {
+        public void onPaymentComplete(String transactionId);
+    }
+
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "PAYMENT ACTIVITY";
     private static final String AMOUNT = "amount";
@@ -54,14 +60,14 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
     private static final String SERVERTOKEN = "client_token/";
     private static final String SERVERTRANS = "checkout";
     private static final int SERVERPORT = 443;
-    private BigDecimal amount= new BigDecimal(0);
+    private BigDecimal amount = new BigDecimal(0);
     private String groupId = null;
     private String userId = null;
     private User user = null;
     private String clientToken = null;
-    private OnFragmentInteractionListener mListener;
     private EditText amountText;
     MaterialSpinner spinner;
+    OnPaymentCompleteListener mPaymentListener;
 
     public PaymentFragment() {
         // Required empty public constructor
@@ -84,7 +90,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
         }
-        if(userId == null)
+        if (userId == null)
             userId = FirebaseAuth.getInstance().getUid();
         getClientToken();
     }
@@ -94,7 +100,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_payment, container, false);
+        View view = inflater.inflate(R.layout.fragment_payment, container, false);
         Button checkoutButton = view.findViewById(R.id.checkout_button);
         //Set amount edittext and set it to initial value;
         amountText = view.findViewById(R.id.payment_amount);
@@ -114,28 +120,21 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         return view;
     }
 
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnPaymentCompleteListener) {
+            mPaymentListener = (OnPaymentCompleteListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnPaymentCompleteListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mPaymentListener = null;
     }
 
     private void launchDropIn() {
@@ -143,12 +142,13 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         startActivityForResult(dropInRequest.getIntent(this.getContext()), REQUEST_CODE);
     }
 
-    private void getClientToken(){
-        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);;
+    private void getClientToken() {
+        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
+        ;
         client.get(SERVERURL + SERVERTOKEN + userId, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
-                Log.d(TAG,"Failed to fetch client token");
+                Log.d(TAG, "Failed to fetch client token");
             }
 
             @Override
@@ -157,6 +157,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             }
         });
     }
+
     private void createTransaction(PaymentMethodNonce nonce) {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
@@ -166,18 +167,18 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
-                Log.d(TAG,"Failed to send nonce to server. Status Code: " + statusCode);
+                Log.d(TAG, "Failed to send nonce to server. Status Code: " + statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
-                String responseString = new String(responseBytes);
-                if(responseString.startsWith("created"))
-                    Toast.makeText(getContext(),"Transaction Complete", Toast.LENGTH_LONG).show();
+                String transactionId = new String(responseBytes);
+                mPaymentListener.onPaymentComplete(transactionId);
             }
         });
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -196,24 +197,21 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
         }
     }
 
-    @Override
-    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-
-    }
-
     public void setupAmountEditTextListener() {
         amountText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             private String current = "";
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals(current)){
+                if (!s.toString().equals(current)) {
                     //Throws an error if backspacing with all 0's, check for this and return if so
                     String emptyTest = s.toString().replaceAll("[^1-9]", "");
-                    if(emptyTest.isEmpty())
+                    if (emptyTest.isEmpty())
                         return;
                     amountText.removeTextChangedListener(this);
 
@@ -243,7 +241,7 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
                 spinner.setItems(groups);
             }
         });
-        if(groupId == null)
+        if (groupId == null)
             spinner.setSelected(false);
         else {
             //Create group to compare to and set to passed in groupID
@@ -252,20 +250,5 @@ public class PaymentFragment extends Fragment implements PaymentMethodNonceCreat
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
