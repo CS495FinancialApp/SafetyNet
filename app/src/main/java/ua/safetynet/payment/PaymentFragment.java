@@ -170,6 +170,8 @@ public class PaymentFragment extends Fragment {
         params.put("groupId", groupId);
         params.put("amount", amount);
         params.put("userId",userId);
+        params.put("email", user.getEmail());
+        params.put("name", user.getName());
         client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
