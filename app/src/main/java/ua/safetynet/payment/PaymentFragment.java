@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -96,7 +97,14 @@ public class PaymentFragment extends Fragment {
             userId = FirebaseAuth.getInstance().getUid();
             Log.d(TAG, "Getting Uid from firebase." + userId);
         }
-
+        //Get user obj from firestore
+        Database db = new Database();
+        db.getUser(userId, new Database.DatabaseUserListener() {
+                    @Override
+                    public void onUserRetrieval(User user) {
+                        updateUser(user);
+                    }
+                });
         getClientToken();
     }
 
@@ -271,5 +279,9 @@ public class PaymentFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    private void updateUser(User user) {
+        this.user = user;
     }
 }
