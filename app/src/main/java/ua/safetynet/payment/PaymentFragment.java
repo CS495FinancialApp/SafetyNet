@@ -119,7 +119,8 @@ public class PaymentFragment extends Fragment {
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchDropIn();
+                if(checkInputs())
+                    launchDropIn();
             }
         });
         return view;
@@ -255,5 +256,18 @@ public class PaymentFragment extends Fragment {
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
+    }
+
+    private boolean checkInputs() {
+        if(amount.equals(new BigDecimal(0))) {
+            Toast.makeText(getContext(),"Please enter amount", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(!spinner.hasSelection()) {
+            Toast.makeText(getContext(), "Please enter group", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
