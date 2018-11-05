@@ -92,8 +92,11 @@ public class PaymentFragment extends Fragment {
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
         }
-        if (userId == null)
+        if (userId == null) {
             userId = FirebaseAuth.getInstance().getUid();
+            Log.d(TAG, "Getting Uid from firebase." + userId);
+        }
+
         getClientToken();
     }
 
@@ -140,51 +143,8 @@ public class PaymentFragment extends Fragment {
     }
 
     private void launchDropIn() {
-        //Check for last used payment method, ask if they want to use that first
-        DropInResult.fetchDropInResult(getActivity(), clientToken, new DropInResult.DropInResultListener() {
-            @Override
-            public void onError(Exception exception) {
-                Log.d(TAG, "Could not fetch last used payment method");
-            }
-
-            @Override
-            public void onResult(DropInResult result) {
-                if (result.getPaymentMethodType() != null) {
-                    // use the icon and name to show in your UI
-                    int icon = result.getPaymentMethodType().getDrawable();
-                    int name = result.getPaymentMethodType().getLocalizedName();
-
-                    //Create dialog box to ask if they want to use last payment method
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(name).setIcon(icon).setTitle(R.string.payment_last_used_dialog_title);
-                    final DropInResult finDropInResult = result;
-                    builder.setPositiveButton(R.string.payment_last_used_yes_btn, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            createTransaction(finDropInResult.getPaymentMethodNonce());
-                        }
-                    });
-                    builder.setNegativeButton(R.string.payment_last_used_no_btn, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken);
-                            startActivityForResult(dropInRequest.getIntent(getContext()), REQUEST_CODE);
-                        }
-                    });
-
-                    // show the payment method in your UI and charge the user at the
-                    // time of checkout using the nonce: paymentMethod.getNonce()
-                    PaymentMethodNonce paymentMethod = result.getPaymentMethodNonce();
-                }
-                else {
-                    DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken);
-                    startActivityForResult(dropInRequest.getIntent(getContext()), REQUEST_CODE);
-                }
-            }
-        });
-        //DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken);
-        //startActivityForResult(dropInRequest.getIntent(this.getContext()), REQUEST_CODE);
+        DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken).vaultManager(true);
+        startActivityForResult(dropInRequest.getIntent(this.getContext()), REQUEST_CODE);
     }
 
     private void getClientToken() {
@@ -208,6 +168,7 @@ public class PaymentFragment extends Fragment {
         params.put("payment_method_nonce", nonce.getNonce());
         params.put("groupId", groupId);
         params.put("amount", amount);
+        params.put("userId",userId);
         client.post(SERVERURL + SERVERTRANS, params, new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
