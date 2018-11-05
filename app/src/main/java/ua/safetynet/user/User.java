@@ -184,6 +184,7 @@ public class User
         user.setName(map.get("name").toString());
         user.setEmail(map.get("email").toString());
 
+        @SuppressWarnings("unchecked")
         Map<String, String> transMap = (Map<String, String>)map.get("transactions");
         ArrayList<String> trans = new ArrayList<>();
         for(Integer i = 0; ; i++) {
@@ -194,6 +195,7 @@ public class User
         }
         user.setTransactions(trans);
 
+        @SuppressWarnings("unchecked")
         Map<String, String> groupsMap = (Map<String, String>)map.get("groups");
         ArrayList<String> groups = new ArrayList<>();
         for(Integer i = 0; ; i++) {

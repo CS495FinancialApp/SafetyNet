@@ -84,7 +84,7 @@ public class CreateGroupFragment extends Fragment {
                 //create the database connection
                 Database database = new Database();
                 Group group = new Group();
-                group.setGroup_name(groupName.getText().toString().trim());
+                group.setName(groupName.getText().toString().trim());
                 group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 //send the data after getting data from the blanks

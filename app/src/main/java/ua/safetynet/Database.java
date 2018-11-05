@@ -1,13 +1,10 @@
 package ua.safetynet;
 
         import android.support.annotation.NonNull;
-        import android.widget.Toast;
 
         import com.google.android.gms.tasks.OnCompleteListener;
         import com.google.android.gms.tasks.OnSuccessListener;
         import com.google.android.gms.tasks.Task;
-        import com.google.api.Context;
-        import com.google.firebase.FirebaseApp;
         import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.firestore.CollectionReference;
         import com.google.firebase.firestore.DocumentReference;
@@ -19,9 +16,7 @@ package ua.safetynet;
 
         import java.util.ArrayList;
 
-        import ua.safetynet.group.CreateGroupFragment;
         import ua.safetynet.group.Group;
-        import ua.safetynet.user.MainPageActivity;
         import ua.safetynet.user.User;
 
 public class Database {
@@ -195,7 +190,7 @@ public class Database {
 
     //updates a group's data in firestore using a given group class
     public void setGroup(Group group){
-        this.databaseGroups.document(group.getGroup_ID()).set(group);
+        this.databaseGroups.document(group.getGroupId()).set(group);
     }
 
     //creates a new user entry in firestore. userId is set here.  Other values must be set before calling createGroup.
@@ -208,7 +203,7 @@ public class Database {
     //creates a new group entry in firestore. group_ID is set here.  Other values must be set before calling createGroup.
     public void createGroup(Group group){
         this.databaseGroup = FirebaseFirestore.getInstance().collection("Groups").document();
-        group.setGroup_ID(databaseGroup.getId());
+        group.setGroupId(databaseGroup.getId());
         databaseGroup.set(group);
     }
 }

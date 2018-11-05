@@ -15,9 +15,9 @@ public class GroupTest {
     @Before
     public void makeUser() {
         group = new Group();
-        group.setGroup_ID("123456789");
-        group.setGroup_name("John Doe");
-        group.setWithdrawal_Limit(new BigDecimal(20));
+        group.setGroupId("123456789");
+        group.setName("John Doe");
+        group.setWithdrawalLimit(new BigDecimal(20));
         group.setFunds(new BigDecimal(150));
         ArrayList<String> trans = new ArrayList<String>();
         trans.add("1");
@@ -39,10 +39,10 @@ public class GroupTest {
     public void testToFromMap() {
         Map<String, Object> map = group.toMap();
         Group mapGroup= Group.fromMap(map);
-        Assert.assertEquals(group.getGroup_ID(), mapGroup.getGroup_ID());
-        Assert.assertEquals(group.getGroup_name(), mapGroup.getGroup_name());
+        Assert.assertEquals(group.getGroupId(), mapGroup.getGroupId());
+        Assert.assertEquals(group.getName(), mapGroup.getName());
         Assert.assertEquals(group.getFunds(), mapGroup.getFunds());
-        Assert.assertEquals(group.getWithdrawal_Limit(), mapGroup.getWithdrawal_Limit());
+        Assert.assertEquals(group.getWithdrawalLimit(), mapGroup.getWithdrawalLimit());
         Assert.assertEquals(group.getWithdrawals(), mapGroup.getWithdrawals());
         Assert.assertEquals(group.getUsers(), mapGroup.getUsers());
         Assert.assertEquals(group.getAdmins(), mapGroup.getAdmins());
