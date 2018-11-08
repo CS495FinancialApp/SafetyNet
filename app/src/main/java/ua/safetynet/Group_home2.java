@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import ua.safetynet.group.Group;
 
 public class Group_home2 extends AppCompatActivity {
 
@@ -47,7 +50,7 @@ public class Group_home2 extends AppCompatActivity {
         if(getIntent().hasExtra("group_balance")){
             TextView balance = findViewById(R.id.textViewGroupBalance);
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-            Double groupBalance = getIntent().getDoubleExtra("group_balance", 0.00);
+            BigDecimal groupBalance = (BigDecimal) getIntent().getSerializableExtra("group_balance");
 
             balance.setText("Balance: " + format.format(groupBalance));
         }

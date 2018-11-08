@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.security.AccessController;
 import java.text.NumberFormat;
@@ -60,7 +61,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         final Group group = groupList.get(position);
         holder.mPicture.setImageBitmap(group.getGroupImage());
         holder.mGroupName.setText(group.getGroup_name());
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         holder.mAmount.setText(format.format(group.getFunds()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
