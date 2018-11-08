@@ -15,6 +15,7 @@ package ua.safetynet;
         import com.google.firebase.firestore.QuerySnapshot;
 
         import java.util.ArrayList;
+        import java.util.Map;
 
         import ua.safetynet.group.Group;
         import ua.safetynet.user.User;
@@ -89,7 +90,7 @@ public class Database {
     public void queryGroups(final Database.DatabaseGroupsListener dbListener){
         final ArrayList<Group> groupList = new ArrayList<>();
         Query groupQuery = databaseGroups
-                .whereArrayContains("Users", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .whereArrayContains("members", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -98,7 +99,7 @@ public class Database {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Group group = document.toObject(Group.class);
-                        //add user to an arraylist
+                        //add group to an arraylist
                         groupList.add(group);
                     }
                     dbListener.onGroupsRetrieval(groupList);
@@ -204,7 +205,9 @@ public class Database {
     public void createGroup(Group group){
         this.databaseGroup = FirebaseFirestore.getInstance().collection("Groups").document();
         group.setGroupId(databaseGroup.getId());
-        databaseGroup.set(group);
+        Map<String, Object> map = group.toMap();
+        databaseGroup.set(map);
     }
+
 }
 

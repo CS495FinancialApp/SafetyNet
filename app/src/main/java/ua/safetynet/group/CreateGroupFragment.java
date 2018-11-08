@@ -77,7 +77,7 @@ public class CreateGroupFragment extends Fragment {
         Button bttn_Create_Group = (Button) rootView.findViewById(R.id.bttn_Create_Group);
         //text box for group name
         final EditText groupName = (EditText) rootView.findViewById(R.id.txtGroupName);
-        //group submition button listener
+        //group submission button listener
         bttn_Create_Group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
