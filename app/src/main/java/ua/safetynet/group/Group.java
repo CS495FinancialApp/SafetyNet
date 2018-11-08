@@ -219,6 +219,7 @@ public class Group {
      map.put("admins",adminMap);
      **/
 
+    @SuppressWarnings("unchecked")
     public static Group fromMap(Map<String, Object> map) {
         Group group = new Group();
         group.setGroupId(map.get("groupId").toString());
@@ -226,7 +227,7 @@ public class Group {
         group.setFunds(new BigDecimal(map.get("funds").toString()));
         group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
         group.setAdmins((ArrayList<String>) map.get("admins"));
-        group.setUsers((ArrayList<String>) map.get("admins"));
+        group.setUsers((ArrayList<String>) map.get("users"));
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
         return group;
     }
