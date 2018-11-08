@@ -17,7 +17,7 @@ public class Withdrawal extends AppCompatActivity {
 
         final EditText dollarField = (EditText) findViewById(R.id.editWithdrawalAmount);
 
-        dollarField.addTextChangedListener(new TextWatcher() {
+        /*dollarField.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 dollarField.setText("$" + dollarField.getText().toString());
@@ -26,6 +26,6 @@ public class Withdrawal extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        });
+        });*/
     }
 }
