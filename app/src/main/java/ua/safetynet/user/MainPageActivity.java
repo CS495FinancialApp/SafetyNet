@@ -23,7 +23,7 @@ import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
