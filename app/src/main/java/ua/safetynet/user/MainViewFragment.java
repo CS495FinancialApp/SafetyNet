@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
@@ -155,16 +156,25 @@ public class MainViewFragment extends Fragment {
         Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
         Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
         Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_rent);
-        Group group1 = new Group("Work Fundraiser", "1", bmp1 , 45, 20, null,null,null);
-        Group group2 = new Group("Johnson Family", "2", bmp2 , 305.52, 100, null,null,null);
-        Group group3 = new Group("Roomates!", "3", bmp3 , 234.89, 25, null,null,null);
+        Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
+        Group group2 = new Group("Johnson Family", "2", bmp2 , new BigDecimal(305.52), new BigDecimal(100), null,null,null);
+        Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
         groupList = new ArrayList<Group>();
+        Database db = new Database();
+        db.queryGroups(new Database.DatabaseGroupsListener() {
+            @Override
+            public void onGroupsRetrieval(ArrayList<Group> groups) {
+                groupList = groups;
+            }
+        });
+        /*
         Group[] tmpList = {group1,group2,group3};
         groupList.addAll(Arrays.asList(tmpList));
         groupList.addAll(Arrays.asList(tmpList));
         groupList.addAll(Arrays.asList(tmpList));
         groupList.add(group2);
         groupList.add(group3);
+        */
     }
 
 }
