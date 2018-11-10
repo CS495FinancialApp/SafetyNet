@@ -4,10 +4,29 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.BaseJsonHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xml.sax.Parser;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+
+import cz.msebera.android.httpclient.Header;
 import ua.safetynet.R;
 
 /**
@@ -19,15 +38,17 @@ import ua.safetynet.R;
  * create an instance of this fragment.
  */
 public class PayoutFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private static final String TAG = "PAYOUT FRAGMENT";
+    private static final String AMOUNT = "amount";
+    private static final String GROUPID = "groupId";
+    private static final String USERID = "userId";
+    private static final int APIPORT = 443;
+    private static final String APIBASEURL = "https://api.sandbox.paypal.com/";
+    private static final String APITOKENURL = "v1/oauth2/token";
+    private String clientToken = null;
+    private BigDecimal amount = new BigDecimal(0);
+    private String groupId;
+    private EditText amountText;
     private OnFragmentInteractionListener mListener;
 
     public PayoutFragment() {
@@ -38,16 +59,15 @@ public class PayoutFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param amount Parameter 1.
+     * @param groupId Parameter 2.
      * @return A new instance of fragment PayoutFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PayoutFragment newInstance(String param1, String param2) {
+    public static PayoutFragment newInstance(BigDecimal amount, String groupId) {
         PayoutFragment fragment = new PayoutFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(AMOUNT, amount.toString());
+        args.putString(GROUPID, groupId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,9 +75,10 @@ public class PayoutFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getClientToken();
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            amount = new BigDecimal(getArguments().getString(AMOUNT));
+            groupId = getArguments().getString(GROUPID);
         }
     }
 
@@ -65,7 +86,22 @@ public class PayoutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_payout, container, false);
+        View view =  inflater.inflate(R.layout.fragment_payout, container, false);
+        amountText = view.findViewById(R.id.payout_amount_text);
+        setupAmountEditTextListener();
+        //Set amount edittext and set it to initial value;
+        amountText = view.findViewById(R.id.payment_amount);
+        String formatted = NumberFormat.getCurrencyInstance().format(amount);
+        amountText.setText(formatted);
+        //Setup withdraw button listener
+        Button withdrawButton = view.findViewById(R.id.payout_withdrawal_btn);
+        withdrawButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeWithdrawal();
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,6 +128,68 @@ public class PayoutFragment extends Fragment {
         mListener = null;
     }
 
+    public void setupAmountEditTextListener() {
+        amountText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            private String current = "";
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    //Throws an error if backspacing with all 0's, check for this and return if so
+                    String emptyTest = s.toString().replaceAll("[^1-9]", "");
+                    if (emptyTest.isEmpty())
+                        return;
+                    amountText.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[^0-9]", "");
+                    BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                    amount = parsed;
+                    String formatted = NumberFormat.getCurrencyInstance().format(parsed);
+                    current = formatted;
+                    amountText.setText(formatted);
+                    amountText.setSelection(formatted.length());
+
+                    amountText.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void makeWithdrawal() {
+
+    }
+
+    private void getClientToken() {
+        String clientId = getString(R.string.paypal_client_id);
+        String secret = getString(R.string.paypal_secret);
+        AsyncHttpClient client = new AsyncHttpClient(APIPORT);
+        client.setBasicAuth(clientId, secret);
+        RequestParams params = new RequestParams();
+        params.put("grant_type", "client_credentials");
+        client.get(APIBASEURL + APITOKENURL,params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    clientToken = response.getString("access_token");
+                    Log.d(TAG, "Fetched client token");
+                }
+                catch (JSONException e){ Log.d(TAG, "Could not parse client token xml data");}
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                Log.d(TAG,"Could not fetch client token");
+            }
+        });
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
