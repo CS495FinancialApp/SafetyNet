@@ -15,7 +15,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:ems="10"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:text="Amount"/>
 
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/payout_group_spinner"

@@ -87,12 +87,11 @@ public class PayoutFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_payout, container, false);
-        amountText = view.findViewById(R.id.payout_amount_text);
-        setupAmountEditTextListener();
         //Set amount edittext and set it to initial value;
-        amountText = view.findViewById(R.id.payment_amount);
+        amountText = view.findViewById(R.id.payout_amount_text);
         String formatted = NumberFormat.getCurrencyInstance().format(amount);
         amountText.setText(formatted);
+        setupAmountEditTextListener();
         //Setup withdraw button listener
         Button withdrawButton = view.findViewById(R.id.payout_withdrawal_btn);
         withdrawButton.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +184,7 @@ public class PayoutFragment extends Fragment {
                 catch (JSONException e){ Log.d(TAG, "Could not parse client token xml data");}
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
                 Log.d(TAG,"Could not fetch client token");
             }
         });
