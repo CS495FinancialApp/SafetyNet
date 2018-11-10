@@ -230,6 +230,18 @@ public class Group {
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
         return group;
     }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this)
+            return true;
+        if(!(o instanceof Group))
+            return false;
+        Group grp = (Group)o;
+        return Group_ID.equals(grp.getGroup_ID());
+    }
+
         /*
         @SuppressWarnings("unchecked")
         Map<String, String> transMap = (Map<String, String>) map.get("transactions");
@@ -262,4 +274,5 @@ public class Group {
         }
         group.setAdmins(admins);
         */
+
 }

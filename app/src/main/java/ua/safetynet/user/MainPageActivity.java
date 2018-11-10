@@ -22,7 +22,7 @@ import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -133,7 +133,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onPaymentComplete(String transactionId) {
 
     }
-
 }

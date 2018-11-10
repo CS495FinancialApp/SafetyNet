@@ -21,6 +21,9 @@
 
     <string name="payment_test_response">Response</string>
     <string name="payment_test_button">Make Request</string>
+    <string name="payment_last_used_dialog_title">Use last payment method?</string>
+    <string name="payment_last_used_yes_btn">Yes, Use this</string>
+    <string name="payment_last_used_no_btn">No</string>
 
     <string name="confirm">Confirm</string>
     <string name="amount">Dollar Amount</string>
