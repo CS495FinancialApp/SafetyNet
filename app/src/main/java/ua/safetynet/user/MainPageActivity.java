@@ -21,6 +21,7 @@ import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
+import ua.safetynet.payment.PayoutFragment;
 
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener
 {
@@ -86,6 +87,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 break;
                             case R.id.nav_payment:
                                 fragment = new PaymentFragment();
+                                break;
+                            case R.id.nav_payout:
+                                fragment = new PayoutFragment();
                                 break;
                             case R.id.nav_logout:
                                 FirebaseAuth.getInstance().signOut();

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SafetyNet</string>
     <string name="sign_out_button">Sign out</string>
@@ -9,6 +10,7 @@
     <string name="menu_drawer_groups">Groups</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="menu_drawer_payment">Payment</string>
+    <string name="menu_drawer_payout">Payout</string>
     <string name="main_nav_header">SafetyNet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
