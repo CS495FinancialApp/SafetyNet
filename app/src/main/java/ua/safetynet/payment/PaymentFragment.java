@@ -262,7 +262,7 @@ public class PaymentFragment extends Fragment {
         else {
             //Create group to compare to and set to passed in groupID
             Group compGroup = new Group();
-            compGroup.setGroup_ID(groupId);
+            compGroup.setGroupId(groupId);
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
