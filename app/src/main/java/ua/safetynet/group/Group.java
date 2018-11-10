@@ -239,7 +239,7 @@ public class Group {
         if(!(o instanceof Group))
             return false;
         Group grp = (Group)o;
-        return Group_ID.equals(grp.getGroup_ID());
+        return groupId.equals(grp.getGroupId());
     }
 
         /*
