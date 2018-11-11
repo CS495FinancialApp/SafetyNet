@@ -57,34 +57,6 @@ public class Database {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    /**returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
-    this can be used with recycler views and will likely be part of how we obtain group membership
-    this is a template for querying multiple things and can be modified easily
-     /////////////////////template/////////////////////////////////
-    public void queryUser(final Database.DatabaseUsersListener dbListener){
-        final ArrayList<User> userList = new ArrayList<>();
-        Query userQuery = databaseUsers
-                .whereEqualTo("userID", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        User user = document.toObject(User.class);
-                        //add user to an arraylist
-                        userList.add(user);
-                    }
-                    dbListener.onUsersRetrieval(userList);
-                }
-                else{
-                    //error toast message goes here
-                }
-            }
-        });
-    }*/
-
     /**query the firestore and return an arraylist of the groups the current user is in
     Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible*/
     public void queryGroups(final Database.DatabaseGroupsListener dbListener){
@@ -113,10 +85,15 @@ public class Database {
         });
     }
 
-    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener){
+    /**Query firestore and return the currently logged in user's transactions for the provided groupId
+    !!!FOR JAKE!!! The groupId can be claimed using the getGroupId function on the group class.
+    Pass it as a parameter to this function.
+    */
+    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
-                .whereArrayContains("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereEqualTo("groupId", groupId);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -124,7 +101,8 @@ public class Database {
                 if(task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Transaction transaction = document.toObject(Transaction.class);
+                        Transaction transaction = new Transaction();
+                        transaction = transaction.fromMap(document.getData());
                         //add Transaction to an arraylist
                         transactionList.add(transaction);
                     }
