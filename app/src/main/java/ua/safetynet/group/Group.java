@@ -39,8 +39,6 @@ public class Group {
         this.withdrawals.clear();
         this.admins.clear();
         this.users.clear();
-
-        //fetchGroupImage();
     }
 
     public Group(String group_name,String group_id, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
@@ -63,8 +61,8 @@ public class Group {
         this.withdrawals = withdrawals;
         this.admins = admins;
         this.users = users;
-        this.image = groupImage;
-        fetchGroupImage();
+        this.setImage(groupImage);
+
     }
 
     public String getName() {
