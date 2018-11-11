@@ -3,7 +3,11 @@ package ua.safetynet;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class Transaction {
@@ -11,19 +15,19 @@ public class Transaction {
     private String transId;
     private String userId;
     private String groupId;
-    private double funds;
-    private @ServerTimestamp Date timestamp;
+    private BigDecimal funds;
+    private String timestamp;
 
     public Transaction() {
         this.transId = null;
         this.userId = null;
         this.groupId = null;
-        this.funds = 0;
+        this.funds = new BigDecimal(0);
         this.timestamp = null;
     }
 
     public String getTransId() {
-        return transId;
+        return this.transId;
     }
 
     public void setTransId(String transId) {
@@ -31,7 +35,7 @@ public class Transaction {
     }
 
     public String getUserId() {
-        return userId;
+        return this.userId;
     }
 
     public void setUserId(String userId) {
@@ -39,27 +43,46 @@ public class Transaction {
     }
 
     public String getGroupId() {
-        return groupId;
+        return this.groupId;
     }
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
-    public double getFunds() {
-        return funds;
+    public BigDecimal getFunds() {
+        return this.funds;
     }
 
-    public void setFunds(double funds) {
+    public void setFunds(BigDecimal funds) {
         this.funds = funds;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public String getTimestamp() {
+        return this.timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("transId", this.transId);
+        map.put("userId", this.userId);
+        map.put("groupId",this.groupId);
+        map.put("funds", this.funds.toString());
+        map.put("timestamp", this.timestamp);
+        return map;
+    }
+
+    public static Transaction fromMap(Map<String, Object> map) {
+        Transaction transaction = new Transaction();
+        transaction.setTransId(map.get("transId").toString());
+        transaction.setUserId(map.get("userId").toString());
+        transaction.setGroupId(map.get("groupId").toString());
+        transaction.setFunds(new BigDecimal(map.get("funds").toString()));
+        transaction.setTimestamp(map.get("timestamp").toString());
+        return transaction;
+    }
 }
