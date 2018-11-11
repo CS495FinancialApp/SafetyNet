@@ -66,20 +66,22 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
+    //The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("transId", this.transId);
-        map.put("userId", this.userId);
+        map.put("userid", this.userId);
         map.put("groupId",this.groupId);
         map.put("funds", this.funds.toString());
         map.put("timestamp", this.timestamp);
         return map;
     }
 
+    //The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
     public static Transaction fromMap(Map<String, Object> map) {
         Transaction transaction = new Transaction();
         transaction.setTransId(map.get("transId").toString());
-        transaction.setUserId(map.get("userId").toString());
+        transaction.setUserId(map.get("userid").toString());
         transaction.setGroupId(map.get("groupId").toString());
         transaction.setFunds(new BigDecimal(map.get("funds").toString()));
         transaction.setTimestamp(map.get("timestamp").toString());

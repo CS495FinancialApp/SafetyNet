@@ -87,13 +87,14 @@ public class Database {
 
     /**
      * returns all the transactions for the currently logged in user in a specific group
+     * The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
      * @param dbListener
      * @param groupId
      */
     public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
-                .whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereEqualTo("userid", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .whereEqualTo("groupId", groupId);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
