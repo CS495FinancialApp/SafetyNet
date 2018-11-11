@@ -85,10 +85,11 @@ public class Database {
         });
     }
 
-    /**Query firestore and return the currently logged in user's transactions for the provided groupId
-    !!!FOR JAKE!!! The groupId can be claimed using the getGroupId function on the group class.
-    Pass it as a parameter to this function.
-    */
+    /**
+     * returns all the transactions for the currently logged in user in a specific group
+     * @param dbListener
+     * @param groupId
+     */
     public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
@@ -115,6 +116,11 @@ public class Database {
         });
     }
 
+    /**
+     * returns all transactions for a specific group, regardless of the user involved.
+     * @param Id
+     * @param dbListener
+     */
     public void queryGroupTransactions(String Id, final Database.DatabaseTransactionsListener dbListener){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
@@ -158,7 +164,8 @@ public class Database {
         databaseGroups.document(groupID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Group group = documentSnapshot.toObject(Group.class);
+                Group group = new Group();
+                group = group.fromMap(documentSnapshot.getData());
                 dbListener.onGroupRetrieval(group);
             }
         });
