@@ -3,23 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".payment.PaymentFragment">
+    tools:context=".payment.PayoutFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/payment_amount"
+        android:id="@+id/payout_amount_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="80dp"
         android:ems="10"
         android:inputType="numberDecimal"
-        android:text="Amount" />
+        android:text="Amount"/>
 
     <com.jaredrummler.materialspinner.MaterialSpinner
-        android:id="@+id/payment_group_spinner"
+        android:id="@+id/payout_group_spinner"
         android:layout_width="212dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -27,11 +27,19 @@
         android:layout_marginTop="130dp" />
 
     <Button
-        android:id="@+id/checkout_button"
+        android:id="@+id/payout_withdrawal_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/group_withdrawal" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="199dp"
-        android:text="Checkout" />
+        android:layout_marginTop="15dp"
+        android:text="Make a Withdrawal"
+        android:textSize="18sp" />
+
 </RelativeLayout>

@@ -41,8 +41,6 @@ public class Group {
         this.withdrawals.clear();
         this.admins.clear();
         this.users.clear();
-
-        //fetchGroupImage();
     }
 
     public Group(String group_name,String group_id, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
@@ -65,8 +63,8 @@ public class Group {
         this.withdrawals = withdrawals;
         this.admins = admins;
         this.users = users;
-        this.image = groupImage;
-        fetchGroupImage();
+        this.setImage(groupImage);
+
     }
 
     public String getName() {
@@ -243,6 +241,18 @@ public class Group {
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
         return group;
     }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this)
+            return true;
+        if(!(o instanceof Group))
+            return false;
+        Group grp = (Group)o;
+        return groupId.equals(grp.getGroupId());
+    }
+
         /*
         @SuppressWarnings("unchecked")
         Map<String, String> transMap = (Map<String, String>) map.get("transactions");
@@ -275,4 +285,5 @@ public class Group {
         }
         group.setAdmins(admins);
         */
+
 }
