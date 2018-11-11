@@ -98,7 +98,9 @@ public class Database {
                 if(task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Group group = document.toObject(Group.class);
+                        Group group = new Group();
+                        group = group.fromMap(document.getData());
+                        //Group group = document.toObject(Group.class);
                         //add group to an arraylist
                         groupList.add(group);
                     }
