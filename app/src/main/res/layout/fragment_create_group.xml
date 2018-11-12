@@ -19,17 +19,6 @@
         android:inputType="textPersonName"
         android:text="@string/groupName" />
 
-    <EditText
-        android:id="@+id/txtGroupID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="76dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/accountID" />
-
     <Button
         android:id="@+id/bttn_Create_Group"
         android:layout_width="wrap_content"
@@ -38,28 +27,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="82dp"
         android:text="@string/createGroupButton" />
-
-    <EditText
-        android:id="@+id/txtGroupPW"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/txtGroupName"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="139dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="@string/accountPW" />
-
-    <EditText
-        android:id="@+id/txtGroupPW2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/txtGroupName"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="207dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="@string/accountPW" />
 
 </RelativeLayout>
