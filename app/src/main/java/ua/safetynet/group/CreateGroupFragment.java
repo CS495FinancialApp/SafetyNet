@@ -77,19 +77,33 @@ public class CreateGroupFragment extends Fragment {
         Button bttn_Create_Group = (Button) rootView.findViewById(R.id.bttn_Create_Group);
         //text box for group name
         final EditText groupName = (EditText) rootView.findViewById(R.id.txtGroupName);
+        final EditText paypalID = (EditText) rootView.findViewById(R.id.txtGroupID);
+        final EditText paypalPW = (EditText) rootView.findViewById(R.id.txtGroupPW);
+        final EditText paypalPW2 = (EditText) rootView.findViewById(R.id.txtGroupPW2);
         //group submission button listener
         bttn_Create_Group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //create the database connection
-                Database database = new Database();
-                Group group = new Group();
-                group.setName(groupName.getText().toString().trim());
-                group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                //send the data after getting data from the blanks
-                database.createGroup(group);
-                Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
+                if (paypalID.getText().toString().equals("") || paypalPW.getText().toString().equals("") || paypalPW2.getText().toString().equals("") || groupName.getText().toString().equals("")){
+                    Toast.makeText(getActivity(), "All fields must be filled", Toast.LENGTH_LONG).show();
+                }
+                else if (paypalPW.getText().toString().equals(paypalPW2.getText().toString())){
+                    Database database = new Database();
+                    Group group = new Group();
+                    group.setName(groupName.getText().toString().trim());
+                    group.setPaypalId(paypalID.getText().toString().trim());
+                    group.setPaypalPw(paypalPW.getText().toString().trim());
+                    group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    //send the data after getting data from the blanks
+                    database.createGroup(group);
+                    Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getActivity(), "Paypal passwords must match.", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         return rootView;

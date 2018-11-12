@@ -21,6 +21,8 @@ public class Group {
 
     private String name;
     private String groupId;
+    private String paypalId;
+    private String paypalPw;
     private int repaymentTime;
     private Bitmap image;
     private BigDecimal funds;
@@ -35,6 +37,8 @@ public class Group {
     public Group() {
         this.name = null;
         this.groupId = null;
+        this.paypalId = null;
+        this.paypalPw = null;
         this.repaymentTime = 10;
         this.funds = new BigDecimal(0);
         this.withdrawalLimit = new BigDecimal(50);
@@ -75,6 +79,14 @@ public class Group {
         return this.groupId;
     }
 
+    public String getPaypalId() {
+        return paypalId;
+    }
+
+    public String getPaypalPw() {
+        return paypalPw;
+    }
+
     public int getRepaymentTime() {
         return this.repaymentTime;
     }
@@ -105,6 +117,14 @@ public class Group {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public void setPaypalId(String paypalId) {
+        this.paypalId = paypalId;
+    }
+
+    public void setPaypalPw(String paypalPw) {
+        this.paypalPw = paypalPw;
     }
 
     public void setRepaymentTime(int repaymentTime) {
@@ -198,6 +218,8 @@ public class Group {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId",this.groupId);
         map.put("name", this.name);
+        map.put("paypalId", this.paypalId);
+        map.put("paypalPw", this.paypalPw);
         map.put("repaymentTime", Integer.toString(this.repaymentTime));
         map.put("funds", this.funds.toString());
         map.put("limit", this.withdrawalLimit.toString());
@@ -236,6 +258,8 @@ public class Group {
         Group group = new Group();
         group.setGroupId((String)map.get("groupId"));
         group.setName((String)map.get("name"));
+        group.setPaypalId((String)map.get("paypalId"));
+        group.setPaypalPw((String)map.get("paypalPw"));
         group.setRepaymentTime(Integer.valueOf((String)map.get("repaymentTime")));
         group.setFunds(new BigDecimal(map.get("funds").toString()));
         group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
