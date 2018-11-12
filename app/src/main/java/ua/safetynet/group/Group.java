@@ -233,7 +233,7 @@ public class Group {
         Group group = new Group();
         group.setGroupId(map.get("groupId").toString());
         group.setName(map.get("name").toString());
-        group.setRepaymentTime((Integer) map.get("repaymentTime"));
+        group.setRepaymentTime(new Integer((Long)map.get("repaymentTime")));
         group.setFunds(new BigDecimal(map.get("funds").toString()));
         group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
         group.setAdmins((ArrayList<String>) map.get("admins"));
