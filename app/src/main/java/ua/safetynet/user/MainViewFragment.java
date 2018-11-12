@@ -105,9 +105,7 @@ public class MainViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         makeGroupList();
-        // specify an adapter (see also next example)
-        mAdapter = new GroupRecyclerAdapter(groupList);
-        mRecyclerView.setAdapter(mAdapter);
+
 
         // Inflate the layout for this fragment
         return rootView;
@@ -167,5 +165,10 @@ public class MainViewFragment extends Fragment {
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 Log.d("MAIN FRAGMENT", groups.toString());
                 groupList = groups;
+                // specify an adapter (see also next example)
+                mAdapter = new GroupRecyclerAdapter(groupList);
+                mRecyclerView.setAdapter(mAdapter);
             }
-        });       /*       Group[] tmpList = {group1,group2,group3};        groupList.addAll(Arrays.asList(tmpList));        groupList.addAll(Arrays.asList(tmpList));        groupList.addAll(Arrays.asList(tmpList));        groupList.add(group2);        groupList.add(group3);        */    }}
+        });
+    }
+}
