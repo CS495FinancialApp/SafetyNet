@@ -19,6 +19,7 @@ public class GroupTest {
         group.setName("John Doe");
         group.setWithdrawalLimit(new BigDecimal(20));
         group.setFunds(new BigDecimal(150));
+        group.setRepaymentTime(10);
         ArrayList<String> trans = new ArrayList<String>();
         trans.add("1");
         trans.add("2");
@@ -42,6 +43,7 @@ public class GroupTest {
         Assert.assertEquals(group.getGroupId(), mapGroup.getGroupId());
         Assert.assertEquals(group.getName(), mapGroup.getName());
         Assert.assertEquals(group.getFunds(), mapGroup.getFunds());
+        Assert.assertEquals(group.getRepaymentTime(), mapGroup.getRepaymentTime());
         Assert.assertEquals(group.getWithdrawalLimit(), mapGroup.getWithdrawalLimit());
         Assert.assertEquals(group.getWithdrawals(), mapGroup.getWithdrawals());
         Assert.assertEquals(group.getUsers(), mapGroup.getUsers());

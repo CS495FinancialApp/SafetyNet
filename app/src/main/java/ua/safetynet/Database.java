@@ -57,34 +57,6 @@ public class Database {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    /**returns a list of all users from the user collection (technically will only ever find one) whose FirebaseAuthentication ID matches the collection's userID
-    this can be used with recycler views and will likely be part of how we obtain group membership
-    this is a template for querying multiple things and can be modified easily
-     /////////////////////template/////////////////////////////////
-    public void queryUser(final Database.DatabaseUsersListener dbListener){
-        final ArrayList<User> userList = new ArrayList<>();
-        Query userQuery = databaseUsers
-                .whereEqualTo("userID", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        User user = document.toObject(User.class);
-                        //add user to an arraylist
-                        userList.add(user);
-                    }
-                    dbListener.onUsersRetrieval(userList);
-                }
-                else{
-                    //error toast message goes here
-                }
-            }
-        });
-    }*/
-
     /**query the firestore and return an arraylist of the groups the current user is in
     Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible*/
     public void queryGroups(final Database.DatabaseGroupsListener dbListener){
@@ -98,7 +70,9 @@ public class Database {
                 if(task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Group group = document.toObject(Group.class);
+                        Group group = new Group();
+                        group = group.fromMap(document.getData());
+                        //Group group = document.toObject(Group.class);
                         //add group to an arraylist
                         groupList.add(group);
                     }
@@ -111,10 +85,17 @@ public class Database {
         });
     }
 
-    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener){
+    /**
+     * returns all the transactions for the currently logged in user in a specific group
+     * The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
+     * @param dbListener
+     * @param groupId
+     */
+    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
-                .whereArrayContains("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .whereEqualTo("userid", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereEqualTo("groupId", groupId);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -122,7 +103,8 @@ public class Database {
                 if(task.isSuccessful()) {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Transaction transaction = document.toObject(Transaction.class);
+                        Transaction transaction = new Transaction();
+                        transaction = transaction.fromMap(document.getData());
                         //add Transaction to an arraylist
                         transactionList.add(transaction);
                     }
@@ -135,6 +117,11 @@ public class Database {
         });
     }
 
+    /**
+     * returns all transactions for a specific group, regardless of the user involved.
+     * @param Id
+     * @param dbListener
+     */
     public void queryGroupTransactions(String Id, final Database.DatabaseTransactionsListener dbListener){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
@@ -178,7 +165,8 @@ public class Database {
         databaseGroups.document(groupID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Group group = documentSnapshot.toObject(Group.class);
+                Group group = new Group();
+                group = group.fromMap(documentSnapshot.getData());
                 dbListener.onGroupRetrieval(group);
             }
         });

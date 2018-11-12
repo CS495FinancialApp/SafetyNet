@@ -21,6 +21,7 @@ public class Group {
 
     private String name;
     private String groupId;
+    private int repaymentTime;
     private Bitmap image;
     private BigDecimal funds;
     private BigDecimal withdrawalLimit;
@@ -34,6 +35,7 @@ public class Group {
     public Group() {
         this.name = null;
         this.groupId = null;
+        this.repaymentTime = 10;
         this.funds = new BigDecimal(0);
         this.withdrawalLimit = new BigDecimal(50);
         this.withdrawals.clear();
@@ -73,6 +75,10 @@ public class Group {
         return this.groupId;
     }
 
+    public int getRepaymentTime() {
+        return this.repaymentTime;
+    }
+
     public BigDecimal getFunds() {
         return this.funds;
     }
@@ -99,6 +105,10 @@ public class Group {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public void setRepaymentTime(int repaymentTime) {
+        this.repaymentTime = repaymentTime;
     }
 
     public void setFunds(BigDecimal funds) {
@@ -185,6 +195,7 @@ public class Group {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId",this.groupId);
         map.put("name", this.name);
+        map.put("repaymentTime", this.repaymentTime);
         map.put("funds", this.funds.toString());
         map.put("limit", this.withdrawalLimit.toString());
         map.put("users", this.users);
@@ -217,14 +228,16 @@ public class Group {
      map.put("admins",adminMap);
      **/
 
+    @SuppressWarnings("unchecked")
     public static Group fromMap(Map<String, Object> map) {
         Group group = new Group();
         group.setGroupId(map.get("groupId").toString());
         group.setName(map.get("name").toString());
+        group.setRepaymentTime((Integer) map.get("repaymentTime"));
         group.setFunds(new BigDecimal(map.get("funds").toString()));
         group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
         group.setAdmins((ArrayList<String>) map.get("admins"));
-        group.setUsers((ArrayList<String>) map.get("admins"));
+        group.setUsers((ArrayList<String>) map.get("users"));
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
         return group;
     }
