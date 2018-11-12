@@ -64,6 +64,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         holder.mAmount.setText(format.format(group.getFunds()));
 
+        //Goes to Group_home2 Activity on click and passes appropriate group name and balance
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

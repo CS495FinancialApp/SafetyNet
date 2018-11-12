@@ -32,6 +32,7 @@ public class Deposit extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });*/
 
+        //Goes to UserTransactionHistory Activity
         historyButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent historyIntent = new Intent(Deposit.this, UserTransactionHistory.class);

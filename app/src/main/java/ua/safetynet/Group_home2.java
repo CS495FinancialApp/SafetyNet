@@ -26,6 +26,7 @@ public class Group_home2 extends AppCompatActivity {
         Button depositButton = (Button) findViewById(R.id.buttonGroupDeposit);
         Button historyButton = (Button) findViewById(R.id.buttonGroupHistory);
 
+        //Goes to Withdrawal Activity
         withdrawalButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent withdrawalIntent = new Intent(Group_home2.this, Withdrawal.class);
@@ -33,6 +34,7 @@ public class Group_home2 extends AppCompatActivity {
             }
         });
 
+        //Goes to Deposit Activity
         depositButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent depositIntent = new Intent(Group_home2.this, Deposit.class);
@@ -40,6 +42,7 @@ public class Group_home2 extends AppCompatActivity {
             }
         });
 
+        //Goes to GroupTransactionHistory Activity
         historyButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent historyIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
@@ -49,6 +52,7 @@ public class Group_home2 extends AppCompatActivity {
         });
     }
 
+    //Function recieves data from intent passed from Group_home2
      private void getIncomingIntent(){
         if(getIntent().hasExtra("group_name")) {
             TextView name = findViewById(R.id.textViewGroupName);
