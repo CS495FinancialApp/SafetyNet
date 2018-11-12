@@ -20,13 +20,15 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.Parser;
 
+
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.text.ParsePosition;
+
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import ua.safetynet.R;
 
 /**
@@ -171,21 +173,25 @@ public class PayoutFragment extends Fragment {
         String clientId = getString(R.string.paypal_client_id);
         String secret = getString(R.string.paypal_secret);
         AsyncHttpClient client = new AsyncHttpClient(APIPORT);
+        client.setAuthenticationPreemptive(true);
         client.setBasicAuth(clientId, secret);
+        client.addHeader("content-type", "application/x-www-form-urlencoded");
         RequestParams params = new RequestParams();
         params.put("grant_type", "client_credentials");
-        client.get(APIBASEURL + APITOKENURL,params, new JsonHttpResponseHandler() {
+        client.post(APIBASEURL + APITOKENURL,params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     clientToken = response.getString("access_token");
                     Log.d(TAG, "Fetched client token");
+                } catch (JSONException e) {
+                    Log.d(TAG, "Could not parse client token xml data");
                 }
-                catch (JSONException e){ Log.d(TAG, "Could not parse client token xml data");}
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
-                Log.d(TAG,"Could not fetch client token");
+                Log.d(TAG, "Could not fetch client token" + t.toString() + json.toString());
             }
         });
     }

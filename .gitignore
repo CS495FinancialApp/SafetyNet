@@ -65,3 +65,5 @@ fastlane/test_output
 fastlane/readme.md
 
 app/src/main/res/values/secrets\.xml
+
+\.DS_Store
