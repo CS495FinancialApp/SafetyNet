@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -25,11 +26,14 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import ua.safetynet.Database;
 import ua.safetynet.R;
+import ua.safetynet.group.Group;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +55,7 @@ public class PayoutFragment extends Fragment {
     private BigDecimal amount = new BigDecimal(0);
     private String groupId;
     private EditText amountText;
+    private MaterialSpinner spinner;
     private OnFragmentInteractionListener mListener;
 
     public PayoutFragment() {
@@ -102,6 +107,8 @@ public class PayoutFragment extends Fragment {
                 makeWithdrawal();
             }
         });
+        spinner = view.findViewById(R.id.payout_group_spinner);
+        setupGroupSpinner();
         return view;
     }
 
@@ -194,6 +201,29 @@ public class PayoutFragment extends Fragment {
                 Log.d(TAG, "Could not fetch client token" + t.toString() + json.toString());
             }
         });
+    }
+
+    public void setupGroupSpinner() {
+        Database db = new Database();
+        db.queryGroups(new Database.DatabaseGroupsListener() {
+            @Override
+            public void onGroupsRetrieval(ArrayList<Group> groups) {
+                ArrayList<String> groupsNames = new ArrayList<>();
+                for(Group g : groups) {
+                    groupsNames.add(g.getName());
+                }
+                spinner.setItems(groupsNames);
+            }
+        });
+        if (groupId == null)
+            spinner.setSelected(false);
+        else {
+            //Create group to compare to and set to passed in groupID
+            Group compGroup = new Group();
+            compGroup.setGroupId(groupId);
+            int index = spinner.getItems().indexOf(compGroup);
+            spinner.setSelectedIndex(index);
+        }
     }
     /**
      * This interface must be implemented by activities that contain this

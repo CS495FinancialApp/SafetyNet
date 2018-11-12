@@ -254,7 +254,11 @@ public class PaymentFragment extends Fragment {
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                spinner.setItems(groups);
+                ArrayList<String> groupsNames = new ArrayList<>();
+                for(Group g : groups) {
+                    groupsNames.add(g.getName());
+                }
+                spinner.setItems(groupsNames);
             }
         });
         if (groupId == null)
