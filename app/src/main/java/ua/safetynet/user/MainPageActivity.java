@@ -98,7 +98,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                         }
                         if(fragment != null)
                         {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
