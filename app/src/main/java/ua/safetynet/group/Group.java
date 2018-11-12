@@ -132,26 +132,28 @@ public class Group {
     }
 
     public void setImage(Bitmap image) {
-        this.image = image;
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroupId() + ".jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+        if(image != null) {
+            this.image = image;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference groupImageRef = storageRef.child("groupimages/" + getGroupId() + ".jpg");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = groupImageRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Group", "Couldnt upload picture");
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
-            }
-        });
+            UploadTask uploadTask = groupImageRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Group", "Couldnt upload picture");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
+                }
+            });
+        }
     }
 
     public void addAdmins(String item){
@@ -175,12 +177,13 @@ public class Group {
         groupImageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                setImage(BitmapFactory.decodeByteArray(bytes, 0 , bytes.length));
+                image = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+                setImage(image);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Group","Couldn't fetch group image "+e.toString());
+                Log.d("Group","Couldn't fetch group image " +e.getMessage());
             }
         });
     }
