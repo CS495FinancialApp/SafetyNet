@@ -23,6 +23,11 @@ import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
 
+/**
+ * Main activity our app opens into
+ * Sets up the toolbar and navigation drawer. Menu views are delegated to fragments which are placed into a container
+ * in the activities layout
+ */
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener
 {
 
@@ -32,6 +37,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    /**
+     * Checks if the user is signed in or not onStart. Launches sign in flow if they aren't
+     */
     @Override
     protected void onStart()
     {
@@ -69,6 +77,11 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
 
     }
+
+    /**
+     * Setup navigation drawer onclicklistener. Creates fragment of selected menu and replaces the main menu fragment with it
+     * Adds fragment to stack so you can use back button
+     */
     private void setupNavigationDrawer()
     {
         final NavigationView navigationView = findViewById(R.id.nav_view);
@@ -106,6 +119,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 }
         );
     }
+
+    /**
+     * Sets up the app toolbar
+     */
     private void setupDrawerToggle()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);

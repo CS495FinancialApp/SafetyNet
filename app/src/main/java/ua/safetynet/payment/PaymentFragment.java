@@ -1,3 +1,9 @@
+/***
+ * @author Jeremy McCormick
+ * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
+ * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
+ * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
+ */
 package ua.safetynet.payment;
 
 import android.app.Activity;
@@ -79,17 +85,23 @@ public class PaymentFragment extends Fragment {
     public static PaymentFragment newInstance(BigDecimal amount, String groupId) {
         PaymentFragment fragment = new PaymentFragment();
         Bundle args = new Bundle();
-        args.putDouble(AMOUNT, amount.doubleValue());
+        args.putString(AMOUNT, amount.toPlainString());
         args.putString(GROUPID, groupId);
         fragment.setArguments(args);
         return fragment;
     }
 
+    /***
+     * OnCreate method can accept the groupId of the group being deposited into and the
+     * amount as a string as well. Uses these to prepopulate the values themselves and the
+     * UI
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            amount = new BigDecimal(getArguments().getDouble(AMOUNT));
+            amount = new BigDecimal(getArguments().getString(AMOUNT));
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
         }
@@ -108,6 +120,13 @@ public class PaymentFragment extends Fragment {
         getClientToken();
     }
 
+    /**
+     * Sets up the view. Formats the amount text, sets up the spinner and the button onClick
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -151,11 +170,18 @@ public class PaymentFragment extends Fragment {
         mPaymentListener = null;
     }
 
+    /**
+     * Once the client token has been retrieved, we can launch the Braintree Drop in UI to get payment method nonce
+     */
     private void launchDropIn() {
         DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken).vaultManager(true);
         startActivityForResult(dropInRequest.getIntent(this.getContext()), REQUEST_CODE);
     }
 
+    /**
+     * Uses HTTP library to make call to server to fetch client token. Passes userId to server
+     * so Braintree can treat them as a returning customer
+     */
     private void getClientToken() {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         client.get(SERVERURL + SERVERTOKEN + userId, new AsyncHttpResponseHandler() {
@@ -171,6 +197,12 @@ public class PaymentFragment extends Fragment {
         });
     }
 
+    /**
+     * Creates the actual transaction once we have recieved a payment method nonce from drop in UI
+     * Sends the user and group ID to server for logging with the transaction.
+     * Calls onPaymentComplete Listener with transaction data if successful
+     * @param nonce Payment method nonce
+     */
     private void createTransaction(PaymentMethodNonce nonce) {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
@@ -195,6 +227,13 @@ public class PaymentFragment extends Fragment {
 
     }
 
+    /**
+     * Handles return from Braintree DropIn UI. Gets the payment method nonce from the response and
+     * calls createTransaction with it
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -213,6 +252,10 @@ public class PaymentFragment extends Fragment {
         }
     }
 
+    /**
+     * Adds text changed listener to amount text box. Formats it in a money style with digits shifting down
+     * as you enter them
+     */
     public void setupAmountEditTextListener() {
         amountText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -249,6 +292,9 @@ public class PaymentFragment extends Fragment {
         });
     }
 
+    /**
+     * Populates the group selection spinner
+     */
     public void setupGroupSpinner() {
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
@@ -272,6 +318,10 @@ public class PaymentFragment extends Fragment {
         }
     }
 
+    /**
+     * Checks inputs to make sure they are correct, throws a toasts if not.
+     * @return
+     */
     private boolean checkInputs() {
         if(amount.equals(new BigDecimal(0))) {
             Toast.makeText(getContext(),"Please enter amount", Toast.LENGTH_SHORT).show();
@@ -285,6 +335,10 @@ public class PaymentFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Helper to update user inside an asynch listener
+     * @param user
+     */
     private void updateUser(User user) {
         this.user = user;
     }

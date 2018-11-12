@@ -28,6 +28,11 @@ import ua.safetynet.R;
 
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
+/**
+ * @author Jeremy McCormick
+ * Adapter for group to list it in recylcer view with its image, name, and balance
+ * Uses Firebase Storage UI and Glide libraries to populate image
+ */
 public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdapter.ViewHolder> {
     private List<Group> groupList;
 
@@ -58,6 +63,13 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+
+    /**
+     * Replace contents of a view with groups values. Binds image view to
+     * groups image storage reference in Firebase
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position

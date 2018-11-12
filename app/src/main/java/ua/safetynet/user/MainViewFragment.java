@@ -32,12 +32,8 @@ import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MainViewFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MainViewFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * @author Jeremy McCormick
+ * Main menu fragment with recycler view of groups user is in and display of outstanding balance
  */
 public class MainViewFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -150,6 +146,10 @@ public class MainViewFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /**
+     * Setup the group recycler view by getting list of groups user is in from database and populating
+     * it with that list.
+     */
     private void makeGroupList() {
         Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
         Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);

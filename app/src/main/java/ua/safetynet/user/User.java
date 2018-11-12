@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Jeremy McCormick
+ * User class to hold data related to user and their groups
+ */
 public class User
 {
     private String userId;
@@ -99,13 +103,28 @@ public class User
     public void setGroups(ArrayList<String> groups) {
         this.groups = groups;
     }
+
+    /**
+     * Sets the local object image to the new one as well as uploading the new image to Firebase storage
+     * @param image
+     */
     public void setImage(Bitmap image) {
         this.storeImageLocal(image);
         this.storeImageFirebase(image);
     }
+
+    /**
+     * Just updates the local image object
+     * @param image
+     */
     private void storeImageLocal(Bitmap image) {
         this.userImage = image;
     }
+
+    /**
+     * Overwrites the image associated with the userID in Firebase Storage to the new image passed in
+     * @param image
+     */
     private void storeImageFirebase(Bitmap image) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -127,6 +146,10 @@ public class User
             }
         });
     }
+
+    /**
+     * Fetches the user image asscoiated with the userID and saves to the local image object
+     */
     public void fetchImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -146,6 +169,11 @@ public class User
         });
     }
 
+    /**
+     * Returns the image for the user
+     * If the local image is null, fetch it from firebase storage
+     * @return
+     */
     public Bitmap getImage() {
         if(this.userImage == null)
             this.fetchImage();
@@ -178,6 +206,12 @@ public class User
         return map;
     }
 
+    /**
+     * Creates and returns a user object based on the pass in map.
+     * Must follow the keys name and structure in toMap
+     * @param map map of user data
+     * @return new user object from passed in map
+     */
     public static User fromMap(Map<String, Object> map) {
         User user = new User();
         user.setUserId(map.get("userId").toString());

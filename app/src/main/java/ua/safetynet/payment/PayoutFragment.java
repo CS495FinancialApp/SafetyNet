@@ -36,12 +36,9 @@ import ua.safetynet.R;
 import ua.safetynet.group.Group;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PayoutFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PayoutFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * @author Jeremy McCormick
+ * Payout Fragment to facilitate withdrawals from group funds. Uses PayPal Payouts. Can
+ * be sent to corresponding paypal with either email or phone #
  */
 public class PayoutFragment extends Fragment {
     private static final String TAG = "PAYOUT FRAGMENT";
@@ -66,8 +63,8 @@ public class PayoutFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param amount Parameter 1.
-     * @param groupId Parameter 2.
+     * @param amount Big Decimal as amount
+     * @param groupId
      * @return A new instance of fragment PayoutFragment.
      */
     public static PayoutFragment newInstance(BigDecimal amount, String groupId) {
@@ -79,6 +76,10 @@ public class PayoutFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Accepts amount and groupId in the bundle to prefill UI components and their values
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +90,14 @@ public class PayoutFragment extends Fragment {
         }
     }
 
+    /**
+     * Sets up the fragment view. Formats amount text box, sets up button listener and sets up
+     * group spinner
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -136,6 +145,10 @@ public class PayoutFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * Adds text changed listener to amount text box. Formats it in a money style with digits shifting down
+     * as you enter them
+     */
     public void setupAmountEditTextListener() {
         amountText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -176,6 +189,10 @@ public class PayoutFragment extends Fragment {
 
     }
 
+    /**
+     * Gets client token from PayPal Payouts REST API. Uses clientId and secret stored in secrets.xml
+     *
+     */
     private void getClientToken() {
         String clientId = getString(R.string.paypal_client_id);
         String secret = getString(R.string.paypal_secret);
@@ -203,6 +220,9 @@ public class PayoutFragment extends Fragment {
         });
     }
 
+    /**
+     * Populates the group selection spinner
+     */
     public void setupGroupSpinner() {
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
