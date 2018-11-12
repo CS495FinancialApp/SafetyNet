@@ -195,7 +195,7 @@ public class Group {
         Map<String, Object> map = new HashMap<>();
         map.put("groupId",this.groupId);
         map.put("name", this.name);
-        map.put("repaymentTime", this.repaymentTime);
+        map.put("repaymentTime", Integer.toString(this.repaymentTime));
         map.put("funds", this.funds.toString());
         map.put("limit", this.withdrawalLimit.toString());
         map.put("users", this.users);
@@ -231,9 +231,9 @@ public class Group {
     @SuppressWarnings("unchecked")
     public static Group fromMap(Map<String, Object> map) {
         Group group = new Group();
-        group.setGroupId(map.get("groupId").toString());
-        group.setName(map.get("name").toString());
-        group.setRepaymentTime(new Integer((Long)map.get("repaymentTime")));
+        group.setGroupId((String)map.get("groupId"));
+        group.setName((String)map.get("name"));
+        group.setRepaymentTime(Integer.valueOf((String)map.get("repaymentTime")));
         group.setFunds(new BigDecimal(map.get("funds").toString()));
         group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
         group.setAdmins((ArrayList<String>) map.get("admins"));
