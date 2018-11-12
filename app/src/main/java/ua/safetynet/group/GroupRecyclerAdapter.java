@@ -1,5 +1,6 @@
 package ua.safetynet.group;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,12 +9,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.request.RequestOptions;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
 import ua.safetynet.Group_home2;
 import ua.safetynet.R;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdapter.ViewHolder> {
     private List<Group> groupList;
@@ -51,6 +64,11 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         // - replace the contents of the view with that element
         final Group group = groupList.get(position);
         holder.mPicture.setImageBitmap(group.getImage());
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference groupImageRef = storageRef.child("groupimages/" + group.getGroupId() + ".jpg");
+        Glide.with(holder.itemView).load(groupImageRef).apply(new RequestOptions()).into(holder.mPicture);
+
         holder.mGroupName.setText(group.getName());
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         holder.mAmount.setText(format.format(group.getFunds()));
@@ -70,6 +88,5 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
     public int getItemCount() {
         return groupList.size();
     }
-
-
 }
+
