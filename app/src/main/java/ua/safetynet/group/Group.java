@@ -169,9 +169,9 @@ public class Group {
     public void fetchGroupImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference groupImageRef = storageRef.child("groupimages/"+ getGroupId() + ".jpg");
+        StorageReference groupImageRef = storageRef.child("groupimages/"+ this.getGroupId() + ".jpg");
         final long ONE_MEGABYTE = 1024 * 1024;
-
+        Log.d("GROUP",this.groupId);
         groupImageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -239,6 +239,7 @@ public class Group {
         group.setAdmins((ArrayList<String>) map.get("admins"));
         group.setUsers((ArrayList<String>) map.get("users"));
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
+        group.fetchGroupImage();
         return group;
     }
 
