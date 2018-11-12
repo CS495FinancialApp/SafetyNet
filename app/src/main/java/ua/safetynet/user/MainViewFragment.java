@@ -161,20 +161,9 @@ public class MainViewFragment extends Fragment {
         Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
         groupList = new ArrayList<Group>();
         Database db = new Database();
-        db.queryGroups(new Database.DatabaseGroupsListener() {
+        /*db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 groupList = groups;
             }
-        });
-        /*
-        Group[] tmpList = {group1,group2,group3};
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.addAll(Arrays.asList(tmpList));
-        groupList.add(group2);
-        groupList.add(group3);
-        */
-    }
-
-}
+        });*/        /*       Group[] tmpList = {group1,group2,group3};        groupList.addAll(Arrays.asList(tmpList));        groupList.addAll(Arrays.asList(tmpList));        groupList.addAll(Arrays.asList(tmpList));        groupList.add(group2);        groupList.add(group3);        */    }}
