@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import ua.safetynet.group.Group;
+import ua.safetynet.user.User;
 
 public class Group_home2 extends AppCompatActivity {
 
@@ -22,28 +23,19 @@ public class Group_home2 extends AppCompatActivity {
 
         getIncomingIntent();
 
-        Button withdrawalButton = (Button) findViewById(R.id.buttonGroupWithdrawal);
-        Button depositButton = (Button) findViewById(R.id.buttonGroupDeposit);
-        Button historyButton = (Button) findViewById(R.id.buttonGroupHistory);
+        Button userHistory = (Button) findViewById(R.id.buttonUserHistory);
+        Button groupHistory = (Button) findViewById(R.id.buttonGroupHistory);
 
-        //Goes to Withdrawal Activity
-        withdrawalButton.setOnClickListener(new View.OnClickListener() {
+        //Goes to UserTransactionHistory Activity
+        userHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent withdrawalIntent = new Intent(Group_home2.this, Withdrawal.class);
-                startActivity(withdrawalIntent);
-            }
-        });
-
-        //Goes to Deposit Activity
-        depositButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent depositIntent = new Intent(Group_home2.this, Deposit.class);
+                Intent depositIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
                 startActivity(depositIntent);
             }
         });
 
         //Goes to GroupTransactionHistory Activity
-        historyButton.setOnClickListener(new View.OnClickListener() {
+        groupHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent historyIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
                 //Need to pass group for transaction history

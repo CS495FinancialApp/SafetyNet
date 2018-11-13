@@ -7,27 +7,29 @@
     tools:context=".Group_home2">
 
     <Button
-        android:id="@+id/buttonGroupWithdrawal"
+        android:id="@+id/buttonGroupHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="134dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginBottom="56dp"
-        android:text="@string/group_withdrawal"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGroupDeposit"
+        android:layout_marginStart="103dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="60dp"
+        android:text="@string/group_history"
+        app:layout_constraintBottom_toTopOf="@+id/buttonUserHistory"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonGroupDeposit"
+        android:id="@+id/buttonUserHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginEnd="148dp"
-        android:layout_marginBottom="189dp"
-        android:text="@string/group_deposit"
+        android:layout_marginStart="91dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginBottom="140dp"
+        android:text="@string/user_history"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -58,15 +60,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewGroupName" />
 
-    <Button
-        android:id="@+id/buttonGroupHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="103dp"
-        android:layout_marginEnd="102dp"
-        android:layout_marginBottom="13dp"
-        android:text="@string/group_history"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
