@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
@@ -53,6 +54,11 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
             //User isnt signed in, launch sign in activity
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
+        User user = new User();
+        user.setName(firebaseUser.getDisplayName());
+        user.setEmail(firebaseUser.getEmail());
+        Database db = new Database();
+        db.setUser(user);
 
     }
 
