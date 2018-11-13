@@ -55,6 +55,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
             startActivity(new Intent(this, FirebaseAuthActivity.class));
         }
         User user = new User();
+        user.setUserId(firebaseUser.getUid());
         user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
         Database db = new Database();
