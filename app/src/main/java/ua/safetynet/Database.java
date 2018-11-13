@@ -153,10 +153,10 @@ public class Database {
      * @param dbListener Listener is called when Firebase returns with the User object. Passes the user object as a parameter
      */
     public void getUser(String userId, final Database.DatabaseUserListener dbListener) {
-        databaseUsers.document("userId").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        databaseUsers.document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
+                User user = User.fromMap(documentSnapshot.getData());
                 dbListener.onUserRetrieval(user);
             }
         });
@@ -167,7 +167,7 @@ public class Database {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Group group = new Group();
-                group = group.fromMap(documentSnapshot.getData());
+                group = Group.fromMap(documentSnapshot.getData());
                 dbListener.onGroupRetrieval(group);
             }
         });
