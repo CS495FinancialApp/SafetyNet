@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -21,34 +23,51 @@ public class Group_home2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_home2);
 
-        getIncomingIntent();
+        //getIncomingIntent();
 
         Button userHistory = (Button) findViewById(R.id.buttonUserHistory);
         Button groupHistory = (Button) findViewById(R.id.buttonGroupHistory);
+        final TextView name = findViewById(R.id.textViewGroupName);
+        final TextView balance = findViewById(R.id.textViewGroupBalance);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
+        final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
+
+        Database db = new Database();
+
+        db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
+            @Override
+            public void onGroupRetrieval(Group group) {
+                name.setText(group.getName());
+                balance.setText("Balance: " + format.format(group.getFunds()));
+                UserIntent.putExtra("group_ID", group.getGroupId());
+                GroupIntent.putExtra("group_ID", group.getGroupId());
+            }
+        });
 
         //Goes to UserTransactionHistory Activity
         userHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent depositIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
-                startActivity(depositIntent);
+                startActivity(UserIntent);
             }
         });
 
         //Goes to GroupTransactionHistory Activity
         groupHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent historyIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
-                //Need to pass group for transaction history
-                startActivity(historyIntent);
+                startActivity(GroupIntent);
             }
         });
     }
 
+/**
     //Function recieves data from intent passed from Group_home2
      private void getIncomingIntent(){
         if(getIntent().hasExtra("group_name")) {
             TextView name = findViewById(R.id.textViewGroupName);
             String groupName = getIntent().getStringExtra("group_name");
+
+            Database db = new Database();
 
             name.setText(groupName);
         }
@@ -59,5 +78,5 @@ public class Group_home2 extends AppCompatActivity {
 
             balance.setText("Balance: " + format.format(groupBalance));
         }
-    }
+    }**/
 }
