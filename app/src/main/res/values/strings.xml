@@ -37,6 +37,9 @@
     <string name="group_deposit">Deposit</string>
     <string name="welcome_message">Welcome to SafetyNet!</string>
     <string name="group_balance">Group Balance</string>
+    <string name="group_history">Group Transactions</string>
+    <string name="user_history">Personal Transactions</string>
+    <string name="user_ID">User ID</string>
 
 
     <string name="confirm2">Confirm</string>
