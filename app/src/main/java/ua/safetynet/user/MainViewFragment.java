@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,23 +153,19 @@ public class MainViewFragment extends Fragment {
      * it with that list.
      */
     private void makeGroupList() {
-        Bitmap bmp1 = BitmapFactory.decodeResource(getResources(), R.drawable.test_tux);
-        Bitmap bmp2 = BitmapFactory.decodeResource(getResources(), R.drawable.test_brain);
-        Bitmap bmp3 = BitmapFactory.decodeResource(getResources(), R.drawable.test_rent);
-        Group group1 = new Group("Work Fundraiser", "1", bmp1 , new BigDecimal(45), new BigDecimal(20), null,null,null);
-        Group group2 = new Group("Johnson Family", "2", bmp2 , new BigDecimal(305.52), new BigDecimal(100), null,null,null);
-        Group group3 = new Group("Roomates!", "3", bmp3 , new BigDecimal(234.89), new BigDecimal(25), null,null,null);
-        groupList = new ArrayList<Group>();
-        Database db = new Database();
-        db.queryGroups(new Database.DatabaseGroupsListener() {
-            @Override
-            public void onGroupsRetrieval(ArrayList<Group> groups) {
-                Log.d("MAIN FRAGMENT", groups.toString());
-                groupList = groups;
-                // specify an adapter (see also next example)
-                mAdapter = new GroupRecyclerAdapter(groupList);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-        });
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            groupList = new ArrayList<Group>();
+            Database db = new Database();
+            db.queryGroups(new Database.DatabaseGroupsListener() {
+                @Override
+                public void onGroupsRetrieval(ArrayList<Group> groups) {
+                    Log.d("MAIN FRAGMENT", groups.toString());
+                    groupList = groups;
+                    // specify an adapter (see also next example)
+                    mAdapter = new GroupRecyclerAdapter(groupList);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            });
+        }
     }
 }

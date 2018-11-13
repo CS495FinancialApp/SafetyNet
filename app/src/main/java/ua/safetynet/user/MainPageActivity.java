@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
@@ -37,7 +40,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private static final int RCSIGNIN = 123;
     /**
      * Checks if the user is signed in or not onStart. Launches sign in flow if they aren't
      */
@@ -52,17 +55,24 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
-            startActivity(new Intent(this, FirebaseAuthActivity.class));
+            startActivityForResult(new Intent(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(Arrays.asList(
+                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                    .setIsSmartLockEnabled(false)
+                    .build()),RCSIGNIN);
         }
-        User user = new User();
-        user.setUserId(firebaseUser.getUid());
-        user.setName(firebaseUser.getDisplayName());
-        user.setEmail(firebaseUser.getEmail());
-        Database db = new Database();
-        db.setUser(user);
-
+        else  {
+            User user = new User();
+            user.setUserId(firebaseUser.getUid());
+            user.setName(firebaseUser.getDisplayName());
+            user.setEmail(firebaseUser.getEmail());
+            Database db = new Database();
+            db.setUser(user);
+        }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
