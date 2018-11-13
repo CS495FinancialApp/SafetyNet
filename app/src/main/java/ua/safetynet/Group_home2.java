@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import ua.safetynet.group.Group;
 
 public class Group_home2 extends AppCompatActivity {
 
@@ -21,7 +24,9 @@ public class Group_home2 extends AppCompatActivity {
 
         Button withdrawalButton = (Button) findViewById(R.id.buttonGroupWithdrawal);
         Button depositButton = (Button) findViewById(R.id.buttonGroupDeposit);
+        Button historyButton = (Button) findViewById(R.id.buttonGroupHistory);
 
+        //Goes to Withdrawal Activity
         withdrawalButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent withdrawalIntent = new Intent(Group_home2.this, Withdrawal.class);
@@ -29,14 +34,25 @@ public class Group_home2 extends AppCompatActivity {
             }
         });
 
+        //Goes to Deposit Activity
         depositButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent depositIntent = new Intent(Group_home2.this, Deposit.class);
                 startActivity(depositIntent);
             }
         });
+
+        //Goes to GroupTransactionHistory Activity
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent historyIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
+                //Need to pass group for transaction history
+                startActivity(historyIntent);
+            }
+        });
     }
 
+    //Function recieves data from intent passed from Group_home2
      private void getIncomingIntent(){
         if(getIntent().hasExtra("group_name")) {
             TextView name = findViewById(R.id.textViewGroupName);
@@ -47,7 +63,7 @@ public class Group_home2 extends AppCompatActivity {
         if(getIntent().hasExtra("group_balance")){
             TextView balance = findViewById(R.id.textViewGroupBalance);
             NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-            Double groupBalance = getIntent().getDoubleExtra("group_balance", 0.00);
+            BigDecimal groupBalance = (BigDecimal) getIntent().getSerializableExtra("group_balance");
 
             balance.setText("Balance: " + format.format(groupBalance));
         }
