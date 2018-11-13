@@ -189,20 +189,8 @@ public class User
         map.put("userId",this.userId);
         map.put("name", this.name);
         map.put("email", this.email);
-        Map<String, String> transMap = new HashMap<>();
-        for(Integer i =0; i < this.transactions.size(); i++ )
-        {
-            transMap.put("transaction" + i.toString(), this.transactions.get(i));
-        }
-        map.put("transactions",transMap);
-
-        Map<String, String> groupMap = new HashMap<>();
-        for(Integer i =0; i < this.transactions.size(); i++ )
-        {
-            groupMap.put("group" + i.toString(), this.groups.get(i));
-        }
-        map.put("groups",groupMap);
-
+        map.put("transactions",this.transactions);
+        map.put("groups", this.groups);
         return map;
     }
 
@@ -217,28 +205,8 @@ public class User
         user.setUserId(map.get("userId").toString());
         user.setName(map.get("name").toString());
         user.setEmail(map.get("email").toString());
-
-        @SuppressWarnings("unchecked")
-        Map<String, String> transMap = (Map<String, String>)map.get("transactions");
-        ArrayList<String> trans = new ArrayList<>();
-        for(Integer i = 0; ; i++) {
-            if(transMap.containsKey("transaction" + i.toString()))
-                trans.add(transMap.get("transaction" + i.toString()));
-            else
-                break;
-        }
-        user.setTransactions(trans);
-
-        @SuppressWarnings("unchecked")
-        Map<String, String> groupsMap = (Map<String, String>)map.get("groups");
-        ArrayList<String> groups = new ArrayList<>();
-        for(Integer i = 0; ; i++) {
-            if(groupsMap.containsKey("group" + i.toString()))
-                groups.add(groupsMap.get("group" + i.toString()));
-            else
-                break;
-        }
-        user.setGroups(groups);
+        user.setGroups((ArrayList<String>)map.get("groups"));
+        user.setGroups((ArrayList<String>)map.get("transactions"));
         return user;
     }
 }

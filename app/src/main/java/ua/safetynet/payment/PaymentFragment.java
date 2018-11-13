@@ -327,11 +327,6 @@ public class PaymentFragment extends Fragment {
             Toast.makeText(getContext(),"Please enter amount", Toast.LENGTH_SHORT).show();
             return false;
         }
-
-        if(!spinner.hasSelection()) {
-            Toast.makeText(getContext(), "Please enter group", Toast.LENGTH_SHORT).show();
-            return false;
-        }
         return true;
     }
 
