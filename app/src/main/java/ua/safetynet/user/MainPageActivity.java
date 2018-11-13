@@ -14,15 +14,25 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Arrays;
+
+import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
+import ua.safetynet.payment.PayoutFragment;
 
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnFragmentInteractionListener
+/**
+ * Main activity our app opens into
+ * Sets up the toolbar and navigation drawer. Menu views are delegated to fragments which are placed into a container
+ * in the activities layout
+ */
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -30,7 +40,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private static final int RCSIGNIN = 123;
+    /**
+     * Checks if the user is signed in or not onStart. Launches sign in flow if they aren't
+     */
     @Override
     protected void onStart()
     {
@@ -42,11 +55,24 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
-            startActivity(new Intent(this, FirebaseAuthActivity.class));
+            startActivityForResult(new Intent(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(Arrays.asList(
+                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                    .setIsSmartLockEnabled(false)
+                    .build()),RCSIGNIN);
         }
-
+        else  {
+            User user = new User();
+            user.setUserId(firebaseUser.getUid());
+            user.setName(firebaseUser.getDisplayName());
+            user.setEmail(firebaseUser.getEmail());
+            Database db = new Database();
+            db.setUser(user);
+        }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -68,9 +94,14 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
 
     }
+
+    /**
+     * Setup navigation drawer onclicklistener. Creates fragment of selected menu and replaces the main menu fragment with it
+     * Adds fragment to stack so you can use back button
+     */
     private void setupNavigationDrawer()
     {
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -87,13 +118,17 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                             case R.id.nav_payment:
                                 fragment = new PaymentFragment();
                                 break;
+                            case R.id.nav_payout:
+                                fragment = new PayoutFragment();
+                                break;
                             case R.id.nav_logout:
                                 FirebaseAuth.getInstance().signOut();
+                                fragment = new MainViewFragment();
                                 break;
                         }
                         if(fragment != null)
                         {
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                         }
                         return false;
@@ -101,6 +136,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 }
         );
     }
+
+    /**
+     * Sets up the app toolbar
+     */
     private void setupDrawerToggle()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -132,7 +171,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    @Override
+    public void onPaymentComplete(String transactionId) {
 
     }
-
 }

@@ -18,6 +18,14 @@
         android:inputType="numberDecimal"
         android:text="Amount" />
 
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/payment_group_spinner"
+        android:layout_width="212dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp" />
+
     <Button
         android:id="@+id/checkout_button"
         android:layout_width="wrap_content"

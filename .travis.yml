@@ -20,8 +20,7 @@ android:
         # if you need to run emulator(s) during your tests
         - sys-img-armeabi-v7a-android-28
     licenses:
-        - android-sdk-license-.+
-        - google-gdk-license-.+    
+        - '.+'   
 before_cache:
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
     - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -36,15 +35,14 @@ before_install:
   - yes | sdkmanager "platforms;android-28"
   - openssl aes-256-cbc -K $encrypted_b5120e425b3b_key -iv $encrypted_b5120e425b3b_iv -in app/googlejson.enc -out app/google-services.json -d
 
-  - "./gradlew dependencies || true"
   
 # Emulator Management: Create, Start and Wait
-#before_script:
+before_script:
 #  - echo no | android create avd --force -n test -t android-28 --abi armeabi-v7a
 #  - emulator -avd test -no-audio -no-window &
 #  - android-wait-for-emulator
 #  - adb shell input keyevent 82 &
-  
+   - chmod +x gradlew  
 script:
-    - yes | "./gradlew clean build --stacktrace"
-    - yes| "./gradlew connectedCheck"
+    - yes | ./gradlew clean build --stacktrace
+    - yes | ./gradlew connectedCheck

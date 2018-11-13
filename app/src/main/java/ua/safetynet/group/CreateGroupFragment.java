@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import ua.safetynet.Database;
 import ua.safetynet.R;
 
@@ -75,17 +77,16 @@ public class CreateGroupFragment extends Fragment {
         Button bttn_Create_Group = (Button) rootView.findViewById(R.id.bttn_Create_Group);
         //text box for group name
         final EditText groupName = (EditText) rootView.findViewById(R.id.txtGroupName);
-        //group submition button listener
+        //group submission button listener
         bttn_Create_Group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //create the database connection
                 Database database = new Database();
-                //create a blank entry and return its id, then create a blank group
-                //String id = database.makeGroupKey();
                 Group group = new Group();
-                //set only the name for now
-                group.setGroup_name(groupName.getText().toString().trim());
+                group.setName(groupName.getText().toString().trim());
+                group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 //send the data after getting data from the blanks
                 database.createGroup(group);
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();

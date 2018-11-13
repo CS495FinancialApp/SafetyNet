@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import ua.safetynet.group.Group;
+import ua.safetynet.user.User;
 
 public class Group_home2 extends AppCompatActivity {
 
@@ -20,30 +23,61 @@ public class Group_home2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_home2);
 
-        getIncomingIntent();
+        //getIncomingIntent();
 
-        Button withdrawalButton = (Button) findViewById(R.id.buttonGroupWithdrawal);
-        Button depositButton = (Button) findViewById(R.id.buttonGroupDeposit);
+        Button userHistory = (Button) findViewById(R.id.buttonUserHistory);
+        Button groupHistory = (Button) findViewById(R.id.buttonGroupHistory);
+        final TextView name = findViewById(R.id.textViewGroupName);
+        final TextView balance = findViewById(R.id.textViewGroupBalance);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
+        final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
+        Database db = new Database();
+/**
 
-        withdrawalButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent withdrawalIntent = new Intent(Group_home2.this, Withdrawal.class);
-                startActivity(withdrawalIntent);
+        db.getUser(db.getUID(), new Database.DatabaseUserListener() {
+            @Override
+            public void onUserRetrieval(User user) {
+
+                name.setText(user.getUserId());
+            }
+
+        });
+**/
+
+        db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
+            @Override
+            public void onGroupRetrieval(Group group) {
+                name.setText(group.getName());
+                balance.setText("Balance: " + format.format(group.getFunds()));
+                GroupIntent.putExtra("group_ID", group.getGroupId());
+                UserIntent.putExtra("group_ID", group.getGroupId());
             }
         });
 
-        depositButton.setOnClickListener(new View.OnClickListener() {
+        //Goes to UserTransactionHistory Activity
+        userHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent depositIntent = new Intent(Group_home2.this, Deposit.class);
-                startActivity(depositIntent);
+                startActivity(UserIntent);
+            }
+        });
+
+        //Goes to GroupTransactionHistory Activity
+        groupHistory.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(GroupIntent);
             }
         });
     }
 
+/**
+    //Function recieves data from intent passed from Group_home2
      private void getIncomingIntent(){
         if(getIntent().hasExtra("group_name")) {
             TextView name = findViewById(R.id.textViewGroupName);
             String groupName = getIntent().getStringExtra("group_name");
+
+            Database db = new Database();
 
             name.setText(groupName);
         }
@@ -54,5 +88,5 @@ public class Group_home2 extends AppCompatActivity {
 
             balance.setText("Balance: " + format.format(groupBalance));
         }
-    }
+    }**/
 }
