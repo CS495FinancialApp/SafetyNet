@@ -32,15 +32,24 @@ public class Group_home2 extends AppCompatActivity {
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
         final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
-
         Database db = new Database();
+/**
+
+        db.getUser(db.getUID(), new Database.DatabaseUserListener() {
+            @Override
+            public void onUserRetrieval(User user) {
+
+                name.setText(user.getUserId());
+            }
+
+        });
+**/
 
         db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
             @Override
             public void onGroupRetrieval(Group group) {
                 name.setText(group.getName());
                 balance.setText("Balance: " + format.format(group.getFunds()));
-                UserIntent.putExtra("group_ID", group.getGroupId());
                 GroupIntent.putExtra("group_ID", group.getGroupId());
             }
         });

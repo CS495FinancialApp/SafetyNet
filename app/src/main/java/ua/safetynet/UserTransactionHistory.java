@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import ua.safetynet.group.Group;
+import ua.safetynet.user.User;
+
 public class UserTransactionHistory extends AppCompatActivity {
 
     @Override
@@ -11,7 +14,14 @@ public class UserTransactionHistory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_transaction_history);
 
-        TextView GroupName = findViewById(R.id.textViewUserID);
-        GroupName.setText("IN PROGRESS");
+        final TextView UserName = findViewById(R.id.textViewUserID);
+        Database db = new Database();
+
+        db.getUser(db.getUID(), new Database.DatabaseUserListener() {
+            @Override
+            public void onUserRetrieval(User user) {
+                UserName.setText(user.getName());
+            }
+        });
     }
 }
