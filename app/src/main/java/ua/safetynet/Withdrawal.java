@@ -40,5 +40,6 @@ public class Withdrawal extends AppCompatActivity {
                 startActivity(historyIntent);
             }
         });
+
     }
 }
