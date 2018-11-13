@@ -51,6 +51,7 @@ public class Group_home2 extends AppCompatActivity {
                 name.setText(group.getName());
                 balance.setText("Balance: " + format.format(group.getFunds()));
                 GroupIntent.putExtra("group_ID", group.getGroupId());
+                UserIntent.putExtra("group_ID", group.getGroupId());
             }
         });
 
