@@ -53,14 +53,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         super.onStart();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
-         /*   User user = new User();
-            user.setUserId(firebaseUser.getUid());
-            user.setName(firebaseUser.getDisplayName());
-            user.setEmail(firebaseUser.getEmail());
-            Database db = new Database();
-            db.setUser(user);
-        }*/
     }
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -111,14 +103,14 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 fragment = new PayoutFragment();
                                 break;
                             case R.id.nav_logout:
-                                firebaseAuth.signOut();
                                 AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        startActivity(new Intent(MainPageActivity.this, SplashScreenActivity.class));
+                                        startActivity(new Intent(MainPageActivity.this, FirebaseAuthActivity.class));
                                         finish();
                                     }
                                 });
+                                firebaseAuth.signOut();
                                 fragment = null;
                                 break;
                         }
