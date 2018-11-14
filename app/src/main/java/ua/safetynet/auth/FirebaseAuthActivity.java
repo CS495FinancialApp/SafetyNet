@@ -46,7 +46,7 @@ public class FirebaseAuthActivity extends AppCompatActivity
                             new AuthUI.IdpConfig.GoogleBuilder().build(),
                             new AuthUI.IdpConfig.EmailBuilder().build(),
                             new AuthUI.IdpConfig.PhoneBuilder().build()))
-                    .setIsSmartLockEnabled(false)
+                    .setIsSmartLockEnabled(true)
                     .build(),RCSIGNIN);
         }
     }
