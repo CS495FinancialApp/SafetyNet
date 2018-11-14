@@ -51,27 +51,13 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-
-        if (firebaseUser == null) //If the user isnt already logged in
-        {
-            //User isnt signed in, launch sign in activity
-            startActivityForResult(new Intent(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(Arrays.asList(
-                            new AuthUI.IdpConfig.GoogleBuilder().build(),
-                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                            new AuthUI.IdpConfig.PhoneBuilder().build()))
-                    .setIsSmartLockEnabled(false)
-                    .build()),RCSIGNIN);
-        }
-        else  {
-            User user = new User();
+         /*   User user = new User();
             user.setUserId(firebaseUser.getUid());
             user.setName(firebaseUser.getDisplayName());
             user.setEmail(firebaseUser.getEmail());
             Database db = new Database();
             db.setUser(user);
-        }
+        }*/
     }
     @Override
     protected void onCreate(Bundle savedInstanceState)
