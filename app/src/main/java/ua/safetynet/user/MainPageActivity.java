@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,6 +25,7 @@ import java.util.Arrays;
 import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
+import ua.safetynet.auth.SplashScreenActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
@@ -108,8 +111,15 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 fragment = new PayoutFragment();
                                 break;
                             case R.id.nav_logout:
-                                FirebaseAuth.getInstance().signOut();
-                                fragment = new MainViewFragment();
+                                firebaseAuth.signOut();
+                                AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        startActivity(new Intent(MainPageActivity.this, SplashScreenActivity.class));
+                                        finish();
+                                    }
+                                });
+                                fragment = null;
                                 break;
                         }
                         if(fragment != null)

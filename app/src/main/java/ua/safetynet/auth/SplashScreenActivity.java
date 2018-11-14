@@ -34,27 +34,29 @@ public class SplashScreenActivity extends AppCompatActivity
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
-            startActivityForResult(new Intent(AuthUI.getInstance()
+            startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(Arrays.asList(
                             new AuthUI.IdpConfig.GoogleBuilder().build(),
                             new AuthUI.IdpConfig.EmailBuilder().build(),
                             new AuthUI.IdpConfig.PhoneBuilder().build()))
-                    .setIsSmartLockEnabled(true)
-                    .build()),RCSIGNIN);
+                    .setIsSmartLockEnabled(false)
+                    .build(),RCSIGNIN);
         }
         //Register auth state listener to start this activity over again on user sign out so they will have to sign in again
-        firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        /*firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() == null) {
                     startActivity(new Intent(getBaseContext(), SplashScreenActivity.class));
                 }
             }
-        });
-        Intent intent = new Intent(this, MainPageActivity.class);
-        startActivity(intent);
-        finish();
+        });*/
+        else {
+            Intent intent = new Intent(this, MainPageActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
