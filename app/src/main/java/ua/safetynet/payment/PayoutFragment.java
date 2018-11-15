@@ -194,8 +194,26 @@ public class PayoutFragment extends Fragment {
     }
 
     private void makeWithdrawal() {
-       
-
+        AsyncHttpClient client = new AsyncHttpClient(APIPORT);
+        JSONObject jsonReq = makePayoutsJson(emailText.getText().toString(), amount.toPlainString());
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(jsonReq.toString());
+        }
+        catch(UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        client.addHeader("Authorization","Bearer " + clientToken);
+        client.post(getContext(), APIBASEURL + APITRANS, entity, ContentType.APPLICATION_JSON.getMimeType(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG,"Payout Completed " + response.toString());
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
+                Log.d(TAG, "Could not create payout" + json.toString() + t.getMessage());
+            }
+        });
     }
 
     /**
