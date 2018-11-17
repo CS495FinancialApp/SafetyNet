@@ -19,6 +19,7 @@ import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,9 +28,12 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import ua.safetynet.Database;
 import ua.safetynet.R;
@@ -48,10 +52,12 @@ public class PayoutFragment extends Fragment {
     private static final int APIPORT = 443;
     private static final String APIBASEURL = "https://api.sandbox.paypal.com/";
     private static final String APITOKENURL = "v1/oauth2/token";
+    private static final String APITRANS = "v1/payments/payouts";
     private String clientToken = null;
     private BigDecimal amount = new BigDecimal(0);
     private String groupId;
     private EditText amountText;
+    private EditText emailText;
     private MaterialSpinner spinner;
     private OnFragmentInteractionListener mListener;
 
@@ -118,6 +124,8 @@ public class PayoutFragment extends Fragment {
         });
         spinner = view.findViewById(R.id.payout_group_spinner);
         setupGroupSpinner();
+        //Setup email edit text
+        emailText = view.findViewById(R.id.payout_email_text);
         return view;
     }
 
@@ -186,7 +194,26 @@ public class PayoutFragment extends Fragment {
     }
 
     private void makeWithdrawal() {
-
+        AsyncHttpClient client = new AsyncHttpClient(APIPORT);
+        JSONObject jsonReq = makePayoutsJson(emailText.getText().toString(), amount.toPlainString());
+        StringEntity entity = null;
+        try {
+            entity = new StringEntity(jsonReq.toString());
+        }
+        catch(UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        client.addHeader("Authorization","Bearer " + clientToken);
+        client.post(getContext(), APIBASEURL + APITRANS, entity, ContentType.APPLICATION_JSON.getMimeType(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d(TAG,"Payout Completed " + response.toString());
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
+                Log.d(TAG, "Could not create payout" + json.toString() + t.getMessage());
+            }
+        });
     }
 
     /**
@@ -219,7 +246,36 @@ public class PayoutFragment extends Fragment {
             }
         });
     }
+    private JSONObject makePayoutsJson(String email, String amount) {
+        JSONObject json = new JSONObject();
+        JSONObject senderHeader = new JSONObject();
+        JSONObject item = new JSONObject();
+        JSONObject amountJson = new JSONObject();
+        String id = UUID.randomUUID().toString().replace("-", "");
+        try {
 
+            senderHeader.put("sender_batch_id", id);
+            senderHeader.put("email_subject", "You have a Payout!");
+            senderHeader.put("recipient_type","EMAIL");
+
+            amountJson.put("value",amount);
+            amountJson.put("currency","USD");
+
+            item.put("sender_item_id",id);
+            item.put("receiver",email);
+            item.put("amount",amountJson);
+
+            JSONArray itemArray = new JSONArray();
+            itemArray.put(item);
+            json.put("sender_batch_header",senderHeader);
+            json.put("items", itemArray);
+            Log.d(TAG, json.toString(1));
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
     /**
      * Populates the group selection spinner
      */
