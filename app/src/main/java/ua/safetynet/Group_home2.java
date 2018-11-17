@@ -26,11 +26,13 @@ public class Group_home2 extends AppCompatActivity {
         //getIncomingIntent();
 
         Button userHistory = (Button) findViewById(R.id.buttonUserHistory);
+        Button editGroup = (Button) findViewById(R.id.buttonEditGroup);
         Button groupHistory = (Button) findViewById(R.id.buttonGroupHistory);
         final TextView name = findViewById(R.id.textViewGroupName);
         final TextView balance = findViewById(R.id.textViewGroupBalance);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
+        final Intent EditIntent = new Intent(Group_home2.this, EditGroups.class);
         final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
         Database db = new Database();
 /**
@@ -51,6 +53,7 @@ public class Group_home2 extends AppCompatActivity {
                 name.setText(group.getName());
                 balance.setText("Balance: " + format.format(group.getFunds()));
                 GroupIntent.putExtra("group_ID", group.getGroupId());
+                EditIntent.putExtra("group_ID", group.getGroupId());
                 UserIntent.putExtra("group_ID", group.getGroupId());
             }
         });
@@ -62,6 +65,12 @@ public class Group_home2 extends AppCompatActivity {
             }
         });
 
+        editGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(EditIntent);
+            }
+        });
         //Goes to GroupTransactionHistory Activity
         groupHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

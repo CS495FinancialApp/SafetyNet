@@ -36,8 +36,12 @@
     <string name="welcome_message">Welcome to SafetyNet!</string>
     <string name="group_balance">Group Balance</string>
     <string name="group_history">Group Transactions</string>
+    <string name="edit_group">Edit Group Settings</string>
     <string name="user_history">Personal Transactions</string>
     <string name="user_ID">User ID</string>
+    <string name="payment_time">Payment Time</string>
+    <string name="withdrawal_limit">Withdrawal Limit</string>
+
 
 
     <string name="confirm2">Confirm</string>
@@ -45,5 +49,8 @@
     <string name="withdrawal_hint">Dollar amount for withdrawl</string>
     <string name="deposit_question2">How much to deposit?</string>
     <string name="deposit_hint">Dollar amount for deposit</string>
+    <string name="payment_time_hint">Number of days to repay a withdrawal</string>
+    <string name="withdrawal_limit_hint">Dollar amount for maximum withdrawal</string>
+
 
 </resources>
