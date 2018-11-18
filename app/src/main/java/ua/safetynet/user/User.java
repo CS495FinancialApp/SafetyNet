@@ -14,6 +14,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @author Jeremy McCormick
  * User class to hold data related to user and their groups
  */
-public class User
+public class User implements Serializable
 {
     private String userId;
     private String email;
