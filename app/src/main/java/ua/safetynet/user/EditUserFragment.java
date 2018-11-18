@@ -7,20 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import ua.safetynet.R;
 
 
 public class EditUserFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private User user;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    private EditText nameText;
+    private EditText emailText;
 
     public EditUserFragment() {
         // Required empty public constructor
@@ -48,6 +45,8 @@ public class EditUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_user, container, false);
+        nameText = view.findViewById(R.id.edit_user_name);
+        emailText = view.findViewById(R.id.edit_user_email);
         return view;
     }
 
