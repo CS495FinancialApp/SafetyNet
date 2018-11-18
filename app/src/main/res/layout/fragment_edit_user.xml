@@ -22,7 +22,7 @@
             app:civ_border_width="3dp"
             app:civ_border_color="#FFFFFFFF"
 
-            android:id="@+id/user_image"
+            android:id="@+id/edit_user_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="-130dp"
@@ -44,7 +44,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="User Details"/>
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="23dp"
+                android:textColor="#000"
+                android:text="Please Enter Your Information"
+                />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
