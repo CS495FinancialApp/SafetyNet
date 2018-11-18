@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.firebase.ui.auth.data.model.PhoneNumber;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ public class User implements Serializable
     private String userId;
     private String email;
     private String name;
+    private String phoneNumber;
     private Bitmap userImage;
     private ArrayList<String> transactions = new ArrayList<>();
     private ArrayList<String> groups = new ArrayList<>();
@@ -56,7 +58,12 @@ public class User implements Serializable
         this.transactions = transactions;
         this.groups = groups;
     }
-
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+    public void setPhoneNumber(String phone) {
+        this.phoneNumber = phone;
+    }
     public String getUserId()
     {
         return this.userId;
@@ -190,6 +197,7 @@ public class User implements Serializable
         map.put("userId",this.userId);
         map.put("name", this.name);
         map.put("email", this.email);
+        map.put("phone", this.phoneNumber);
         map.put("transactions",this.transactions);
         map.put("groups", this.groups);
         return map;
@@ -206,6 +214,7 @@ public class User implements Serializable
         user.setUserId(map.get("userId").toString());
         user.setName(map.get("name").toString());
         user.setEmail(map.get("email").toString());
+        user.setPhoneNumber(map.get("phone").toString());
         user.setGroups((ArrayList<String>)map.get("groups"));
         user.setGroups((ArrayList<String>)map.get("transactions"));
         return user;
