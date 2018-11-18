@@ -35,7 +35,8 @@ import ua.safetynet.payment.PayoutFragment;
  * Sets up the toolbar and navigation drawer. Menu views are delegated to fragments which are placed into a container
  * in the activities layout
  */
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener,
+        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -101,6 +102,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                 break;
                             case R.id.nav_payout:
                                 fragment = new PayoutFragment();
+                                break;
+                            case R.id.nav_edit_user:
+                                fragment = new EditUserFragment();
                                 break;
                             case R.id.nav_logout:
                                 AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Void>() {
