@@ -21,7 +21,6 @@
             android:focusable="true"
             app:civ_border_width="3dp"
             app:civ_border_color="#FFFFFFFF"
-
             android:id="@+id/edit_user_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -61,6 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
+                    android:imeOptions="actionDone"
                     android:hint="Name" />
 
             </android.support.design.widget.TextInputLayout>
@@ -74,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="actionDone"
                     android:hint="Email"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -89,6 +90,7 @@
                     android:inputType="phone"
                     android:ems="10"
                     android:maxLength="14"
+                    android:imeOptions="actionDone"
                     android:hint="Phone Number"/>
 
             </android.support.design.widget.TextInputLayout>
