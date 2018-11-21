@@ -2,6 +2,8 @@ package ua.safetynet.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import java.util.List;
 
 
 import ua.safetynet.R;
+import ua.safetynet.user.EditUserFragment;
 import ua.safetynet.user.MainPageActivity;
 
 
@@ -62,8 +65,15 @@ public class FirebaseAuthActivity extends AppCompatActivity
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
-                startActivity(new Intent(this,MainPageActivity.class));
-                finish();
+                FirebaseUserMetadata metadata = FirebaseAuth.getInstance().getCurrentUser().getMetadata();
+                //Check timestamps to see if a new user
+                if(metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                    setupNewUser();
+                }
+                else {
+                    startActivity(new Intent(this,MainPageActivity.class));
+                    finish();
+                }
             } else {
                 // Sign in failed
                 if (response == null) {
@@ -80,6 +90,13 @@ public class FirebaseAuthActivity extends AppCompatActivity
                 Log.e("Splash Screen Login", "Sign-in error: ", response.getError());
             }
         }
+    }
+    private void setupNewUser() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.firebase_auth_container, new EditUserFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
 
