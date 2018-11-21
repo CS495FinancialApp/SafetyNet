@@ -34,6 +34,7 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     private static final int RCSIGNIN = 123;
+    private static final String TAG = "AUTH ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,11 +74,14 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
                 //Check timestamps to see if a new user
                 if(metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
                     setupNewUser();
+                    Log.d(TAG, "New user created");
                 }
                 else {
-                    startActivity(new Intent(this,MainPageActivity.class));
+                    Log.d(TAG, "Starting main page activity");
+                    startActivity(new Intent(this, MainPageActivity.class));
                     finish();
                 }
+
             } else {
                 // Sign in failed
                 if (response == null) {
