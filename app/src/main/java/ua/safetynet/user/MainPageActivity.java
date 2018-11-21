@@ -41,7 +41,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-
+    private User user = null;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private static final int RCSIGNIN = 123;
@@ -59,6 +59,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getParcelable("user") != null)
+            user = savedInstanceState.getParcelable("user");
+
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
 
@@ -71,10 +74,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         setupDrawerToggle();
         setupNavigationDrawer();
-
-
-
-
     }
 
     /**
