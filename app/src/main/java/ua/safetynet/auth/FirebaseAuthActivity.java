@@ -1,10 +1,12 @@
 package ua.safetynet.auth;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 
 
 import java.util.Arrays;
@@ -26,7 +29,7 @@ import ua.safetynet.user.EditUserFragment;
 import ua.safetynet.user.MainPageActivity;
 
 
-public class FirebaseAuthActivity extends AppCompatActivity
+public class FirebaseAuthActivity extends AppCompatActivity implements EditUserFragment.OnFragmentInteractionListener
 {
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -40,6 +43,7 @@ public class FirebaseAuthActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
+        setContentView(R.layout.activity_firebase_auth);
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
@@ -97,6 +101,10 @@ public class FirebaseAuthActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.firebase_auth_container, new EditUserFragment());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
 
