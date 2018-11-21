@@ -91,24 +91,15 @@ public class EditUserFragment extends Fragment {
                 selectImage();
             }
         });
-        populateText();
-        setupPhoneInput();
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.done_check_toolbar, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.edit_user_done:
+        view.findViewById(R.id.edit_user_done).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 storeUser();
                 leaveFragment();
-                return true;
-        }
-        return super.onOptionsItemSelected(item); // important line
+            }
+        });
+        populateText();
+        setupPhoneInput();
     }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -204,7 +195,9 @@ public class EditUserFragment extends Fragment {
         }
         catch(NullPointerException e) {
             Log.d(TAG, e.getLocalizedMessage());
-            startActivity(new Intent(getContext(), MainPageActivity.class));
+            Intent mainPageIntent = new Intent(getContext(), MainPageActivity.class);
+            mainPageIntent.putExtra("user",user);
+            startActivity(mainPageIntent);
         }
     }
     @Override
