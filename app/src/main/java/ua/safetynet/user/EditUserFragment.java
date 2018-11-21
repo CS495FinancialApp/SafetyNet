@@ -3,9 +3,11 @@ package ua.safetynet.user;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -27,6 +29,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -101,6 +105,7 @@ public class EditUserFragment extends Fragment {
         switch (id) {
             case R.id.edit_user_done:
                 storeUser();
+                leaveFragment();
                 return true;
         }
         return super.onOptionsItemSelected(item); // important line
@@ -138,7 +143,7 @@ public class EditUserFragment extends Fragment {
                     nameText.setText(firebaseUser.getDisplayName());
                 if (firebaseUser.getEmail() != null)
                     emailText.setText(firebaseUser.getEmail());
-                if (!firebaseUser.getPhoneNumber().isEmpty())
+                if (firebaseUser.getPhoneNumber() != null )
                     phoneText.setText(firebaseUser.getPhoneNumber());
                 if (firebaseUser.getPhotoUrl() != null) {
                     Glide.with(getContext()).load(firebaseUser.getPhotoUrl()).into(imageView);
@@ -164,20 +169,15 @@ public class EditUserFragment extends Fragment {
             phoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher("US"));
     }
     private void selectImage() {
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
         Intent pickIntent = new Intent(Intent.ACTION_PICK);
         pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
 
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE);
+        startActivityForResult(pickIntent, PICK_IMAGE);
     }
     private void storeUser() {
         if(user==null) {
             user = new User();
+            Log.d(TAG, FirebaseAuth.getInstance().getCurrentUser().getUid() + " " + FirebaseAuth.getInstance().getUid());
             user.setUserId(FirebaseAuth.getInstance().getUid());
             user.setName(nameText.getText().toString());
             user.setEmail(emailText.getText().toString());
@@ -198,7 +198,15 @@ public class EditUserFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
+    private void leaveFragment() {
+        try {
+            getFragmentManager().popBackStackImmediate();
+        }
+        catch(NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+            startActivity(new Intent(getContext(), MainPageActivity.class));
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -208,11 +216,22 @@ public class EditUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Could not get photo from storage",Toast.LENGTH_SHORT ).show();
                 return;
             }
-            final Bundle extras = data.getExtras();
-            if(extras != null) {
-                Bitmap newImage = extras.getParcelable("data");
-                imageView.setImageBitmap(newImage);
+            Uri imageUri = data.getData();
+            if(imageUri != null) {
+                Log.d(TAG, "Got new image from picker");
+                Bitmap newImage = null;
+                try {
+                    newImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Glide.with(getContext()).asBitmap().load(newImage).into(imageView);
             }
+            else
+                Log.d(TAG, "Could not image from return bundle");
         }
+        else
+            Log.d(TAG, "Request code not equal to PICK IMAGE");
     }
 }
