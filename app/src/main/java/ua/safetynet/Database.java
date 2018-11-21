@@ -175,7 +175,7 @@ public class Database {
 
     //updates a user's data in firestore using a given user class
     public void setUser(User user) {
-        databaseUsers.document(user.getUserId()).set(user);
+        databaseUsers.document(user.getUserId()).set(user.toMap());
     }
 
     //updates a group's data in firestore using a given group class
@@ -187,7 +187,7 @@ public class Database {
     public void createUser(User user){
         this.databaseUser = FirebaseFirestore.getInstance().collection("Users").document();
         user.setUserId(databaseUser.getId());
-        databaseGroup.set(user);
+        databaseGroup.set(user.toMap());
     }
 
     //creates a new group entry in firestore. group_ID is set here.  Other values must be set before calling createGroup.
