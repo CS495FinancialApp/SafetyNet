@@ -11,6 +11,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="@string/main_nav_header"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+    
+    <TextView
+        android:id="@+id/nav_header_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/main_nav_header"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+    <TextView
+        android:id="@+id/nav_header_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/main_nav_header"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
