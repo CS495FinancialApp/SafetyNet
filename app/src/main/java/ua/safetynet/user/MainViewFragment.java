@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +49,8 @@ public class MainViewFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mainBalance;
+    private ProgressBar progressBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -90,20 +93,23 @@ public class MainViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
 
-        TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
+        mainBalance = rootView.findViewById(R.id.main_balance_amount);
         String text = "<font color=#ad3535>-</font> <font color=#000000>$55.27</font>";
         mainBalance.setText(Html.fromHtml(text,0));
         mainBalance.setTextSize(45);
 
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
+        //Get loading spinner
+        progressBar = rootView.findViewById(R.id.main_view_progressbar);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         makeGroupList();
-
-
+        //Hide view components so we can show spinner before data is gotten
+        mRecyclerView.setVisibility(View.GONE);
+        mainBalance.setVisibility(View.GONE);
         // Inflate the layout for this fragment
         return rootView;
 
@@ -164,8 +170,14 @@ public class MainViewFragment extends Fragment {
                     // specify an adapter (see also next example)
                     mAdapter = new GroupRecyclerAdapter(groupList);
                     mRecyclerView.setAdapter(mAdapter);
+                    makeVisible();
                 }
             });
         }
+    }
+    private void makeVisible(){
+        progressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mainBalance.setVisibility(View.VISIBLE);
     }
 }
