@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ua.safetynet">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,12 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".auth.SplashScreenActivity"
-                android:theme="@style/SplashScreen">
+        <activity
+            android:name=".auth.SplashScreenActivity"
+            android:theme="@style/SplashScreen">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -24,17 +27,20 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".user.MainPageActivity"/>
+        <activity android:name=".user.MainPageActivity" />
         <activity android:name=".Withdrawal" />
         <activity android:name=".Deposit" />
         <activity android:name=".Group_home2" />
         <activity android:name=".UserTransactionHistory" />
-        <activity android:name=".GroupTransactionHistory"/>
+        <activity android:name=".GroupTransactionHistory" />
+        <activity android:name=".EditGroup"></activity>
     </application>
 
 </manifest>
