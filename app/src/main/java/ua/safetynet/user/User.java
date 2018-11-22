@@ -209,14 +209,15 @@ public class User implements Serializable
      * @param map map of user data
      * @return new user object from passed in map
      */
+    
     public static User fromMap(Map<String, Object> map) {
         User user = new User();
         user.setUserId(map.get("userId").toString());
         user.setName(map.get("name").toString());
         user.setEmail(map.get("email").toString());
         user.setPhoneNumber(map.get("phone").toString());
-        user.setGroups((ArrayList<String>)map.get("groups"));
-        user.setGroups((ArrayList<String>)map.get("transactions"));
+        user.setGroups((ArrayList<String>) map.get("groups"));
+        user.setTransactions((ArrayList<String>) map.get("transactions"));
         return user;
     }
 }
