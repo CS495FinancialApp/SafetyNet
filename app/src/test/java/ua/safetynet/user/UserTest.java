@@ -19,6 +19,7 @@ public class UserTest {
         user.setUserId("123456789");
         user.setName("John Doe");
         user.setEmail("email@email.test");
+        user.setPhoneNumber("5555555555");
         ArrayList<String> trans = new ArrayList<String>();
         trans.add("1");
         trans.add("2");
@@ -32,8 +33,7 @@ public class UserTest {
     }
     @Test
     public void testToFromMap() {
-        Map<String, Object> map = user.toMap();
-        User mapUser = User.fromMap(map);
+        User mapUser = User.fromMap(user.toMap());
         Assert.assertEquals(user.getUserId(), mapUser.getUserId());
         Assert.assertEquals(user.getName(), mapUser.getName());
         Assert.assertEquals(user.getEmail(), mapUser.getEmail());
