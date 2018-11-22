@@ -242,7 +242,7 @@ public class Group {
         group.setAdmins((ArrayList<String>) map.get("admins"));
         group.setUsers((ArrayList<String>) map.get("users"));
         group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
-        group.fetchGroupImage();
+        //group.fetchGroupImage();
         return group;
     }
 
