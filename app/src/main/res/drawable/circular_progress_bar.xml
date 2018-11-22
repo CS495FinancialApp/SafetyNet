@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromDegrees="90"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toDegrees="360"
+    android:id="@+id/circular_progress_bar">
+
+    <shape
+        android:innerRadiusRatio="1"
+        android:shape="ring"
+        android:thicknessRatio="4.0">
+
+        <gradient
+            android:centerColor="#009660"
+            android:endColor="#00A660"
+            android:startColor="@color/colorPrimary"
+            android:angle="0"
+            android:type="sweep"
+            android:useLevel="false" />
+    </shape>
+</rotate>
