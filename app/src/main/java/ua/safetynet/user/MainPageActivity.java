@@ -117,9 +117,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                             case R.id.nav_payout:
                                 fragment = new PayoutFragment();
                                 break;
-                            case R.id.nav_edit_user:
-                                fragment = new EditUserFragment();
-                                break;
                             case R.id.nav_logout:
                                 AuthUI.getInstance().signOut(getApplicationContext()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
