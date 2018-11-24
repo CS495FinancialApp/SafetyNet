@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.payment.Transaction;
+import ua.safetynet.payment.TransactionRecyclerAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,7 +42,10 @@ public class ViewUserFragment extends Fragment {
     private User user;
     private TextView nameText;
     private ImageView userImageView;
-    private RecyclerView transactionRecycler;
+    private List<Transaction> transactionList;
+    private RecyclerView mTransactionRecycler;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,6 +78,13 @@ public class ViewUserFragment extends Fragment {
         nameText = view.findViewById(R.id.view_user_name);
         userImageView = view.findViewById(R.id.view_user_image);
         populateHeader();
+        //Setup recycler view
+        mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
+        mTransactionRecycler.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(container.getContext());
+        mTransactionRecycler.setLayoutManager(mLayoutManager);
+        mTransactionRecycler.setItemAnimator(new DefaultItemAnimator());
+        getTransactionList();
         return view;
     }
 
@@ -110,7 +130,18 @@ public class ViewUserFragment extends Fragment {
         nameText.setText(user.getName());
         Glide.with(getContext()).load(user.getImage()).into(userImageView);
     }
-    private void setupRecyclerView() {
-
+    private void getTransactionList() {
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Database db = new Database();
+            db.queryUserTransactions(user.getUserId(), new Database.DatabaseTransactionsListener() {
+                @Override
+                public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
+                    transactionList = transactions;
+                    //Set adapter with group view
+                    TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.GROUP);
+                    mTransactionRecycler.setAdapter(adapter);
+                }
+            });
+        }
     }
 }
