@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ua.safetynet.group.Group;
+import ua.safetynet.payment.Transaction;
 
 public class GroupTransactionHistory extends AppCompatActivity {
 

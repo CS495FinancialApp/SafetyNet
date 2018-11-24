@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ua.safetynet.group.Group;
+import ua.safetynet.payment.Transaction;
 import ua.safetynet.user.User;
 
 public class UserTransactionHistory extends AppCompatActivity {

@@ -19,6 +19,7 @@ package ua.safetynet;
         import java.util.Map;
 
         import ua.safetynet.group.Group;
+        import ua.safetynet.payment.Transaction;
         import ua.safetynet.user.User;
 
 public class Database {
