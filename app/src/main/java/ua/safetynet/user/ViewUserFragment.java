@@ -136,7 +136,12 @@ public class ViewUserFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Fragment editUserFragment = EditUserFragment.newInstance(user);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, editUserFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
