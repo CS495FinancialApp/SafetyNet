@@ -1,5 +1,6 @@
 package ua.safetynet.payment;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
+import ua.safetynet.group.GlideApp;
 import ua.safetynet.group.Group;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.user.User;
@@ -49,6 +51,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public TransactionRecyclerAdapter(List<Transaction> list, int showType) {
         this.transactionList = list;
     }
+    @NonNull
     @Override
     public TransactionRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -78,6 +81,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onUserRetrieval(User user) {
                     holder.nameText.setText(user.getName());
+                    Glide.with(holder.itemView).load(user.getImage()).into(holder.imageView);
                 }
             });
         }
@@ -87,6 +91,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onGroupRetrieval(Group group) {
                     holder.nameText.setText(group.getName());
+                    Glide.with(holder.itemView).load(group.getImage()).into(holder.imageView);
                 }
             });
         }
