@@ -16,6 +16,7 @@ package ua.safetynet;
         import com.google.firebase.firestore.QuerySnapshot;
 
         import java.util.ArrayList;
+        import java.util.List;
         import java.util.Map;
 
         import ua.safetynet.group.Group;
@@ -118,7 +119,27 @@ public class Database {
             }
         });
     }
+    /**
+     * Gets all transactions made by one user regardless of group with the userId being passed in.
+     *
+     */
+    public void queryUserTransactions(String userId, final Database.DatabaseTransactionsListener listener) {
+        Query query = databaseTransactions.whereEqualTo("userid", userId).orderBy("timestamp");
 
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    ArrayList<Transaction> transList = new ArrayList<>();
+                    for(QueryDocumentSnapshot document : task.getResult()) {
+                        Transaction transaction = Transaction.fromMap(document.getData());
+                        transList.add(transaction);
+                    }
+                    listener.onTransactionsRetrieval(transList);
+                }
+            }
+        });
+    }
     /**
      * returns all transactions for a specific group, regardless of the user involved.
      * @param Id
