@@ -3,6 +3,8 @@ package ua.safetynet.group;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -18,12 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Group {
+public class Group implements Parcelable {
 
     private String name;
     private String groupId;
     private int repaymentTime;
-    private Bitmap image;
     private Uri imageUri;
     private BigDecimal funds;
     private BigDecimal withdrawalLimit;
@@ -133,12 +134,11 @@ public class Group {
 
     public void setImage(Bitmap image) {
         if(image != null) {
-            this.image = image;
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             final StorageReference groupImageRef = storageRef.child("groupimages/" + getGroupId() + ".jpg");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            image.compress(Bitmap.CompressFormat.JPEG, 99, baos);
             byte[] data = baos.toByteArray();
 
             UploadTask uploadTask = groupImageRef.putBytes(data);
@@ -281,4 +281,45 @@ public class Group {
         group.setAdmins(admins);
         */
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.groupId);
+        dest.writeInt(this.repaymentTime);
+        dest.writeParcelable(this.imageUri, flags);
+        dest.writeSerializable(this.funds);
+        dest.writeSerializable(this.withdrawalLimit);
+        dest.writeStringList(this.withdrawals);
+        dest.writeStringList(this.admins);
+        dest.writeStringList(this.users);
+    }
+
+    protected Group(Parcel in) {
+        this.name = in.readString();
+        this.groupId = in.readString();
+        this.repaymentTime = in.readInt();
+        this.imageUri = in.readParcelable(Uri.class.getClassLoader());
+        this.funds = (BigDecimal) in.readSerializable();
+        this.withdrawalLimit = (BigDecimal) in.readSerializable();
+        this.withdrawals = in.createStringArrayList();
+        this.admins = in.createStringArrayList();
+        this.users = in.createStringArrayList();
+    }
+
+    public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {
+        @Override
+        public Group createFromParcel(Parcel source) {
+            return new Group(source);
+        }
+
+        @Override
+        public Group[] newArray(int size) {
+            return new Group[size];
+        }
+    };
 }
