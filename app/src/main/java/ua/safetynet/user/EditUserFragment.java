@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -32,8 +33,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import ua.safetynet.Database;
 import ua.safetynet.R;
 
@@ -45,7 +44,7 @@ public class EditUserFragment extends Fragment {
     private TextInputEditText nameText;
     private TextInputEditText emailText;
     private TextInputEditText phoneText;
-    private CircleImageView imageView;
+    private ImageView imageView;
     private Bitmap image;
     public static final String TAG = "Edit User Fragment";
     public static final int PICK_IMAGE = 1;
@@ -58,7 +57,7 @@ public class EditUserFragment extends Fragment {
     public static EditUserFragment newInstance(User user) {
         EditUserFragment fragment = new EditUserFragment();
         Bundle args = new Bundle();
-        //args.putStr("user", user);
+        args.putParcelable("user",user );
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,7 +66,7 @@ public class EditUserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = (User)savedInstanceState.getSerializable("user");
+            user = savedInstanceState.getParcelable("user");
         }
         setHasOptionsMenu(true);
     }
