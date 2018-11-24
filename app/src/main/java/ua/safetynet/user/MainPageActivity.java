@@ -39,7 +39,8 @@ import ua.safetynet.payment.PayoutFragment;
  * in the activities layout
  */
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener,
-        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener
+        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener,
+        ViewUserFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
@@ -70,8 +71,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 db.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), new Database.DatabaseUserListener() {
                     @Override
                     public void onUserRetrieval(User user) {
-                        if (user != null)
+                        if (user != null) {
+                            setUser(user);
                             populateNavDrawerHeader(user);
+                        }
                     }
                 });
             }
@@ -107,6 +110,9 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                         {
                             case R.id.nav_home:
                                 fragment = new MainViewFragment();
+                                break;
+                            case R.id.nav_user:
+                                fragment = ViewUserFragment.newInstance(user);
                                 break;
                             case R.id.nav_groups:
                                 fragment = new CreateGroupFragment();
@@ -189,5 +195,8 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         headerName.setText(user.getName());
         headerEmail.setText(user.getEmail());
         //headerImage.setImageBitmap(user.getImage());
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 }

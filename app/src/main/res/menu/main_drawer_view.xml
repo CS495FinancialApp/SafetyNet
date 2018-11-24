@@ -7,6 +7,10 @@
         android:icon="@drawable/ic_round_home_24px"
         android:title="@string/menu_drawer_home"/>
     <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_baseline_account_circle_24px"
+        android:title="@string/menu_drawer_user"/>
+    <item
         android:id="@+id/nav_groups"
         android:icon="@drawable/ic_baseline_group_24px"
         android:title="@string/menu_drawer_groups" />
