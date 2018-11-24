@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/view_user_image"
             android:layout_marginBottom="9dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
 
         <TextView
             android:id="@+id/amount"

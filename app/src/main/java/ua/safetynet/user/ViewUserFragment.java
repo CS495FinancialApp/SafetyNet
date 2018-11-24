@@ -79,6 +79,11 @@ public class ViewUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_user, container, false);
+        mLayoutManager = new LinearLayoutManager(container.getContext());
+        return view;
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         nameText = view.findViewById(R.id.view_user_name);
         userImageView = view.findViewById(R.id.view_user_image);
         editImage = view.findViewById(R.id.view_user_edit_button);
@@ -98,14 +103,10 @@ public class ViewUserFragment extends Fragment {
         //Setup recycler view
         mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
         mTransactionRecycler.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(container.getContext());
         mTransactionRecycler.setLayoutManager(mLayoutManager);
         mTransactionRecycler.setItemAnimator(new DefaultItemAnimator());
         getTransactionList();
-        return view;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
