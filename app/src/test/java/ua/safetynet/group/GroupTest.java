@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RunWith(JUnit4.class)
 public class GroupTest {
-    Group group;
+    private Group group;
     @Before
     public void makeUser() {
         group = new Group();
@@ -38,8 +38,7 @@ public class GroupTest {
     }
     @Test
     public void testToFromMap() {
-        Map<String, Object> map = group.toMap();
-        Group mapGroup= Group.fromMap(map);
+        Group mapGroup= Group.fromMap(group.toMap());
         Assert.assertEquals(group.getGroupId(), mapGroup.getGroupId());
         Assert.assertEquals(group.getName(), mapGroup.getName());
         Assert.assertEquals(group.getFunds(), mapGroup.getFunds());

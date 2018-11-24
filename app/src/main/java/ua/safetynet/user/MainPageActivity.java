@@ -3,6 +3,7 @@ package ua.safetynet.user;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,12 +38,13 @@ import ua.safetynet.payment.PayoutFragment;
  * Sets up the toolbar and navigation drawer. Menu views are delegated to fragments which are placed into a container
  * in the activities layout
  */
-public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener, PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener
+public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener,
+        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener
 {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-
+    private User user = null;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private static final int RCSIGNIN = 123;
@@ -58,6 +62,21 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getParcelable("user") != null)
+            user = savedInstanceState.getParcelable("user");
+        else {
+            if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Database db = new Database();
+                db.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), new Database.DatabaseUserListener() {
+                    @Override
+                    public void onUserRetrieval(User user) {
+                        if (user != null)
+                            populateNavDrawerHeader(user);
+                    }
+                });
+            }
+        }
+
         //Show main page, just show user info for temp
         setContentView(R.layout.activity_main_page);
 
@@ -70,10 +89,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
 
         setupDrawerToggle();
         setupNavigationDrawer();
-
-
-
-
     }
 
     /**
@@ -164,5 +179,15 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     @Override
     public void onPaymentComplete(String transactionId) {
 
+    }
+
+    private void populateNavDrawerHeader(User user) {
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+        TextView headerName = navigationView.getHeaderView(0).findViewById(R.id.nav_header_name);
+        TextView headerEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_header_email);
+        //ImageView headerImage = navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
+        headerName.setText(user.getName());
+        headerEmail.setText(user.getEmail());
+        //headerImage.setImageBitmap(user.getImage());
     }
 }

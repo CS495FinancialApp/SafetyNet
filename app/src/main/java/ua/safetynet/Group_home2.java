@@ -32,7 +32,7 @@ public class Group_home2 extends AppCompatActivity {
         final TextView balance = findViewById(R.id.textViewGroupBalance);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
-        final Intent EditIntent = new Intent(Group_home2.this, EditGroups.class);
+        final Intent EditIntent = new Intent(Group_home2.this, EditGroup.class);
         final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
         Database db = new Database();
 /**

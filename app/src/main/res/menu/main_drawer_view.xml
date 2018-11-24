@@ -8,17 +8,22 @@
         android:title="@string/menu_drawer_home"/>
     <item
         android:id="@+id/nav_groups"
+        android:icon="@drawable/ic_baseline_group_24px"
         android:title="@string/menu_drawer_groups" />
     <item
         android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_baseline_settings_20px"
         android:title="@string/menu_drawer_settings" />
     <item
         android:id="@+id/nav_payment"
+        android:icon="@drawable/ic_baseline_payment_24px"
         android:title="@string/menu_drawer_payment"/>
     <item
         android:id="@+id/nav_payout"
+        android:icon="@drawable/ic_baseline_attach_money_24px"
         android:title="@string/menu_drawer_payout"/>
     <item
         android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_baseline_exit_to_app_24px"
         android:title="@string/menu_drawer_logout" />
 </menu>
