@@ -10,9 +10,11 @@
         android:id="@+id/view_user_image_bg"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/colorPrimary"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:id="@+id/view_user_edit_button"
@@ -27,40 +29,44 @@
             android:src="@drawable/ic_baseline_edit_24px" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:clickable="true"
-            android:focusable="true"
-            app:civ_border_width="3dp"
-            app:civ_border_color="#FFFFFFFF"
             android:id="@+id/view_user_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginTop="-130dp"
-            android:elevation="5dp"
-            android:padding="20dp"
-            android:scaleType="centerCrop"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/defaultuser" />
+            android:layout_marginTop="-130dp"
+            android:clickable="true"
+            android:elevation="5dp"
+            android:focusable="true"
+            android:padding="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/defaultuser"
+            app:civ_border_color="#FFFFFFFF"
+            app:civ_border_width="3dp" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:id="@+id/view_user_name"
-            android:layout_alignBottom="@id/view_user_image"/>
-        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/amount"/>
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/view_user_image"
+            android:layout_marginBottom="9dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/view_user_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/view_user_image_bg"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="-199dp"
         android:layout_marginBottom="0dp" />
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,18 @@ public class ViewUserFragment extends Fragment {
         nameText = view.findViewById(R.id.view_user_name);
         userImageView = view.findViewById(R.id.view_user_image);
         editImage = view.findViewById(R.id.view_user_edit_button);
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment editUserFragment = EditUserFragment.newInstance(user);
+                Log.d(TAG, "Edit Button clicked, going to that fragment");
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, editUserFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         populateHeader();
         //Setup recycler view
         mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
@@ -133,17 +146,6 @@ public class ViewUserFragment extends Fragment {
     private void populateHeader() {
         nameText.setText(user.getName());
         Glide.with(getContext()).load(user.getImage()).into(userImageView);
-        editImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment editUserFragment = EditUserFragment.newInstance(user);
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, editUserFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
     }
     private void getTransactionList() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
