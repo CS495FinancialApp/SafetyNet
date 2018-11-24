@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ public class ViewUserFragment extends Fragment {
     private User user;
     private TextView nameText;
     private ImageView userImageView;
+    private ImageView editImage;
     private List<Transaction> transactionList;
     private RecyclerView mTransactionRecycler;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -77,6 +80,7 @@ public class ViewUserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_user, container, false);
         nameText = view.findViewById(R.id.view_user_name);
         userImageView = view.findViewById(R.id.view_user_image);
+        editImage = view.findViewById(R.id.view_user_edit_button);
         populateHeader();
         //Setup recycler view
         mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
@@ -129,6 +133,12 @@ public class ViewUserFragment extends Fragment {
     private void populateHeader() {
         nameText.setText(user.getName());
         Glide.with(getContext()).load(user.getImage()).into(userImageView);
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     private void getTransactionList() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -138,8 +148,8 @@ public class ViewUserFragment extends Fragment {
                 public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
                     transactionList = transactions;
                     //Set adapter with group view
-                    TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.GROUP);
-                    mTransactionRecycler.setAdapter(adapter);
+                    mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.GROUP);
+                    mTransactionRecycler.setAdapter(mAdapter);
                 }
             });
         }
