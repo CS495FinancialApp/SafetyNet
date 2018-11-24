@@ -2,6 +2,7 @@ package ua.safetynet.group;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -23,6 +24,7 @@ public class Group {
     private String groupId;
     private int repaymentTime;
     private Bitmap image;
+    private Uri imageUri;
     private BigDecimal funds;
     private BigDecimal withdrawalLimit;
     //private int withdrawalDate;
@@ -51,8 +53,6 @@ public class Group {
         this.withdrawals = withdrawals;
         this.admins = admins;
         this.users = users;
-
-        fetchGroupImage();
     }
 
     public Group(String group_name,String group_id, Bitmap groupImage, BigDecimal funds, BigDecimal withdrawal_Limit, ArrayList<String> withdrawals, ArrayList<String> admins, ArrayList<String> users) {
@@ -136,7 +136,7 @@ public class Group {
             this.image = image;
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference groupImageRef = storageRef.child("groupimages/" + getGroupId() + ".jpg");
+            final StorageReference groupImageRef = storageRef.child("groupimages/" + getGroupId() + ".jpg");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
@@ -150,10 +150,22 @@ public class Group {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    groupImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            setImageUri(uri);
+                        }
+                    });
                     Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
                 }
             });
         }
+    }
+    public void setImage(Uri uri) {
+        setImageUri(uri);
+    }
+    private void setImageUri(Uri uri) {
+        this.imageUri = uri;
     }
 
     public void addAdmins(String item){
@@ -168,30 +180,8 @@ public class Group {
         this.withdrawals.add(item);
     }
 
-    public void fetchGroupImage() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference groupImageRef = storageRef.child("groupimages/"+ this.getGroupId() + ".jpg");
-        final long ONE_MEGABYTE = 1024 * 1024;
-        Log.d("GROUP",this.groupId);
-        groupImageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                image = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
-                setImage(image);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Group","Couldn't fetch group image " +e.getMessage());
-            }
-        });
-    }
-
-    public Bitmap getImage() {
-        if(this.image == null)
-            fetchGroupImage();
-        return image;
+    public Uri getImage() {
+       return this.imageUri;
     }
 
     public Map<String, Object> toMap() {
@@ -201,6 +191,7 @@ public class Group {
         map.put("repaymentTime", Integer.toString(this.repaymentTime));
         map.put("funds", this.funds.toString());
         map.put("limit", this.withdrawalLimit.toString());
+        map.put("imageuri",this.imageUri);
         map.put("users", this.users);
         map.put("admins", this.admins);
         map.put("withdrawals", this.withdrawals);
@@ -234,15 +225,15 @@ public class Group {
     @SuppressWarnings("unchecked")
     public static Group fromMap(Map<String, Object> map) {
         Group group = new Group();
-        group.setGroupId((String)map.get("groupId"));
-        group.setName((String)map.get("name"));
-        group.setRepaymentTime(Integer.valueOf((String)map.get("repaymentTime")));
-        group.setFunds(new BigDecimal(map.get("funds").toString()));
-        group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
-        group.setAdmins((ArrayList<String>) map.get("admins"));
-        group.setUsers((ArrayList<String>) map.get("users"));
-        group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
-        //group.fetchGroupImage();
+        if(map.get("groupId") != null) group.setGroupId((String)map.get("groupId"));
+        if(map.get("name") != null) group.setName((String)map.get("name"));
+        if(map.get("repaymentTime") != null) group.setRepaymentTime(Integer.valueOf((String)map.get("repaymentTime")));
+        if(map.get("funds") != null) group.setFunds(new BigDecimal(map.get("funds").toString()));
+        if(map.get("limit") != null) group.setWithdrawalLimit(new BigDecimal(map.get("limit").toString()));
+        if(map.get("imageuri") != null) group.setImage(Uri.parse(map.get("imageuri").toString()));
+        if(map.get("admins") != null) group.setAdmins((ArrayList<String>) map.get("admins"));
+        if(map.get("users") != null) group.setUsers((ArrayList<String>) map.get("users"));
+        if(map.get("withdrawals") != null) group.setWithdrawals((ArrayList<String>) map.get("withdrawals"));
         return group;
     }
 
