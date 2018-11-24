@@ -193,12 +193,12 @@ public class User implements  Parcelable {
     public static User fromMap(Map<String, Object> map) {
         User user = new User();
         if(map.get("userId") != null) user.setUserId(map.get("userId").toString());
-        if(map.get("userId") != null) user.setName(map.get("name").toString());
-        if(map.get("userId") != null) user.setEmail(map.get("email").toString());
-        if(map.get("userId") != null) user.setPhoneNumber(map.get("phone").toString());
-        if(map.get("userId") != null) user.setImage(Uri.parse(map.get("imageuri").toString()));
-        if(map.get("userId") != null) user.setGroups((ArrayList<String>) map.get("groups"));
-        if(map.get("userId") != null) user.setTransactions((ArrayList<String>) map.get("transactions"));
+        if(map.get("name") != null) user.setName(map.get("name").toString());
+        if(map.get("email") != null) user.setEmail(map.get("email").toString());
+        if(map.get("phone") != null) user.setPhoneNumber(map.get("phone").toString());
+        if(map.get("imageuri") != null) user.setImage(Uri.parse(map.get("imageuri").toString()));
+        if(map.get("groups") != null) user.setGroups((ArrayList<String>) map.get("groups"));
+        if(map.get("transactions") != null) user.setTransactions((ArrayList<String>) map.get("transactions"));
         return user;
     }
 
