@@ -22,14 +22,18 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
+
 import ua.safetynet.Database;
 import ua.safetynet.R;
+import ua.safetynet.Transaction;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
@@ -90,10 +94,21 @@ public class MainViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
 
-        TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
-        String text = "<font color=#ad3535>-</font> <font color=#000000>$55.27</font>";
-        mainBalance.setText(Html.fromHtml(text,0));
-        mainBalance.setTextSize(45);
+        final TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        Database db = new Database();
+        db.queryGroups(new Database.DatabaseGroupsListener() {
+            @Override
+            public void onGroupsRetrieval(ArrayList<Group> groups) {
+                BigDecimal bal = new BigDecimal("0");
+                for (int count = 0; count < groups.size(); count++){
+                    bal.add(groups.get(count).getFunds());
+                }
+                String text = "<font color=#ad3535>-</font> <font color=#000000>"+format.format(bal)+"</font>";
+                mainBalance.setText(Html.fromHtml(text,0));
+                mainBalance.setTextSize(45);
+            }
+        });
 
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
