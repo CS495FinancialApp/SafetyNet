@@ -1,5 +1,8 @@
 package ua.safetynet.user;
 
+import android.net.Uri;
+import android.os.Parcel;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +10,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 @RunWith(JUnit4.class)
 public class UserTest {
@@ -20,6 +26,8 @@ public class UserTest {
         user.setName("John Doe");
         user.setEmail("email@email.test");
         user.setPhoneNumber("5555555555");
+        //user.setImage(Uri.parse("https://firebasestorage.googleapis.com/v0/b/safetynet-f2326.appspot.com/o/userimages%2Fnull.jpg?alt=media&token=35787dac-f9d6-4faa-8df3-bb021c4be09c"));
+        user.setImage((Uri)null);
         ArrayList<String> trans = new ArrayList<String>();
         trans.add("1");
         trans.add("2");

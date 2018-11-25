@@ -75,7 +75,6 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Group group = groupList.get(position);
-        holder.mPicture.setImageBitmap(group.getImage());
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference groupImageRef = storageRef.child("groupimages/" + group.getGroupId() + ".jpg");
