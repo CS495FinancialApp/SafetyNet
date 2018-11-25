@@ -179,7 +179,7 @@ public class User implements  Parcelable {
         map.put("phone", this.phoneNumber);
         map.put("transactions",this.transactions);
         map.put("groups", this.groups);
-        map.put("imageuri", this.imageUri);
+        map.put("imageuri", this.imageUri.toString());
         return map;
     }
 
