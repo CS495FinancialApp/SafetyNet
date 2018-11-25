@@ -78,6 +78,7 @@ public class PaymentFragment extends Fragment {
     private User user = null;
     private String clientToken = null;
     private EditText amountText;
+    private ArrayList<Group> groupList = new ArrayList<>();
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
 
@@ -210,7 +211,7 @@ public class PaymentFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
-        params.put("groupId", spinner.);
+        params.put("groupId", groupId);
         params.put("amount", amount);
         params.put("userId",userId);
         params.put("email", user.getEmail());
@@ -300,16 +301,17 @@ public class PaymentFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
-
-
+        //Get list of groups from database
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groups);
+                groupList = groups;
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
                 spinner.setAdapter(adapter);
             }
         });
+        //setSelected if a groupId is passed in
         if (groupId == null)
             spinner.setSelected(false);
         else {
@@ -319,17 +321,14 @@ public class PaymentFragment extends Fragment {
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //Set selected listener to set groupId when item selected
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+            public void onItemSelected(MaterialSpinner view, int position, long id, Group item) {
+                groupId = item.getGroupId();
+                Log.d(TAG, "Group slected from spinner ID="+groupId);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-                // sometimes you need nothing here
-            }
-        }
+        });
     }
 
     /**
