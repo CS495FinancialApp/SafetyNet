@@ -280,17 +280,17 @@ public class PayoutFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
+        //Get list of groups from database
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayList<String> groupsNames = new ArrayList<>();
-                for(Group g : groups) {
-                    groupsNames.add(g.getName());
-                }
-                spinner.setItems(groupsNames);
+                groupList = groups;
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
+                spinner.setAdapter(adapter);
             }
         });
+        //setSelected if a groupId is passed in
         if (groupId == null)
             spinner.setSelected(false);
         else {
@@ -300,6 +300,19 @@ public class PayoutFragment extends Fragment {
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
+        //Set selected listener to set groupId when item selected
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Group item) {
+                groupId = item.getGroupId();
+                Log.d(TAG, "Group slected from spinner ID="+groupId);
+            }
+        });
+    }
+
+    private Transaction transactionFromJson(JSONObject json) {
+        Transaction transaction = new Transaction();
+        return transaction;
     }
     /**
      * This interface must be implemented by activities that contain this
