@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ua.safetynet.payment.Transaction;
+
 /**
  * @author Jeremy McCormick
  * User class to hold data related to user and their groups
@@ -109,7 +111,9 @@ public class User implements  Parcelable {
     public void setTransactions(ArrayList<String> transactions) {
         this.transactions = transactions;
     }
-
+    public void addTransaction(String transactionId) {
+        this.transactions.add(transactionId);
+    }
     public void setGroups(ArrayList<String> groups) {
         this.groups = groups;
     }
