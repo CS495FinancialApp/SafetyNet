@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -184,7 +185,10 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     }
     @Override
     public void onPaymentComplete(String transactionId) {
-
+        user.addTransaction(transactionId);
+        Database db = new Database();
+        db.setUser(user);
+        Log.d("Main Activity","Updated user with transaction ID = "+ transactionId);
     }
 
     private void populateNavDrawerHeader(User user) {

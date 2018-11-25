@@ -34,7 +34,6 @@ import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
-import ua.safetynet.Transaction;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
