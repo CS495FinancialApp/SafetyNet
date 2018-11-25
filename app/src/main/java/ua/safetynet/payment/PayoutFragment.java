@@ -51,6 +51,10 @@ import ua.safetynet.group.Group;
  * be sent to corresponding paypal with either email or phone #
  */
 public class PayoutFragment extends Fragment {
+    public interface OnPayoutCompleteListener {
+        public void onPayoutComplete(String transactionId);
+    }
+
     private static final String TAG = "PAYOUT FRAGMENT";
     private static final String AMOUNT = "amount";
     private static final String GROUPID = "groupId";
@@ -349,5 +353,5 @@ public class PayoutFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    
+
 }
