@@ -123,7 +123,7 @@ public class Database {
     public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
-                .whereEqualTo("userid", FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .whereEqualTo("groupId", groupId);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -150,7 +150,7 @@ public class Database {
      *
      */
     public void queryUserTransactions(String userId, final Database.DatabaseTransactionsListener listener) {
-        Query query = databaseTransactions.whereEqualTo("userid", userId).orderBy("timestamp");
+        Query query = databaseTransactions.whereEqualTo("userId", userId).orderBy("timestamp");
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
