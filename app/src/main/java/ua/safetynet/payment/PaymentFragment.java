@@ -210,7 +210,7 @@ public class PaymentFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
-        params.put("groupId", groupId);
+        params.put("groupId", spinner.);
         params.put("amount", amount);
         params.put("userId",userId);
         params.put("email", user.getEmail());
