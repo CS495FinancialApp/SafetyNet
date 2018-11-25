@@ -22,6 +22,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -207,7 +210,7 @@ public class PaymentFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
-        params.put("groupId", groupId);
+        params.put("groupId", spinner.);
         params.put("amount", amount);
         params.put("userId",userId);
         params.put("email", user.getEmail());
@@ -297,15 +300,14 @@ public class PaymentFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
+
+
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayList<String> groupsNames = new ArrayList<>();
-                for(Group g : groups) {
-                    groupsNames.add(g.getName());
-                }
-                spinner.setItems(groupsNames);
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groups);
+                spinner.setAdapter(adapter);
             }
         });
         if (groupId == null)
@@ -316,6 +318,17 @@ public class PaymentFragment extends Fragment {
             compGroup.setGroupId(groupId);
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
+        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+                // sometimes you need nothing here
+            }
         }
     }
 
