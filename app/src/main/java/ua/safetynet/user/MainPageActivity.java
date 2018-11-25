@@ -33,6 +33,7 @@ import ua.safetynet.auth.SplashScreenActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
+import ua.safetynet.payment.Transaction;
 
 /**
  * Main activity our app opens into
@@ -40,7 +41,7 @@ import ua.safetynet.payment.PayoutFragment;
  * in the activities layout
  */
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener,
-        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener,
+        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnPayoutCompleteListener, EditUserFragment.OnFragmentInteractionListener,
         ViewUserFragment.OnFragmentInteractionListener
 {
 
@@ -190,7 +191,16 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         db.setUser(user);
         Log.d("Main Activity","Updated user with transaction ID = "+ transactionId);
     }
-
+    @Override
+    public void onPayoutComplete(Transaction transaction) {
+        Database db = new Database();
+        //Add transaction to db since no server side handling with payouts
+        db.addTransaction(transaction);
+        //Add transaction id to user and update user
+        user.addTransaction(transaction.getTransId());
+        db.setUser(user);
+        Log.d("Main Activity","Updated user with transaction ID = "+ transaction.getTransId());
+    }
     private void populateNavDrawerHeader(User user) {
         final NavigationView navigationView = findViewById(R.id.nav_view);
         TextView headerName = navigationView.getHeaderView(0).findViewById(R.id.nav_header_name);
