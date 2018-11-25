@@ -99,7 +99,7 @@ public class MainViewFragment extends Fragment {
         mainBalance = rootView.findViewById(R.id.main_balance_amount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         Database db = new Database();
-        db.queryGroups(new Database.DatabaseGroupsListener() {
+        db.queryGroups(FirebaseAuth.getInstance().getCurrentUser().getUid(),new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 BigDecimal bal = new BigDecimal("0");
