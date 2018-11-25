@@ -1,5 +1,8 @@
 package ua.safetynet.payment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.math.BigDecimal;
@@ -7,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class Transaction {
+public class Transaction implements Parcelable {
 
     private String transId;
     private String userId;
@@ -84,4 +87,39 @@ public class Transaction {
         transaction.setTimestamp(map.get("timestamp").toString());
         return transaction;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.transId);
+        dest.writeString(this.userId);
+        dest.writeString(this.groupId);
+        dest.writeSerializable(this.funds);
+        dest.writeString(this.timestamp);
+    }
+
+    protected Transaction(Parcel in) {
+        this.transId = in.readString();
+        this.userId = in.readString();
+        this.groupId = in.readString();
+        this.funds = (BigDecimal) in.readSerializable();
+        this.timestamp = in.readString();
+    }
+
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel source) {
+            return new Transaction(source);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }
+
