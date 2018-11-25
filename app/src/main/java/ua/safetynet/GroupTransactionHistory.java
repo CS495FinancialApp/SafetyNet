@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import ua.safetynet.group.Group;
 import ua.safetynet.payment.Transaction;
+import ua.safetynet.payment.TransactionRecyclerAdapter;
 
 public class GroupTransactionHistory extends AppCompatActivity {
 
@@ -19,12 +20,10 @@ public class GroupTransactionHistory extends AppCompatActivity {
         setContentView(R.layout.activity_group_transaction_history);
 
         final TextView GroupName = findViewById(R.id.textViewGroupID);
-        RecyclerView GroupTrans = findViewById(R.id.RecyclerViewGroupTrans);
-        GroupTrans.setHasFixedSize(true);
-        RecyclerView.LayoutManager GroupManage = new LinearLayoutManager(this);
-        GroupTrans.setLayoutManager(GroupManage);
+        final RecyclerView GroupTrans = findViewById(R.id.RecyclerViewGroupTrans);
         Database db = new Database();
 
+        //Get & set name of current group
         db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
             @Override
             public void onGroupRetrieval(Group group) {
@@ -32,10 +31,16 @@ public class GroupTransactionHistory extends AppCompatActivity {
             }
         });
 
+        //Set linear layout
+        GroupTrans.setHasFixedSize(true);
+        RecyclerView.LayoutManager GroupManage = new LinearLayoutManager(this);
+        GroupTrans.setLayoutManager(GroupManage);
         db.queryGroupTransactions(getIntent().getStringExtra("group_ID"), new Database.DatabaseTransactionsListener() {
             @Override
             public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
-
+                //Specify adapter
+                RecyclerView.Adapter gAdapter = new TransactionRecyclerAdapter(transactions);
+                GroupTrans.setAdapter(gAdapter);
             }
         });
 

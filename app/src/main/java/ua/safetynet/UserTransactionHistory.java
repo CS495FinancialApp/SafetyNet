@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ua.safetynet.payment.Transaction;
+import ua.safetynet.payment.TransactionRecyclerAdapter;
 import ua.safetynet.user.User;
 
 public class UserTransactionHistory extends AppCompatActivity {
@@ -19,12 +20,11 @@ public class UserTransactionHistory extends AppCompatActivity {
         setContentView(R.layout.activity_user_transaction_history);
 
         final TextView UserName = findViewById(R.id.textViewUserID);
-        RecyclerView UserTrans = findViewById(R.id.RecyclerViewUserTrans);
-        UserTrans.setHasFixedSize(true);
-        RecyclerView.LayoutManager UserManage = new LinearLayoutManager(this);
-        UserTrans.setLayoutManager(UserManage);
+        final RecyclerView UserTrans = findViewById(R.id.RecyclerViewUserTrans);
         Database db = new Database();
 
+
+        //Get & set name of current user
         db.getUser(db.getUID(), new Database.DatabaseUserListener() {
             @Override
             public void onUserRetrieval(User user) {
@@ -32,12 +32,16 @@ public class UserTransactionHistory extends AppCompatActivity {
             }
         });
 
-        //UserName.setText("UserName");
-
+        //Set linear layout
+        UserTrans.setHasFixedSize(true);
+        RecyclerView.LayoutManager UserManage = new LinearLayoutManager(this);
+        UserTrans.setLayoutManager(UserManage);
         db.queryUserTransactions(new Database.DatabaseTransactionsListener() {
             @Override
             public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
-
+                //Specify adapter
+                RecyclerView.Adapter uAdapter = new TransactionRecyclerAdapter(transactions);
+                UserTrans.setAdapter(uAdapter);
             }
         }, getIntent().getStringExtra("group_ID"));
     }
