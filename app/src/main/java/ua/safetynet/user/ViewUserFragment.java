@@ -80,14 +80,7 @@ public class ViewUserFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_view_user, container, false);
         mLayoutManager = new LinearLayoutManager(container.getContext());
-        return view;
-    }
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        nameText = view.findViewById(R.id.view_user_name);
-        userImageView = view.findViewById(R.id.view_user_image);
-        editImage = view.findViewById(R.id.view_user_edit_button);
-        editImage.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.view_user_edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment editUserFragment = EditUserFragment.newInstance(user);
@@ -99,6 +92,9 @@ public class ViewUserFragment extends Fragment {
                         .commit();
             }
         });
+        nameText = view.findViewById(R.id.view_user_name);
+        userImageView = view.findViewById(R.id.view_user_image);
+
         populateHeader();
         //Setup recycler view
         mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
@@ -106,6 +102,11 @@ public class ViewUserFragment extends Fragment {
         mTransactionRecycler.setLayoutManager(mLayoutManager);
         mTransactionRecycler.setItemAnimator(new DefaultItemAnimator());
         getTransactionList();
+        return view;
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
     }
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -150,6 +151,7 @@ public class ViewUserFragment extends Fragment {
     }
     private void getTransactionList() {
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            transactionList = new ArrayList<>();
             Database db = new Database();
             db.queryUserTransactions(user.getUserId(), new Database.DatabaseTransactionsListener() {
                 @Override
@@ -161,5 +163,14 @@ public class ViewUserFragment extends Fragment {
                 }
             });
         }
+    }
+    public void onEditUserClick(View view) {
+        Fragment editUserFragment = EditUserFragment.newInstance(user);
+        Log.d(TAG, "Edit Button clicked, going to that fragment");
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, editUserFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

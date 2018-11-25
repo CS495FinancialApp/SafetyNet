@@ -18,15 +18,16 @@
 
         <ImageView
             android:id="@+id/view_user_edit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="37dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="11dp"
             android:layout_marginEnd="12dp"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_baseline_edit_24px" />
+            android:src="@drawable/ic_baseline_edit_24px"
+            android:contentDescription="TODO" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/view_user_image"
@@ -58,16 +59,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/view_user_recycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/view_user_image_bg"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="-199dp"
-        android:layout_marginBottom="0dp" />
-
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_user_image_bg">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/view_user_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="-199dp"
+            android:layout_marginBottom="0dp" />
+    </FrameLayout>
 </RelativeLayout>
