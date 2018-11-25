@@ -87,7 +87,33 @@ public class Database {
             }
         });
     }
+    /**query the firestore and return an arraylist of the groups the current user is in
+     Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible*/
+    public void queryGroups(String userId, final Database.DatabaseGroupsListener dbListener){
+        Query groupQuery = databaseGroups
+                .whereArrayContains("users", userId);
 
+        groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    ArrayList<Group> groupList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Group group = Group.fromMap(document.getData());
+                        Log.d("DATABASE", document.toString());
+                        //Group group = document.toObject(Group.class);
+                        //add group to an arraylist
+                        groupList.add(group);
+                    }
+                    dbListener.onGroupsRetrieval(groupList);
+                }
+                else{
+                    //error toast message goes here
+                    Log.d("DATABASE", "Group list fetch was not successful");
+                }
+            }
+        });
+    }
     /**
      * returns all the transactions for the currently logged in user in a specific group
      * The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
