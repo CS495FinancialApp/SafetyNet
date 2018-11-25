@@ -65,8 +65,8 @@ public class EditUserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState!= null && getArguments() != null) {
-            user = savedInstanceState.getParcelable("user");
+        if (getArguments() != null) {
+            user = getArguments().getParcelable("user");
             Log.d(TAG, "User obj gotten from bundle");
         }
         setHasOptionsMenu(true);
