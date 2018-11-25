@@ -1,7 +1,9 @@
 package ua.safetynet.payment;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +52,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         this.transactionList = list;
     }
     public TransactionRecyclerAdapter(List<Transaction> list, int showType) {
+        this.showType = showType;
         this.transactionList = list;
     }
     @NonNull
@@ -81,22 +85,24 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                 @Override
                 public void onUserRetrieval(User user) {
                     holder.nameText.setText(user.getName());
-                    Glide.with(holder.itemView).load(user.getImage()).into(holder.imageView);
                 }
             });
         }
         else {
             Database db = new Database();
-            db.getGroup(transaction.getUserId(), new Database.DatabaseGroupListener() {
+            db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
                 @Override
                 public void onGroupRetrieval(Group group) {
                     holder.nameText.setText(group.getName());
-                    Glide.with(holder.itemView).load(group.getImage()).into(holder.imageView);
                 }
             });
         }
         //Set amount
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        Log.d("TransactionAdapter", "Amount is " + transaction.getFunds().toPlainString() + " " + format.format(transaction.getFunds()));
+        //If negative set text to red
+        if(transaction.getFunds().compareTo(BigDecimal.ZERO)  < 0)
+            holder.amountText.setTextColor(Color.RED);
         holder.amountText.setText(format.format(transaction.getFunds()));
     }
 
