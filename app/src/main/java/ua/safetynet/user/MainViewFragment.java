@@ -34,7 +34,6 @@ import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
-import ua.safetynet.Transaction;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
@@ -97,7 +96,7 @@ public class MainViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
 
-        final TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
+        mainBalance = rootView.findViewById(R.id.main_balance_amount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
