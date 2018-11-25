@@ -221,6 +221,7 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
+                //Call onPaymentComplete listener to update user with transaction data
                 mPaymentListener.onPaymentComplete(transactionId);
             }
         });

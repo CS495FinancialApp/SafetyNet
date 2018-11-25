@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-@IgnoreExtraProperties
+
 public class Transaction implements Parcelable {
 
     private String transId;
