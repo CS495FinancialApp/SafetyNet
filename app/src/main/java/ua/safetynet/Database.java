@@ -200,6 +200,10 @@ public class Database {
         databaseUsers.document(user.getUserId()).set(user.toMap());
     }
 
+    public void addTransaction(Transaction transaction) {
+        databaseTransactions.document(transaction.getTransId()).set(transaction.toMap());
+    }
+
     //updates a group's data in firestore using a given group class
     public void setGroup(Group group){
         this.databaseGroups.document(group.getGroupId()).set(group);
