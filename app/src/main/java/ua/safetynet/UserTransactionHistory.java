@@ -40,7 +40,7 @@ public class UserTransactionHistory extends AppCompatActivity {
             @Override
             public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
                 //Specify adapter
-                RecyclerView.Adapter uAdapter = new TransactionRecyclerAdapter(transactions);
+                RecyclerView.Adapter uAdapter = new TransactionRecyclerAdapter(transactions,1);
                 UserTrans.setAdapter(uAdapter);
             }
         }, getIntent().getStringExtra("group_ID"));

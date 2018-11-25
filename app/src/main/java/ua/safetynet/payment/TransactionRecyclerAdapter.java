@@ -13,7 +13,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,6 +35,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public static final int NOIMAGE = 0;
     public static final int USER = 1;
     public static final int GROUP = 2;
+    public int repaymentTime = 0;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameText;
@@ -76,24 +82,32 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             Glide.with(holder.itemView).load(imageRef).apply(new RequestOptions()).into(holder.imageView);
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
-            Database db = new Database();
-            db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
-                @Override
-                public void onUserRetrieval(User user) {
-                    holder.nameText.setText(user.getName());
-                    Glide.with(holder.itemView).load(user.getImage()).into(holder.imageView);
-                }
-            });
+            if(checkAnon(transaction))
+                holder.nameText.setText("*****");
+            else {
+                Database db = new Database();
+                db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
+                    @Override
+                    public void onUserRetrieval(User user) {
+                        holder.nameText.setText(user.getName());
+                        Glide.with(holder.itemView).load(user.getImage()).into(holder.imageView);
+                    }
+                });
+            }
         }
         else {
-            Database db = new Database();
-            db.getGroup(transaction.getUserId(), new Database.DatabaseGroupListener() {
-                @Override
-                public void onGroupRetrieval(Group group) {
-                    holder.nameText.setText(group.getName());
-                    Glide.with(holder.itemView).load(group.getImage()).into(holder.imageView);
-                }
-            });
+            if(checkAnon(transaction))
+                holder.nameText.setText("*****");
+            else {
+                Database db = new Database();
+                db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
+                    @Override
+                    public void onGroupRetrieval(Group group) {
+                        holder.nameText.setText(group.getName());
+                        Glide.with(holder.itemView).load(group.getImage()).into(holder.imageView);
+                    }
+                });
+            }
         }
         //Set amount
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
@@ -105,5 +119,36 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         return transactionList.size();
     }
 
+    private boolean checkAnon(Transaction transaction){
+        //ToDo: Potentially use java date strings instead of calendar objects
+        Database db = new Database();
+        String timestamp = transaction.getTimestamp();
+        //ToDo: Confirm format of datetime
+        DateFormat df = DateFormat.getDateInstance();
+        //Get current datetime
+        Calendar current = Calendar.getInstance();
+        Calendar deadline = Calendar.getInstance();
+
+        //Get set group repaymentTime
+        db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
+            @Override
+            public void onGroupRetrieval(Group group) {
+                repaymentTime = group.getRepaymentTime();
+            }
+        });
+        //Set timestamp of transaction
+        try {
+            deadline.setTime(df.parse(timestamp));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //Add repayment time to timestamp
+        deadline.add(Calendar.DATE, repaymentTime);
+        //If current date is after designated deadline
+        if(current.after(deadline))
+            return true;
+        else
+            return false;
+    }
 
 }

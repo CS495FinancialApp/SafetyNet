@@ -39,7 +39,7 @@ public class GroupTransactionHistory extends AppCompatActivity {
             @Override
             public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
                 //Specify adapter
-                RecyclerView.Adapter gAdapter = new TransactionRecyclerAdapter(transactions);
+                RecyclerView.Adapter gAdapter = new TransactionRecyclerAdapter(transactions,2);
                 GroupTrans.setAdapter(gAdapter);
             }
         });
