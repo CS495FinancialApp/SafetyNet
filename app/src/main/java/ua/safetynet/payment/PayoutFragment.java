@@ -1,8 +1,10 @@
 package ua.safetynet.payment;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,9 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.type.Date;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
@@ -35,6 +40,7 @@ import java.util.UUID;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.client.HttpResponseException;
 import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.group.Group;
@@ -58,6 +64,7 @@ public class PayoutFragment extends Fragment {
     private String groupId;
     private EditText amountText;
     private EditText emailText;
+    private ArrayList<Group> groupList = new ArrayList<>();
     private MaterialSpinner spinner;
     private OnFragmentInteractionListener mListener;
 
@@ -208,6 +215,7 @@ public class PayoutFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG,"Payout Completed " + response.toString());
+                Log.d(TAG, transactionFromJson(response, amount).toMap().toString());
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
@@ -310,8 +318,21 @@ public class PayoutFragment extends Fragment {
         });
     }
 
-    private Transaction transactionFromJson(JSONObject json) {
+    private Transaction transactionFromJson(JSONObject resp, BigDecimal amount) {
         Transaction transaction = new Transaction();
+        transaction.setGroupId(groupId);
+        transaction.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        transaction.setFunds(amount.negate());
+        //Make timestamp here b/c its not returned in json resp
+        transaction.setTimestamp(new java.util.Date().toString());
+        try {
+            JSONObject header = resp.getJSONObject("batch_header");
+            transaction.setTransId(header.getString("payout_batch_id"));
+            transaction.setTimestamp(header.getString("time_created"));
+        }
+        catch(JSONException e) {
+            e.printStackTrace();
+        }
         return transaction;
     }
     /**
@@ -328,4 +349,5 @@ public class PayoutFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    
 }
