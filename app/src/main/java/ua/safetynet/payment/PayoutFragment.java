@@ -52,7 +52,7 @@ import ua.safetynet.group.Group;
  */
 public class PayoutFragment extends Fragment {
     public interface OnPayoutCompleteListener {
-        public void onPayoutComplete(String transactionId);
+        void onPayoutComplete(Transaction transaction);
     }
 
     private static final String TAG = "PAYOUT FRAGMENT";
@@ -70,7 +70,7 @@ public class PayoutFragment extends Fragment {
     private EditText emailText;
     private ArrayList<Group> groupList = new ArrayList<>();
     private MaterialSpinner spinner;
-    private OnFragmentInteractionListener mListener;
+    private OnPayoutCompleteListener mListener;
 
     public PayoutFragment() {
         // Required empty public constructor
@@ -140,18 +140,11 @@ public class PayoutFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnPayoutCompleteListener) {
+            mListener = (OnPayoutCompleteListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -219,7 +212,9 @@ public class PayoutFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG,"Payout Completed " + response.toString());
-                Log.d(TAG, transactionFromJson(response, amount).toMap().toString());
+                Transaction trans = transactionFromJson(response, amount);
+                Log.d(TAG, trans.toMap().toString());
+                mListener.onPayoutComplete(trans);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
