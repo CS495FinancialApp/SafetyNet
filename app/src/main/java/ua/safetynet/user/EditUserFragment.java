@@ -173,13 +173,11 @@ public class EditUserFragment extends Fragment {
             user.setName(nameText.getText().toString());
             user.setEmail(emailText.getText().toString());
             user.setPhoneNumber(phoneText.getText().toString());
-            user.setImage(((BitmapDrawable) imageView.getDrawable()).getBitmap());
         }
         else {
             user.setName(nameText.getText().toString());
             user.setEmail(emailText.getText().toString());
             user.setPhoneNumber(phoneText.getText().toString());
-            user.setImage(((BitmapDrawable) imageView.getDrawable()).getBitmap());
         }
 
             Database db = new Database();
@@ -220,6 +218,7 @@ public class EditUserFragment extends Fragment {
                     e.printStackTrace();
                 }
                 Glide.with(getContext()).asBitmap().load(newImage).into(imageView);
+                user.setImage(newImage);
             }
             else
                 Log.d(TAG, "Could not image from return bundle");
