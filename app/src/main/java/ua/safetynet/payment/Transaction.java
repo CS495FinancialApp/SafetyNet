@@ -72,7 +72,7 @@ public class Transaction implements Parcelable {
         map.put("transId", this.transId);
         map.put("userId", this.userId);
         map.put("groupId",this.groupId);
-        map.put("funds", this.funds.toString());
+        map.put("amount", this.funds.toString());
         map.put("timestamp", this.timestamp);
         return map;
     }
@@ -82,7 +82,7 @@ public class Transaction implements Parcelable {
         transaction.setTransId(map.get("transId").toString());
         transaction.setUserId(map.get("userId").toString());
         transaction.setGroupId(map.get("groupId").toString());
-        transaction.setFunds(new BigDecimal(map.get("funds").toString()));
+        transaction.setFunds(new BigDecimal(map.get("amount").toString()));
         transaction.setTimestamp(map.get("timestamp").toString());
         return transaction;
     }
