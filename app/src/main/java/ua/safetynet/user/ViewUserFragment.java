@@ -71,6 +71,7 @@ public class ViewUserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             user = getArguments().getParcelable(USER);
+            Log.d(TAG, "User obj gotten from bundle");
         }
     }
 

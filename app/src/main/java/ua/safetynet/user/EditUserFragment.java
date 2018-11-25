@@ -57,7 +57,7 @@ public class EditUserFragment extends Fragment {
     public static EditUserFragment newInstance(User user) {
         EditUserFragment fragment = new EditUserFragment();
         Bundle args = new Bundle();
-        args.putParcelable("user",user );
+        args.putParcelable("user",user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,8 +65,9 @@ public class EditUserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (savedInstanceState!= null && getArguments() != null) {
             user = savedInstanceState.getParcelable("user");
+            Log.d(TAG, "User obj gotten from bundle");
         }
         setHasOptionsMenu(true);
     }
