@@ -52,7 +52,7 @@ public class Database {
     public Database() {
         this.databaseUsers = FirebaseFirestore.getInstance().collection("Users");
         this.databaseGroups = FirebaseFirestore.getInstance().collection("Groups");
-        this.databaseTransactions = FirebaseFirestore.getInstance().collection("Transactions");
+        this.databaseTransactions = FirebaseFirestore.getInstance().collection("transactions");
     }
 
     //returns the user ID of the user currently logged in to the device (via firebaseAuth)
