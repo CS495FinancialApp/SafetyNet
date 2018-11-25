@@ -12,6 +12,10 @@ import ua.safetynet.group.Group;
 import ua.safetynet.payment.Transaction;
 import ua.safetynet.payment.TransactionRecyclerAdapter;
 
+/**
+ * @author Jake Bailey
+ * Activity for tracking a group's transaction history
+ */
 public class GroupTransactionHistory extends AppCompatActivity {
 
     @Override

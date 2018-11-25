@@ -16,6 +16,10 @@ import java.util.Locale;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
+/**
+ * @author Jake Bailey
+ * Main activity for a single group
+ */
 public class Group_home2 extends AppCompatActivity {
 
     @Override
@@ -23,35 +27,23 @@ public class Group_home2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_home2);
 
-        //getIncomingIntent();
-
         Button userHistory = (Button) findViewById(R.id.buttonUserHistory);
         Button editGroup = (Button) findViewById(R.id.buttonEditGroup);
         Button groupHistory = (Button) findViewById(R.id.buttonGroupHistory);
         final TextView name = findViewById(R.id.textViewGroupName);
         final TextView balance = findViewById(R.id.textViewGroupBalance);
-        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar format
         final Intent UserIntent = new Intent(Group_home2.this, UserTransactionHistory.class);
         final Intent EditIntent = new Intent(Group_home2.this, EditGroup.class);
         final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
         Database db = new Database();
-/**
-
-        db.getUser(db.getUID(), new Database.DatabaseUserListener() {
-            @Override
-            public void onUserRetrieval(User user) {
-
-                name.setText(user.getUserId());
-            }
-
-        });
-**/
 
         db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
             @Override
             public void onGroupRetrieval(Group group) {
                 name.setText(group.getName());
                 balance.setText("Balance: " + format.format(group.getFunds()));
+                //Pass groupID for future retrieval
                 GroupIntent.putExtra("group_ID", group.getGroupId());
                 EditIntent.putExtra("group_ID", group.getGroupId());
                 UserIntent.putExtra("group_ID", group.getGroupId());
@@ -78,24 +70,4 @@ public class Group_home2 extends AppCompatActivity {
             }
         });
     }
-
-/**
-    //Function recieves data from intent passed from Group_home2
-     private void getIncomingIntent(){
-        if(getIntent().hasExtra("group_name")) {
-            TextView name = findViewById(R.id.textViewGroupName);
-            String groupName = getIntent().getStringExtra("group_name");
-
-            Database db = new Database();
-
-            name.setText(groupName);
-        }
-        if(getIntent().hasExtra("group_balance")){
-            TextView balance = findViewById(R.id.textViewGroupBalance);
-            NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-            BigDecimal groupBalance = (BigDecimal) getIntent().getSerializableExtra("group_balance");
-
-            balance.setText("Balance: " + format.format(groupBalance));
-        }
-    }**/
 }

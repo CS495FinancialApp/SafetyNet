@@ -84,10 +84,12 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         holder.mAmount.setText(format.format(group.getFunds()));
 
+        //Transfers to appropriate group activity when element is clicked
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), Group_home2.class);
+                //Pass groupID for future retrieval
                 intent.putExtra("group_ID", group.getGroupId());
                 v.getContext().startActivity(intent);
             }

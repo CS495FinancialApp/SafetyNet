@@ -12,6 +12,10 @@ import ua.safetynet.payment.Transaction;
 import ua.safetynet.payment.TransactionRecyclerAdapter;
 import ua.safetynet.user.User;
 
+/**
+ * @author Jake Bailey
+ * Activity for tracking a user's transaction history
+ */
 public class UserTransactionHistory extends AppCompatActivity {
 
     @Override
@@ -22,7 +26,6 @@ public class UserTransactionHistory extends AppCompatActivity {
         final TextView UserName = findViewById(R.id.textViewUserID);
         final RecyclerView UserTrans = findViewById(R.id.RecyclerViewUserTrans);
         Database db = new Database();
-
 
         //Get & set name of current user
         db.getUser(db.getUID(), new Database.DatabaseUserListener() {

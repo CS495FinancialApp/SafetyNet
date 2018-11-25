@@ -99,6 +99,7 @@ public class MainViewFragment extends Fragment {
         mainBalance = rootView.findViewById(R.id.main_balance_amount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         Database db = new Database();
+        //Retrieve total amount of money from user's groups
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
@@ -106,8 +107,7 @@ public class MainViewFragment extends Fragment {
                 for (int count = 0; count < groups.size(); count++){
                     bal.add(groups.get(count).getFunds());
                 }
-                String text = "<font color=#ad3535>-</font> <font color=#000000>"+format.format(bal)+"</font>";
-                mainBalance.setText(Html.fromHtml(text,0));
+                mainBalance.setText(format.format(bal));
                 mainBalance.setTextSize(45);
             }
         });

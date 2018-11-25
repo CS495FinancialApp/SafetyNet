@@ -35,6 +35,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public static final int NOIMAGE = 0;
     public static final int USER = 1;
     public static final int GROUP = 2;
+    //Variable of how many days of anonymity to provide
     public int repaymentTime = 0;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,6 +83,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             Glide.with(holder.itemView).load(imageRef).apply(new RequestOptions()).into(holder.imageView);
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
+            //Check if transaction should be anonymous
             if(checkAnon(transaction))
                 holder.nameText.setText("*****");
             else {
@@ -96,6 +98,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             }
         }
         else {
+            //Check if transaction should be anonymous
             if(checkAnon(transaction))
                 holder.nameText.setText("*****");
             else {
@@ -119,6 +122,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         return transactionList.size();
     }
 
+    //Check's if given transaction's anonymity has expired or not
     private boolean checkAnon(Transaction transaction){
         //ToDo: Potentially use java date strings instead of calendar objects
         Database db = new Database();
@@ -146,9 +150,9 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         deadline.add(Calendar.DATE, repaymentTime);
         //If current date is after designated deadline
         if(current.after(deadline))
-            return true;
+            return true;    //Hide username
         else
-            return false;
+            return false;   //Display username
     }
 
 }
