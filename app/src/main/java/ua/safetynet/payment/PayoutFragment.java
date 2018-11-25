@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.type.Date;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -327,7 +328,6 @@ public class PayoutFragment extends Fragment {
         try {
             JSONObject header = resp.getJSONObject("batch_header");
             transaction.setTransId(header.getString("payout_batch_id"));
-            transaction.setTimestamp(header.getString("time_created"));
         }
         catch(JSONException e) {
             e.printStackTrace();
