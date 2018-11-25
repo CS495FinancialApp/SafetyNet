@@ -40,25 +40,31 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-
         setContentView(R.layout.activity_firebase_auth);
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null) //If the user isnt already logged in
         {
             //User isnt signed in, launch sign in activity
+            Log.d(TAG, "User isnt signed in, starting sign in activity");
             startActivityForResult(AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(Arrays.asList(
                             new AuthUI.IdpConfig.GoogleBuilder().build(),
-                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                            new AuthUI.IdpConfig.PhoneBuilder().build()))
+                            new AuthUI.IdpConfig.EmailBuilder().build()))
                     .setIsSmartLockEnabled(true)
                     .build(),RCSIGNIN);
         }
+        else {
+            Log.d(TAG, "Starting main page activity");
+            startActivity(new Intent(this, MainPageActivity.class));
+            finish();
+        }
     }
-
 
     // [START auth_fui_result]
     @Override

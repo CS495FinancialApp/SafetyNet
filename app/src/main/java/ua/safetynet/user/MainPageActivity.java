@@ -131,6 +131,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                     public void onComplete(@NonNull Task<Void> task) {
                                         startActivity(new Intent(MainPageActivity.this, FirebaseAuthActivity.class));
                                         finish();
+                                        firebaseAuth.signOut();
                                     }
                                 });
                                 firebaseAuth.signOut();
