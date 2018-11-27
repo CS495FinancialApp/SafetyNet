@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import ua.safetynet.Database;
@@ -31,6 +32,7 @@ import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.auth.SplashScreenActivity;
 import ua.safetynet.group.CreateGroupFragment;
+import ua.safetynet.group.Group;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
 import ua.safetynet.payment.Transaction;
@@ -201,6 +203,20 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         user.addTransaction(transaction.getTransId());
         db.setUser(user);
         Log.d("Main Activity","Updated user with transaction ID = "+ transaction.getTransId());
+        //Update group as well because server doesn't do it
+        db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
+            @Override
+            public void onGroupRetrieval(Group group) {
+                //Add transaction ID to group
+                group.addWithdrawal(transaction.getTransId());
+                //Deduct payout amt
+                BigDecimal transAmt = transaction.getFunds();
+                BigDecimal groupAmt = group.getFunds();
+                group.setFunds(groupAmt.add(transAmt));
+                //Update group in DB
+                db.setGroup(group);
+            }
+        });
     }
     private void populateNavDrawerHeader(User user) {
         final NavigationView navigationView = findViewById(R.id.nav_view);
