@@ -44,6 +44,14 @@
     <string name="withdrawal_limit">Withdrawal Limit</string>
 
 
+    <string name="add_admin">Add user as Admin</string>
+    <string name="add_user">Add a new user</string>
+    <string name="remove_user">Remove user</string>
+    <string name="remove_admin">Remove admin</string>
+    <string name="confirm_changes">Confirm Changes</string>
+    <string name="add_user_hint">New user\'s UID</string>
+
+
     <string name="confirm2">Confirm</string>
     <string name="withdrawal_question2">How much to withdrawal?</string>
     <string name="withdrawal_hint">Dollar amount for withdrawl</string>

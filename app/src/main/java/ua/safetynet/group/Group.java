@@ -172,8 +172,16 @@ public class Group implements Parcelable {
         this.admins.add(item);
     }
 
+    public void removeAdmins(String item){
+        this.admins.remove(item);
+    }
+
     public void addUsers(String item){
         this.users.add(item);
+    }
+
+    public void removeUsers(String item){
+        this.users.remove(item);
     }
 
     public void addWithdrawal(String item){
