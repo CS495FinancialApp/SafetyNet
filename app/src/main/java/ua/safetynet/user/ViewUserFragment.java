@@ -165,13 +165,4 @@ public class ViewUserFragment extends Fragment {
             });
         }
     }
-    public void onEditUserClick(View view) {
-        Fragment editUserFragment = EditUserFragment.newInstance(user);
-        Log.d(TAG, "Edit Button clicked, going to that fragment");
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, editUserFragment)
-                .addToBackStack(null)
-                .commit();
-    }
 }
