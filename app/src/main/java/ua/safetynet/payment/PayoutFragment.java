@@ -354,7 +354,7 @@ public class PayoutFragment extends Fragment {
     }
 
     public boolean checkInputs() {
-        if(groupId == null || !groupId.isEmpty()) {
+        if(groupId == null || groupId.isEmpty()) {
             Toast.makeText(getContext(), "Must Select a Group", Toast.LENGTH_SHORT).show();
             return false;
         }
