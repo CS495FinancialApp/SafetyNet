@@ -6,12 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".EditGroup">
 
+    <Button
+        android:id="@+id/bttnAddUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/add_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAdmins" />
+
+    <Button
+        android:id="@+id/bttnConfirmChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="18dp"
+        android:text="@string/confirm_changes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bttnAddUser" />
+
+    <Button
+        android:id="@+id/bttnRemoveAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:text="@string/remove_admin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAdmins" />
+
+    <Button
+        android:id="@+id/bttnRemoveUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/remove_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUsers" />
+
+    <TextView
+        android:id="@+id/textViewSelectedUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/groupName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextWithdrawalLimit" />
+
     <TextView
         android:id="@+id/textViewGroupID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="154dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="152dp"
         android:text="@string/groupName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,39 +76,37 @@
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="62dp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerAdmins"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextWithdrawalLimit" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectedUser" />
 
     <Spinner
         android:id="@+id/spinnerAdmins"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="116dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerUsers" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSelectedAdmin" />
 
     <EditText
         android:id="@+id/editTextWithdrawalLimit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="85dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="17dp"
         android:layout_marginEnd="84dp"
         android:ems="10"
+        android:gravity="center"
         android:hint="@string/withdrawal_limit_hint"
         android:inputType="numberDecimal"
+        android:selectAllOnFocus="true"
         android:text="@string/withdrawal_limit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,15 +117,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="85dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="19dp"
         android:layout_marginEnd="84dp"
-        android:layout_marginBottom="41dp"
         android:ems="10"
+        android:gravity="center"
         android:hint="@string/payment_time_hint"
         android:inputType="number"
+        android:selectAllOnFocus="true"
         android:text="@string/payment_time"
-        app:layout_constraintBottom_toTopOf="@+id/editTextWithdrawalLimit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewGroupID" />
+
+    <Button
+        android:id="@+id/bttnAddAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:text="@string/add_admin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUsers" />
+
+    <TextView
+        android:id="@+id/textViewSelectedAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="@string/groupName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bttnAddAdmin" />
+
+    <EditText
+        android:id="@+id/editTextNewUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@String/add_user_hint"
+        android:inputType="text"
+        android:text="@string/user_ID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bttnRemoveAdmin" />
 </android.support.constraint.ConstraintLayout>

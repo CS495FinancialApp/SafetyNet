@@ -122,14 +122,14 @@ public class MainViewFragment extends Fragment {
         Database db = new Database();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db.queryGroups(userId,new Database.DatabaseGroupsListener() {
+
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 BigDecimal bal = new BigDecimal("0");
                 for (int count = 0; count < groups.size(); count++){
                     bal.add(groups.get(count).getFunds());
                 }
-                String text = "<font color=#ad3535>-</font> <font color=#000000>"+format.format(bal)+"</font>";
-                mainBalance.setText(Html.fromHtml(text,0));
+                mainBalance.setText(format.format(bal));
                 mainBalance.setTextSize(45);
             }
         });
