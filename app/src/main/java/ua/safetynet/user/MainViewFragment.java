@@ -1,12 +1,14 @@
 package ua.safetynet.user;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,9 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.math.BigDecimal;
@@ -34,6 +39,7 @@ import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
+import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
@@ -98,9 +104,25 @@ public class MainViewFragment extends Fragment {
 
         mainBalance = rootView.findViewById(R.id.main_balance_amount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+
+        try {
+            String test = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+        catch (NullPointerException e) {
+            //Somehow the current user is null, log out and start sign in
+            Log.d("MAIN FRAG", "Current user is null, logging out and starting sign in");
+            AuthUI.getInstance().signOut(getActivity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    startActivity(new Intent(getActivity(), FirebaseAuthActivity.class));
+                }
+            });
+            return rootView;
+        }
         Database db = new Database();
-        //Retrieve total amount of money from user's groups
-        db.queryGroups(new Database.DatabaseGroupsListener() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.queryGroups(userId,new Database.DatabaseGroupsListener() {
+
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 BigDecimal bal = new BigDecimal("0");

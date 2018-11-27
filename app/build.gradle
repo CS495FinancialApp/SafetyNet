@@ -20,6 +20,10 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -52,13 +56,10 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
-
-
 }
 apply plugin: 'com.google.gms.google-services'

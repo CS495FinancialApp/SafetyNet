@@ -1,9 +1,4 @@
-/***
- * @author Jeremy McCormick
- * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
- * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
- * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
- */
+
 package ua.safetynet.payment;
 
 import android.app.Activity;
@@ -22,6 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,7 +49,12 @@ import cz.msebera.android.httpclient.Header;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
-
+/**
+ * @author Jeremy McCormick
+ * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
+ * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
+ * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
+ */
 public class PaymentFragment extends Fragment {
     //Interface to define callback in which transaction Id will be returned
     public interface OnPaymentCompleteListener {
@@ -75,6 +78,7 @@ public class PaymentFragment extends Fragment {
     private User user = null;
     private String clientToken = null;
     private EditText amountText;
+    private ArrayList<Group> groupList = new ArrayList<>();
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
 
@@ -221,6 +225,9 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
+                //Call onPaymentComplete listener to update user with transaction data
+                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
+                transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
             }
         });
@@ -296,17 +303,17 @@ public class PaymentFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
+        //Get list of groups from database
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayList<String> groupsNames = new ArrayList<>();
-                for(Group g : groups) {
-                    groupsNames.add(g.getName());
-                }
-                spinner.setItems(groupsNames);
+                groupList = groups;
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
+                spinner.setAdapter(adapter);
             }
         });
+        //setSelected if a groupId is passed in
         if (groupId == null)
             spinner.setSelected(false);
         else {
@@ -316,6 +323,14 @@ public class PaymentFragment extends Fragment {
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
+        //Set selected listener to set groupId when item selected
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Group item) {
+                groupId = item.getGroupId();
+                Log.d(TAG, "Group slected from spinner ID="+groupId);
+            }
+        });
     }
 
     /**

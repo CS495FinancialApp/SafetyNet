@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import ua.safetynet.Database;
@@ -30,8 +32,10 @@ import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.auth.SplashScreenActivity;
 import ua.safetynet.group.CreateGroupFragment;
+import ua.safetynet.group.Group;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
+import ua.safetynet.payment.Transaction;
 
 /**
  * Main activity our app opens into
@@ -39,7 +43,7 @@ import ua.safetynet.payment.PayoutFragment;
  * in the activities layout
  */
 public class MainPageActivity extends AppCompatActivity implements CreateGroupFragment.OnFragmentInteractionListener, MainViewFragment.OnFragmentInteractionListener,
-        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnFragmentInteractionListener, EditUserFragment.OnFragmentInteractionListener,
+        PaymentFragment.OnPaymentCompleteListener, PayoutFragment.OnPayoutCompleteListener, EditUserFragment.OnFragmentInteractionListener,
         ViewUserFragment.OnFragmentInteractionListener
 {
 
@@ -129,6 +133,7 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                                     public void onComplete(@NonNull Task<Void> task) {
                                         startActivity(new Intent(MainPageActivity.this, FirebaseAuthActivity.class));
                                         finish();
+                                        firebaseAuth.signOut();
                                     }
                                 });
                                 firebaseAuth.signOut();
@@ -184,9 +189,35 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     }
     @Override
     public void onPaymentComplete(String transactionId) {
-
+        user.addTransaction(transactionId);
+        Database db = new Database();
+        db.setUser(user);
+        Log.d("Main Activity","Updated user with transaction ID = "+ transactionId);
     }
-
+    @Override
+    public void onPayoutComplete(Transaction transaction) {
+        Database db = new Database();
+        //Add transaction to db since no server side handling with payouts
+        db.addTransaction(transaction);
+        //Add transaction id to user and update user
+        user.addTransaction(transaction.getTransId());
+        db.setUser(user);
+        Log.d("Main Activity","Updated user with transaction ID = "+ transaction.getTransId());
+        //Update group as well because server doesn't do it
+        db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
+            @Override
+            public void onGroupRetrieval(Group group) {
+                //Add transaction ID to group
+                group.addWithdrawal(transaction.getTransId());
+                //Deduct payout amt
+                BigDecimal transAmt = transaction.getFunds();
+                BigDecimal groupAmt = group.getFunds();
+                group.setFunds(groupAmt.add(transAmt));
+                //Update group in DB
+                db.setGroup(group);
+            }
+        });
+    }
     private void populateNavDrawerHeader(User user) {
         final NavigationView navigationView = findViewById(R.id.nav_view);
         TextView headerName = navigationView.getHeaderView(0).findViewById(R.id.nav_header_name);

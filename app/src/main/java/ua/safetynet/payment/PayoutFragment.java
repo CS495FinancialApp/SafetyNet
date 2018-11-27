@@ -1,8 +1,10 @@
 package ua.safetynet.payment;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,9 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.type.Date;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
@@ -35,6 +42,7 @@ import java.util.UUID;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.client.HttpResponseException;
 import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.group.Group;
@@ -45,6 +53,10 @@ import ua.safetynet.group.Group;
  * be sent to corresponding paypal with either email or phone #
  */
 public class PayoutFragment extends Fragment {
+    public interface OnPayoutCompleteListener {
+        void onPayoutComplete(Transaction transaction);
+    }
+
     private static final String TAG = "PAYOUT FRAGMENT";
     private static final String AMOUNT = "amount";
     private static final String GROUPID = "groupId";
@@ -55,11 +67,12 @@ public class PayoutFragment extends Fragment {
     private static final String APITRANS = "v1/payments/payouts";
     private String clientToken = null;
     private BigDecimal amount = new BigDecimal(0);
-    private String groupId;
+    private String groupId = null;
     private EditText amountText;
     private EditText emailText;
+    private ArrayList<Group> groupList = new ArrayList<>();
     private MaterialSpinner spinner;
-    private OnFragmentInteractionListener mListener;
+    private OnPayoutCompleteListener mListener;
 
     public PayoutFragment() {
         // Required empty public constructor
@@ -119,7 +132,8 @@ public class PayoutFragment extends Fragment {
         withdrawButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeWithdrawal();
+                if(checkInputs())
+                    makeWithdrawal();
             }
         });
         spinner = view.findViewById(R.id.payout_group_spinner);
@@ -129,18 +143,11 @@ public class PayoutFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnPayoutCompleteListener) {
+            mListener = (OnPayoutCompleteListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -208,6 +215,11 @@ public class PayoutFragment extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d(TAG,"Payout Completed " + response.toString());
+                Transaction trans = transactionFromJson(response, amount);
+                Log.d(TAG, trans.toMap().toString());
+                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),trans);
+                transactionDialog.show();
+                mListener.onPayoutComplete(trans);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
@@ -280,17 +292,17 @@ public class PayoutFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
+        //Get list of groups from database
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayList<String> groupsNames = new ArrayList<>();
-                for(Group g : groups) {
-                    groupsNames.add(g.getName());
-                }
-                spinner.setItems(groupsNames);
+                groupList = groups;
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
+                spinner.setAdapter(adapter);
             }
         });
+        //setSelected if a groupId is passed in
         if (groupId == null)
             spinner.setSelected(false);
         else {
@@ -300,6 +312,31 @@ public class PayoutFragment extends Fragment {
             int index = spinner.getItems().indexOf(compGroup);
             spinner.setSelectedIndex(index);
         }
+        //Set selected listener to set groupId when item selected
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Group item) {
+                groupId = item.getGroupId();
+                Log.d(TAG, "Group slected from spinner ID="+groupId);
+            }
+        });
+    }
+
+    private Transaction transactionFromJson(JSONObject resp, BigDecimal amount) {
+        Transaction transaction = new Transaction();
+        transaction.setGroupId(groupId);
+        transaction.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        transaction.setFunds(amount.negate());
+        //Make timestamp here b/c its not returned in json resp
+        transaction.setTimestamp(new java.util.Date().toString());
+        try {
+            JSONObject header = resp.getJSONObject("batch_header");
+            transaction.setTransId(header.getString("payout_batch_id"));
+        }
+        catch(JSONException e) {
+            e.printStackTrace();
+        }
+        return transaction;
     }
     /**
      * This interface must be implemented by activities that contain this
@@ -314,5 +351,30 @@ public class PayoutFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public boolean checkInputs() {
+        if(groupId == null && !groupId.isEmpty()) {
+            Toast.makeText(getContext(), "Must Select a Group", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(amount.compareTo(BigDecimal.ZERO) == 0) {
+            Toast.makeText(getContext(), "Amount Cannot be Zero", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(emailText.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), "Please Input an Email to Receive Payout", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Group group = groupList.get(spinner.getSelectedIndex());
+        if(amount.compareTo(group.getWithdrawalLimit()) > 0){
+            Toast.makeText(getContext(), "Amount is Above Your Groups Payout Limit", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(amount.compareTo(group.getFunds()) > 0) {
+            Toast.makeText(getContext(), "Payout Amount is Larger than Group Balance", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

@@ -290,6 +290,11 @@ public class Group implements Parcelable {
         */
 
     @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
