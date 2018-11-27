@@ -7,7 +7,10 @@ import android.content.DialogInterface;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
-
+/**
+ * @author Jeremy McCormick
+ * Class to view user picture and info, as well as a list of their transactions
+ */
 public class TransactionDialog {
     AlertDialog dialog =null;
 

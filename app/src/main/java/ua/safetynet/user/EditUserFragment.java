@@ -36,7 +36,10 @@ import java.io.InputStream;
 import ua.safetynet.Database;
 import ua.safetynet.R;
 
-
+/**
+ * @author Jeremy McCormick
+ * Fragment class to  edit user picture and info, as well as a list of their transactions
+ */
 public class EditUserFragment extends Fragment {
 
     private User user = null;

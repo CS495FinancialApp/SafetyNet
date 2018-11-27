@@ -16,7 +16,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,7 +30,14 @@ import ua.safetynet.group.GlideApp;
 import ua.safetynet.group.Group;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.user.User;
-
+/**
+ * @author Jeremy McCormick
+ * Recycler Adapter class to show transaction information in a recycler view. Can change how it
+ * will show info based on the showType passed in
+ * NOIMAGE will display group name without image
+ * USER shows user image and user name with transaction
+ * GROUP shows group image along with group name
+ */
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder>{
     private List<Transaction> transactionList;
     private int showType = 2;
@@ -38,6 +49,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView nameText;
         public TextView amountText;
         public ImageView imageView;
+        public TextView dateText;
         public View view;
         public ViewHolder(View v) {
             super(v);
@@ -45,12 +57,19 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             this.nameText = v.findViewById(R.id.transaction_recycler_name);
             this.amountText = v.findViewById(R.id.transaction_recycler_amount);
             this.imageView = v.findViewById(R.id.transaction_recycler_image);
+            this.dateText = v.findViewById(R.id.transaction_recycler_date);
         }
     }
 
     public TransactionRecyclerAdapter(List<Transaction> list) {
         this.transactionList = list;
     }
+
+    /**
+     * Contructor takes in list of transactions and showType
+     * @param list
+     * @param showType
+     */
     public TransactionRecyclerAdapter(List<Transaction> list, int showType) {
         this.showType = showType;
         this.transactionList = list;
@@ -104,6 +123,18 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         if(transaction.getFunds().compareTo(BigDecimal.ZERO)  < 0)
             holder.amountText.setTextColor(Color.RED);
         holder.amountText.setText(format.format(transaction.getFunds()));
+        //Set Date
+        /*try {
+            DateFormat inputFormat = DateFormat.getDateInstance();
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
+            Date date = inputFormat.parse(transaction.getTimestamp());
+            holder.dateText.setText(dateFormat.format(date));
+        }
+        catch(ParseException e) {
+            e.printStackTrace();
+        }*/
+        holder.dateText.setText(transaction.getTimestamp());
+
     }
 
     @Override

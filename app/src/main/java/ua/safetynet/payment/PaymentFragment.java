@@ -1,9 +1,4 @@
-/***
- * @author Jeremy McCormick
- * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
- * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
- * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
- */
+
 package ua.safetynet.payment;
 
 import android.app.Activity;
@@ -54,7 +49,12 @@ import cz.msebera.android.httpclient.Header;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
-
+/**
+ * @author Jeremy McCormick
+ * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
+ * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
+ * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
+ */
 public class PaymentFragment extends Fragment {
     //Interface to define callback in which transaction Id will be returned
     public interface OnPaymentCompleteListener {

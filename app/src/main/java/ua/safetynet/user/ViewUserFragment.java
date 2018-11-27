@@ -29,14 +29,9 @@ import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.payment.Transaction;
 import ua.safetynet.payment.TransactionRecyclerAdapter;
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ViewUserFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ViewUserFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * @author Jeremy McCormick
+ * Fragment class to view user picture and info, as well as a list of their transactions
  */
 public class ViewUserFragment extends Fragment {
 
