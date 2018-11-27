@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +67,7 @@ public class PayoutFragment extends Fragment {
     private static final String APITRANS = "v1/payments/payouts";
     private String clientToken = null;
     private BigDecimal amount = new BigDecimal(0);
-    private String groupId;
+    private String groupId = null;
     private EditText amountText;
     private EditText emailText;
     private ArrayList<Group> groupList = new ArrayList<>();
@@ -131,7 +132,8 @@ public class PayoutFragment extends Fragment {
         withdrawButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeWithdrawal();
+                if(checkInputs())
+                    makeWithdrawal();
             }
         });
         spinner = view.findViewById(R.id.payout_group_spinner);
@@ -349,4 +351,28 @@ public class PayoutFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public boolean checkInputs() {
+        if(groupId == null && !groupId.isEmpty()) {
+            Toast.makeText(getContext(), "Must Select a Group", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(amount.compareTo(BigDecimal.ZERO) == 0) {
+            Toast.makeText(getContext(), "Amount Cannot be Zero", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(emailText.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), "Please Input an Email to Receive Payout", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Group group = groupList.get(spinner.getSelectedIndex());
+        if(amount.compareTo(group.getWithdrawalLimit()) > 0){
+            Toast.makeText(getContext(), "Amount is Above Your Groups Payout Limit", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(amount.compareTo(group.getFunds()) > 0) {
+            Toast.makeText(getContext(), "Payout Amount is Larger than Group Balance", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 }
