@@ -232,7 +232,7 @@ public class Database {
 
     //updates a group's data in firestore using a given group class
     public void setGroup(Group group){
-        this.databaseGroups.document(group.getGroupId()).set(group);
+        this.databaseGroups.document(group.getGroupId()).set(group.toMap());
     }
 
     //creates a new user entry in firestore. userId is set here.  Other values must be set before calling createGroup.
