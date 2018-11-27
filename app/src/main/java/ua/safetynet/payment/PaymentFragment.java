@@ -226,6 +226,8 @@ public class PaymentFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
                 //Call onPaymentComplete listener to update user with transaction data
+                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
+                transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
             }
         });

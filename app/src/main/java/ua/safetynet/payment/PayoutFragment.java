@@ -217,6 +217,8 @@ public class PayoutFragment extends Fragment {
                 Log.d(TAG,"Payout Completed " + response.toString());
                 Transaction trans = transactionFromJson(response, amount);
                 Log.d(TAG, trans.toMap().toString());
+                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),trans);
+                transactionDialog.show();
                 mListener.onPayoutComplete(trans);
             }
             @Override
