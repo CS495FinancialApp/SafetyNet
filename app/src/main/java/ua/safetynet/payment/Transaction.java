@@ -3,9 +3,11 @@ package ua.safetynet.payment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +18,9 @@ public class Transaction implements Parcelable {
     private String userId;
     private String groupId;
     private BigDecimal funds;
-    private String timestamp;
+    //private String timestamp;
+    private Timestamp timestamp;
+    private Timestamp repayTimestamp;
 
     public Transaction() {
         this.transId = null;
@@ -58,14 +62,21 @@ public class Transaction implements Parcelable {
         this.funds = funds;
     }
 
-    public String getTimestamp() {
+    public Timestamp getTimestamp() {
         return this.timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
+    public Timestamp getRepayTimestamp() {
+        return this.repayTimestamp;
+    }
+
+    public void setRepayTimestamp(Timestamp timestamp) {
+        this.repayTimestamp = timestamp;
+    }
     //The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -74,16 +85,18 @@ public class Transaction implements Parcelable {
         map.put("groupId",this.groupId);
         map.put("amount", this.funds.toString());
         map.put("timestamp", this.timestamp);
+        map.put("repayTimestamp", this.repayTimestamp);
         return map;
     }
 
     public static Transaction fromMap(Map<String, Object> map) {
         Transaction transaction = new Transaction();
-        transaction.setTransId(map.get("transId").toString());
-        transaction.setUserId(map.get("userId").toString());
-        transaction.setGroupId(map.get("groupId").toString());
-        transaction.setFunds(new BigDecimal(map.get("amount").toString()));
-        transaction.setTimestamp(map.get("timestamp").toString());
+        if(map.get("transId") != null) transaction.setTransId(map.get("transId").toString());
+        if(map.get("userId") != null) transaction.setUserId(map.get("userId").toString());
+        if(map.get("groupId") != null)transaction.setGroupId(map.get("groupId").toString());
+        if(map.get("amount") != null) transaction.setFunds(new BigDecimal(map.get("amount").toString()));
+        if(map.get("timestamp") != null) transaction.setTimestamp((Timestamp)map.get("timestamp"));
+        if(map.get("repayTimestamp") != null) transaction.setRepayTimestamp((Timestamp)map.get("repayTimestamp"));
         return transaction;
     }
 
@@ -98,7 +111,8 @@ public class Transaction implements Parcelable {
         dest.writeString(this.userId);
         dest.writeString(this.groupId);
         dest.writeSerializable(this.funds);
-        dest.writeString(this.timestamp);
+        dest.writeParcelable(this.timestamp, flags);
+        dest.writeParcelable(this.repayTimestamp, flags);
     }
 
     protected Transaction(Parcel in) {
@@ -106,10 +120,11 @@ public class Transaction implements Parcelable {
         this.userId = in.readString();
         this.groupId = in.readString();
         this.funds = (BigDecimal) in.readSerializable();
-        this.timestamp = in.readString();
+        this.timestamp = in.readParcelable(Timestamp.class.getClassLoader());
+        this.repayTimestamp = in.readParcelable(Timestamp.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+    public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
         @Override
         public Transaction createFromParcel(Parcel source) {
             return new Transaction(source);
