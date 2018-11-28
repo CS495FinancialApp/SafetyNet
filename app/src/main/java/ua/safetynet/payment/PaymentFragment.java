@@ -342,6 +342,10 @@ public class PaymentFragment extends Fragment {
             Toast.makeText(getContext(),"Please enter amount", Toast.LENGTH_SHORT).show();
             return false;
         }
+        else if(groupId == null || groupId.isEmpty()) {
+            Toast.makeText(getContext(), "Must Select a Group", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

@@ -21,11 +21,13 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
@@ -197,8 +199,6 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     @Override
     public void onPayoutComplete(Transaction transaction) {
         Database db = new Database();
-        //Add transaction to db since no server side handling with payouts
-        db.addTransaction(transaction);
         //Add transaction id to user and update user
         user.addTransaction(transaction.getTransId());
         db.setUser(user);
@@ -213,8 +213,17 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
                 BigDecimal transAmt = transaction.getFunds();
                 BigDecimal groupAmt = group.getFunds();
                 group.setFunds(groupAmt.add(transAmt));
+                //Set repayment time
+                int repayTime = group.getRepaymentTime();
+                Calendar calTimestamp = Calendar.getInstance();
+                calTimestamp.setTime(transaction.getTimestamp().toDate());
+                calTimestamp.add(Calendar.DAY_OF_WEEK, repayTime);
+                Timestamp repayTimestamp = new Timestamp(calTimestamp.getTime());
+                transaction.setRepayTimestamp(repayTimestamp);
                 //Update group in DB
                 db.setGroup(group);
+                //Add transaction to DB
+                db.addTransaction(transaction);
             }
         });
     }
