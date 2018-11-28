@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -46,8 +47,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public static final int NOIMAGE = 0;
     public static final int USER = 1;
     public static final int GROUP = 2;
-    //Variable of how many days of anonymity to provide
-    public int repaymentTime = 0;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameText;
@@ -134,16 +134,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             holder.amountText.setTextColor(Color.RED);
         holder.amountText.setText(format.format(transaction.getFunds()));
         //Set Date
-        /*try {
-            DateFormat inputFormat = DateFormat.getDateInstance();
-            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
-            Date date = inputFormat.parse(transaction.getTimestamp());
-            holder.dateText.setText(dateFormat.format(date));
-        }
-        catch(ParseException e) {
-            e.printStackTrace();
-        }*/
-        holder.dateText.setText(transaction.getTimestamp());
+
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
+        String dateString = dateFormat.format(transaction.getTimestamp().toDate());
+        holder.dateText.setText(dateString);
+
+
 
     }
 
@@ -154,32 +150,11 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
     //Check's if given transaction's anonymity has expired or not
     private boolean checkAnon(Transaction transaction){
-        //ToDo: Potentially use java date strings instead of calendar objects
-        Database db = new Database();
-        String timestamp = transaction.getTimestamp();
-        //ToDo: Confirm format of datetime
-        DateFormat df = DateFormat.getDateInstance();
-        //Get current datetime
-        Calendar current = Calendar.getInstance();
-        Calendar deadline = Calendar.getInstance();
+        Timestamp now = Timestamp.now();
+        Timestamp repayTimestamp = transaction.getRepayTimestamp();
 
-        //Get set group repaymentTime
-        db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
-            @Override
-            public void onGroupRetrieval(Group group) {
-                repaymentTime = group.getRepaymentTime();
-            }
-        });
-        //Set timestamp of transaction
-        try {
-            deadline.setTime(df.parse(timestamp));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        //Add repayment time to timestamp
-        deadline.add(Calendar.DATE, repaymentTime);
         //If current date is after designated deadline
-        if(current.after(deadline))
+        if(now.compareTo(repayTimestamp) > 0)
             return true;    //Hide username
         else
             return false;   //Display username
