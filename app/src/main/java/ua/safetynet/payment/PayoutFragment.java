@@ -328,7 +328,7 @@ public class PayoutFragment extends Fragment {
         transaction.setUserId(FirebaseAuth.getInstance().getCurrentUser().getUid());
         transaction.setFunds(amount.negate());
         //Make timestamp here b/c its not returned in json resp
-        transaction.setTimestamp(new java.util.Date().toString());
+        transaction.setTimestamp(Timestamp.now());
         try {
             JSONObject header = resp.getJSONObject("batch_header");
             transaction.setTransId(header.getString("payout_batch_id"));
