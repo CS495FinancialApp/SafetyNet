@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class Transaction implements Parcelable {
@@ -77,6 +78,26 @@ public class Transaction implements Parcelable {
     public void setRepayTimestamp(Timestamp timestamp) {
         this.repayTimestamp = timestamp;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(transId, that.transId) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(groupId, that.groupId) &&
+                Objects.equals(funds, that.funds) &&
+                Objects.equals(timestamp, that.timestamp) &&
+                Objects.equals(repayTimestamp, that.repayTimestamp);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(transId, userId, groupId, funds, timestamp, repayTimestamp);
+    }
+
     //The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -86,6 +107,7 @@ public class Transaction implements Parcelable {
         map.put("amount", this.funds.toString());
         map.put("timestamp", this.timestamp);
         map.put("repayTimestamp", this.repayTimestamp);
+
         return map;
     }
 
