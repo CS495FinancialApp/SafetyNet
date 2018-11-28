@@ -61,4 +61,9 @@ public class TransactionDialog {
             return;
         dialog.show();
     }
+    public void dismiss() {
+        if(dialog == null)
+            return;
+        dialog.dismiss();
+    }
 }

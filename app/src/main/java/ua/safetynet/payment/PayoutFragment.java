@@ -73,7 +73,7 @@ public class PayoutFragment extends Fragment {
     private ArrayList<Group> groupList = new ArrayList<>();
     private MaterialSpinner spinner;
     private OnPayoutCompleteListener mListener;
-
+    private TransactionDialog transactionDialog;
     public PayoutFragment() {
         // Required empty public constructor
     }
@@ -217,7 +217,7 @@ public class PayoutFragment extends Fragment {
                 Log.d(TAG,"Payout Completed " + response.toString());
                 Transaction trans = transactionFromJson(response, amount);
                 Log.d(TAG, trans.toMap().toString());
-                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),trans);
+                transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),trans);
                 transactionDialog.show();
                 mListener.onPayoutComplete(trans);
             }
@@ -304,7 +304,7 @@ public class PayoutFragment extends Fragment {
         });
         //setSelected if a groupId is passed in
         if (groupId == null)
-            spinner.setSelected(false);
+            spinner.setSelected(true);
         else {
             //Create group to compare to and set to passed in groupID
             Group compGroup = new Group();
@@ -376,5 +376,19 @@ public class PayoutFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onStop() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onPause();
     }
 }

@@ -79,6 +79,7 @@ public class PaymentFragment extends Fragment {
     private String clientToken = null;
     private EditText amountText;
     private ArrayList<Group> groupList = new ArrayList<>();
+    private TransactionDialog transactionDialog;
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
 
@@ -226,7 +227,7 @@ public class PaymentFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
                 //Call onPaymentComplete listener to update user with transaction data
-                TransactionDialog transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
+                transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
                 transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
             }
@@ -347,6 +348,20 @@ public class PaymentFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onStop() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onPause();
     }
 
     /**
