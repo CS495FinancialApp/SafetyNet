@@ -108,12 +108,13 @@ public class PayoutFragment extends Fragment {
             amount = new BigDecimal(getArguments().getString(AMOUNT));
             groupId = getArguments().getString(GROUPID);
         }
+
+        //Call the fetch regardless in case it has expired
+        new ClientTokenFetch(getContext()).fetchPaypalToken();
         //Setup shared prefs to get token from
         try {
             sharedPrefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
             clientToken = sharedPrefs.getString("paypal", null);
-            if(clientToken == null)
-                new ClientTokenFetch(getContext()).fetchPaypalToken();
         }
         catch (NullPointerException e) {
             e.printStackTrace();

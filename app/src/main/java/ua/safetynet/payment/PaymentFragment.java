@@ -124,12 +124,12 @@ public class PaymentFragment extends Fragment {
                         updateUser(user);
                     }
                 });
+        //Call the fetch regardless in case it has expired
+        new ClientTokenFetch(getContext()).fetchBraintreeToken();
         //Setup shared prefs to get token from
         try {
             sharedPrefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
             clientToken = sharedPrefs.getString("braintree", null);
-            if(clientToken == null)
-                new ClientTokenFetch(getContext()).fetchBraintreeToken();
         }
         catch (NullPointerException e) {
             e.printStackTrace();
