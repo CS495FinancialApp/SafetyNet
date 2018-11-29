@@ -61,6 +61,10 @@ public class ClientTokenFetch {
             }
         });
     }
+    /**
+     * Gets client token from PayPal Payouts REST API. Uses clientId and secret stored in secrets.xml
+     *
+     */
     public void fetchPaypalToken() {
         String clientId = context.getString(R.string.paypal_client_id);
         String secret = context.getString(R.string.paypal_secret);
