@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -80,6 +81,7 @@ public class PaymentFragment extends Fragment {
     private EditText amountText;
     private ArrayList<Group> groupList = new ArrayList<>();
     private TransactionDialog transactionDialog;
+    private SharedPreferences sharedPrefs;
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
 
@@ -122,7 +124,17 @@ public class PaymentFragment extends Fragment {
                         updateUser(user);
                     }
                 });
-        getClientToken();
+        //Setup shared prefs to get token from
+        try {
+            sharedPrefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+            clientToken = sharedPrefs.getString("braintree", null);
+            if(clientToken == null)
+                new ClientTokenFetch(getContext()).fetchBraintreeToken();
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -184,31 +196,13 @@ public class PaymentFragment extends Fragment {
     }
 
     /**
-     * Uses HTTP library to make call to server to fetch client token. Passes userId to server
-     * so Braintree can treat them as a returning customer
-     */
-    private void getClientToken() {
-        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
-        client.get(SERVERURL + SERVERTOKEN + userId, new AsyncHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
-                Log.d(TAG, "Failed to fetch client token");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                clientToken = new String(responseBody);
-            }
-        });
-    }
-
-    /**
      * Creates the actual transaction once we have recieved a payment method nonce from drop in UI
      * Sends the user and group ID to server for logging with the transaction.
      * Calls onPaymentComplete Listener with transaction data if successful
      * @param nonce Payment method nonce
      */
     private void createTransaction(PaymentMethodNonce nonce) {
+        clientToken = sharedPrefs.getString("braintree", null);
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
