@@ -40,6 +40,10 @@ public class ClientTokenFetch {
         this.context = context;
     }
 
+    /**
+     * Uses HTTP library to make call to server to fetch client token. Passes userId to server
+     * so Braintree can treat them as a returning customer
+     */
     public void fetchBraintreeToken() {
         AsyncHttpClient clientBt = new AsyncHttpClient(SERVERPORT);
         clientBt.setURLEncodingEnabled(true);
