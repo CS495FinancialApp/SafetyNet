@@ -9,17 +9,28 @@ The app depends on Firebase Firestore NoSQL Database for data storage and Fireba
 Either ask the maintainers for the associated "google-services.json" and PayPal API key files for Firebase & PayPal access or start your own project under Firebase and PayPal.
 ### Compile
 This project was developed using the Android Studio IDE. If you want an IDE, either Android Studio or IntelliJ IDEA IDE will be suitable. If using an IDE,, consult it's docs for compiling Gradle projects.
-To build on the command line, from the root directory of the project execute 
+To build on the command line, from the root directory of the project first clean the project with 
+
 `./gradlew clean`
+
 To first clean the project, then generate the debug apk with 
+
 `./gradlew assembleDebug`
+
 To build the apk and immediately deploy it to a connected device, run
+
 `./gradlew installDebug`
+
 To install the apk to a connected device
+
 `adb -d install path/to/your_app.apk`
+
 To run our JUnit 4 tests use 
+
 `./gradlew check`
+
 To run the Android JUnit 4 tests, a device or emulator needs to be connected, then run
+
 `./gradlew connectedCheck`
 
 ## Issues and Bugs
