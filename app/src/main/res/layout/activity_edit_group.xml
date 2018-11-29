@@ -166,9 +166,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="5dp"
-        android:text="Repayment Time (Days)"
-        app:layout_constraintEnd_toStartOf="@+id/editTextRepayTime"
+        android:text="@string/payment_time_days"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewGroupID" />
 
@@ -176,9 +174,9 @@
         android:id="@+id/textViewWithdrawalLimit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="36dp"
-        android:text="Withdrawal Limit"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/withdrawal_limit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPaymentTime" />
 </android.support.constraint.ConstraintLayout>
