@@ -3,7 +3,6 @@ package ua.safetynet.user;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -28,15 +26,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
-import ua.safetynet.auth.SplashScreenActivity;
 import ua.safetynet.group.CreateGroupFragment;
 import ua.safetynet.group.Group;
+import ua.safetynet.payment.ClientTokenFetch;
 import ua.safetynet.payment.PaymentFragment;
 import ua.safetynet.payment.PayoutFragment;
 import ua.safetynet.payment.Transaction;
@@ -64,13 +64,19 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     protected void onStart()
     {
         super.onStart();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         super.onCreate(savedInstanceState);
+        //Set runnable for client tokens
+        if(firebaseUser != null) {
+            ClientTokenFetch tokenFetch = new ClientTokenFetch(getApplicationContext());
+            tokenFetch.fetchBraintreeToken();
+            tokenFetch.fetchPaypalToken();
+        }
         //Set Firestore settings to use Timestamp
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -247,4 +253,5 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     public void setUser(User user) {
         this.user = user;
     }
+
 }
