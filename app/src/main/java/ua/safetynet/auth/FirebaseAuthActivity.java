@@ -79,6 +79,9 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
                 FirebaseUserMetadata metadata = FirebaseAuth.getInstance().getCurrentUser().getMetadata();
                 //Check timestamps to see if a new user
                 if(metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                    //Start onboarding activity first
+                    startActivity(new Intent(this, OnboardingActivity.class));
+                    //Then start new user
                     setupNewUser();
                     Log.d(TAG, "New user created");
                 }
