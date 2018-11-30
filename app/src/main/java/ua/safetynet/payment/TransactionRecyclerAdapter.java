@@ -104,7 +104,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
         //Check if transaction should be anonymous
-            if(checkAnon(transaction))
+            if(transaction.shouldAnonymous())
                 holder.nameText.setText("*****");
             else {
                 Database db = new Database();
