@@ -148,16 +148,4 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         return transactionList.size();
     }
 
-    //Check's if given transaction's anonymity has expired or not
-    private boolean checkAnon(Transaction transaction){
-        Timestamp now = Timestamp.now();
-        Timestamp repayTimestamp = transaction.getRepayTimestamp();
-
-        //If current date is after designated deadline
-        if(now.compareTo(repayTimestamp) > 0)
-            return true;    //Hide username
-        else
-            return false;   //Display username
-    }
-
 }
