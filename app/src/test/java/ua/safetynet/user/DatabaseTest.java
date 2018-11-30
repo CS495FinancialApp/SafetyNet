@@ -74,10 +74,10 @@ public class DatabaseTest {
         db.setUser(user); //Add new user to db
 
         //Get user from db
-        
+
         db.getUser("1", (dbUser) -> {
                 Log.d("TESTING","DB userId is: " + dbUser.getName());
-                Assert.assertEquals(user.getUserId(), "no");
+                Assert.assertEquals(user.getUserId(), dbUser.getUserId());
                 Assert.assertEquals(user.getName(),dbUser.getName());
                 Assert.assertEquals(user.getEmail(),dbUser.getEmail());
                 Assert.assertEquals(user.getGroups(),ids);
