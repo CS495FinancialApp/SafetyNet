@@ -80,7 +80,7 @@ public class Transaction implements Parcelable {
     }
 
     //Check's if given transaction's anonymity has expired or not
-    private boolean shouldAnonymous(){
+    public boolean shouldAnonymous(){
         Timestamp now = Timestamp.now();
         return (now.compareTo(this.repayTimestamp) > 0);
     }
