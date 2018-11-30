@@ -1,6 +1,7 @@
 package ua.safetynet.payment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,6 +75,7 @@ public class PayoutFragment extends Fragment {
     private MaterialSpinner spinner;
     private OnPayoutCompleteListener mListener;
     private TransactionDialog transactionDialog;
+    private SharedPreferences sharedPrefs;
     public PayoutFragment() {
         // Required empty public constructor
     }
@@ -102,11 +104,22 @@ public class PayoutFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getClientToken();
         if (getArguments() != null) {
             amount = new BigDecimal(getArguments().getString(AMOUNT));
             groupId = getArguments().getString(GROUPID);
         }
+
+        //Call the fetch regardless in case it has expired
+        new ClientTokenFetch(getContext()).fetchPaypalToken();
+        //Setup shared prefs to get token from
+        try {
+            sharedPrefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+            clientToken = sharedPrefs.getString("paypal", null);
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -201,6 +214,7 @@ public class PayoutFragment extends Fragment {
     }
 
     private void makeWithdrawal() {
+        clientToken = sharedPrefs.getString("paypal", null);
         AsyncHttpClient client = new AsyncHttpClient(APIPORT);
         JSONObject jsonReq = makePayoutsJson(emailText.getText().toString(), amount.toPlainString());
         StringEntity entity = null;
@@ -228,36 +242,8 @@ public class PayoutFragment extends Fragment {
         });
     }
 
-    /**
-     * Gets client token from PayPal Payouts REST API. Uses clientId and secret stored in secrets.xml
-     *
-     */
-    private void getClientToken() {
-        String clientId = getString(R.string.paypal_client_id);
-        String secret = getString(R.string.paypal_secret);
-        AsyncHttpClient client = new AsyncHttpClient(APIPORT);
-        client.setAuthenticationPreemptive(true);
-        client.setBasicAuth(clientId, secret);
-        client.addHeader("content-type", "application/x-www-form-urlencoded");
-        RequestParams params = new RequestParams();
-        params.put("grant_type", "client_credentials");
-        client.post(APIBASEURL + APITOKENURL,params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    clientToken = response.getString("access_token");
-                    Log.d(TAG, "Fetched client token");
-                } catch (JSONException e) {
-                    Log.d(TAG, "Could not parse client token xml data");
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
-                Log.d(TAG, "Could not fetch client token" + t.toString() + json.toString());
-            }
-        });
-    }
+
     private JSONObject makePayoutsJson(String email, String amount) {
         JSONObject json = new JSONObject();
         JSONObject senderHeader = new JSONObject();
