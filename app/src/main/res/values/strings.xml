@@ -41,6 +41,7 @@
     <string name="user_history">Personal Transactions</string>
     <string name="user_ID">User ID</string>
     <string name="payment_time">Payment Time</string>
+    <string name="payment_time_days">Payment Time (Days)</string>
     <string name="withdrawal_limit">Withdrawal Limit</string>
 
 
