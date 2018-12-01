@@ -3,6 +3,7 @@ package ua.safetynet.auth;
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import ua.safetynet.R;
 public class OnboardingFragment extends Fragment {
@@ -60,7 +63,8 @@ public class OnboardingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_onboarding, container,false);
         headerText = view.findViewById(R.id.onboarding_fragment_label);
         bodyText = view.findViewById(R.id.onboarding_fragement_description);
-        helpImage = view.findViewById(R.id.edit_user_image);
+        helpImage = view.findViewById(R.id.onboarding_fragment_image);
+        populateView();
         return view;
     }
 
@@ -75,6 +79,31 @@ public class OnboardingFragment extends Fragment {
     }
 
     private void populateView() {
-        
+        String header;
+        String body;
+        Drawable image;
+        if(type == MAKE_GROUP) {
+            header = "Welcome to SafetyNet";
+            body = "Take some time to get familiar with the app. First you'll want to join a group.";
+            image = null;
+        }
+        else if(type == PAYMENT) {
+            header = "Making a deposit";
+            body = "Under payments, you can deposit an amount to a group using a card, PayPal, or Venmo";
+            image = null;
+        }
+        else if(type == PAYOUT) {
+            header = "Making a withdrawal";
+            body = "You can withdrawal funds from a group when needed. Just be sure to pay it back in time so your withdrawal stays anonymous";
+            image = null;
+        }
+        else { //USERINFO
+            header = "Before we start, let's get some basic information";
+            body = "";
+            image = null;
+        }
+        headerText.setText(header);
+        bodyText.setText(body);
+        Glide.with(this).load(image).into(helpImage);
     }
 }
