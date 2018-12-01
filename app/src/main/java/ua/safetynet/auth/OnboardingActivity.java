@@ -30,6 +30,7 @@ public class OnboardingActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+    private static int NUM_PAGES=5;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -49,7 +50,7 @@ public class OnboardingActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.onboarding_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
