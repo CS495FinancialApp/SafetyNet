@@ -54,6 +54,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         public TextView amountText;
         public ImageView imageView;
         public TextView dateText;
+        public TextView repayDateText;
         public View view;
         public ViewHolder(View v) {
             super(v);
@@ -62,6 +63,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             this.amountText = v.findViewById(R.id.transaction_recycler_amount);
             this.imageView = v.findViewById(R.id.transaction_recycler_image);
             this.dateText = v.findViewById(R.id.transaction_recycler_date);
+            this.repayDateText = v.findViewById(R.id.transaction_recycler_due_date);
         }
     }
 
@@ -71,8 +73,8 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
     /**
      * Contructor takes in list of transactions and showType
-     * @param list
-     * @param showType
+     * @param list list of transactions
+     * @param showType Type to show. USER, GROUP or NOIMAGE
      */
     public TransactionRecyclerAdapter(List<Transaction> list, int showType) {
         this.showType = showType;
@@ -80,13 +82,13 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     }
     @NonNull
     @Override
-    public TransactionRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TransactionRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.transaction_recyclerview_row, parent, false);
         return new TransactionRecyclerAdapter.ViewHolder(v);
     }
     @Override
-    public void onBindViewHolder(final TransactionRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final TransactionRecyclerAdapter.ViewHolder holder, int position) {
         final Transaction transaction = transactionList.get(position);
         //Get image based on what we should be showing
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -99,26 +101,32 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             case USER: imageRef = storageRef.child("userimages/" + transaction.getUserId() + ".jpg");
                 break;
         }
+        //If type isnt no image, load the fetched image into the ImageView
         if(showType != NOIMAGE)
             Glide.with(holder.itemView).load(imageRef).apply(new RequestOptions()).into(holder.imageView);
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
         //Check if transaction should be anonymous
-            if(checkAnon(transaction))
+            if(transaction.shouldAnonymous())
                 holder.nameText.setText("*****");
             else {
+                //If not anonymous, get user from DB
                 Database db = new Database();
                 db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
                     @Override
                     public void onUserRetrieval(User user) {
+                        //Set user  name
                         holder.nameText.setText(user.getName());
-                        Glide.with(holder.itemView).load(R.drawable.defaultuser).into(holder.imageView);
+                        //If no image, set to default
+                        if(user.getImage() == null)
+                            Glide.with(holder.itemView).load(R.drawable.defaultuser).into(holder.imageView);
                     }
                 });
             }
         }
         else {
             Database db = new Database();
+            //Get group from DB and use to set name
             db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
                 @Override
                 public void onGroupRetrieval(Group group) {
@@ -134,11 +142,17 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             holder.amountText.setTextColor(Color.RED);
         holder.amountText.setText(format.format(transaction.getFunds()));
         //Set Date
-
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
         String dateString = dateFormat.format(transaction.getTimestamp().toDate());
         holder.dateText.setText(dateString);
-
+        //If a withdrawl, set repayment date too
+        if(transaction.getFunds().compareTo(BigDecimal.ZERO) < 0) {
+            String repayString = "Due On: " + dateFormat.format(transaction.getRepayTimestamp().toDate());
+            holder.repayDateText.setText(repayString);
+        }
+        //If nonegative, remove TextView
+        else
+            holder.repayDateText.setVisibility(View.GONE);
 
 
     }
@@ -146,18 +160,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     @Override
     public int getItemCount() {
         return transactionList.size();
-    }
-
-    //Check's if given transaction's anonymity has expired or not
-    private boolean checkAnon(Transaction transaction){
-        Timestamp now = Timestamp.now();
-        Timestamp repayTimestamp = transaction.getRepayTimestamp();
-
-        //If current date is after designated deadline
-        if(now.compareTo(repayTimestamp) > 0)
-            return true;    //Hide username
-        else
-            return false;   //Display username
     }
 
 }

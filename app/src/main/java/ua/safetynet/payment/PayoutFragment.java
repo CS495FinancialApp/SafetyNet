@@ -354,11 +354,11 @@ public class PayoutFragment extends Fragment {
         }
         Group group = groupList.get(spinner.getSelectedIndex());
         if(amount.compareTo(group.getWithdrawalLimit()) > 0){
-            Toast.makeText(getContext(), "Amount is Above Your Groups Payout Limit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Amount is Above Your Groups Payout Limit, $" + group.getWithdrawalLimit().toPlainString(), Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(amount.compareTo(group.getFunds()) > 0) {
-            Toast.makeText(getContext(), "Payout Amount is Larger than Group Balance", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Payout Amount is Larger than Group Balance: $" + group.getFunds().toPlainString(), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
