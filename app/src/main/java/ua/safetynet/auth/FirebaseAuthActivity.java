@@ -1,6 +1,8 @@
 package ua.safetynet.auth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -79,9 +81,7 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
                 FirebaseUserMetadata metadata = FirebaseAuth.getInstance().getCurrentUser().getMetadata();
                 //Check timestamps to see if a new user
                 if(metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                    //Start onboarding activity first
-                    startActivity(new Intent(this, OnboardingActivity.class));
-                    //Then start new user
+                    //start new user
                     setupNewUser();
                     Log.d(TAG, "New user created");
                 }
@@ -118,6 +118,17 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public static boolean isFirstLaunch(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("firstlaunch", true);
+    }
+    public static void setFirstLaunch(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("firstlaunch", false);
+        editor.apply();
     }
 }
 
