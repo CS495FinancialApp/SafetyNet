@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -38,6 +39,8 @@ public class Group_home2 extends AppCompatActivity {
         final Intent GroupIntent = new Intent(Group_home2.this, GroupTransactionHistory.class);
         Database db = new Database();
 
+        final boolean[] adminFlag = {false};
+
         db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
             @Override
             public void onGroupRetrieval(Group group) {
@@ -47,6 +50,9 @@ public class Group_home2 extends AppCompatActivity {
                 GroupIntent.putExtra("group_ID", group.getGroupId());
                 EditIntent.putExtra("group_ID", group.getGroupId());
                 UserIntent.putExtra("group_ID", group.getGroupId());
+                if (group.getAdmins().contains(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    adminFlag[0] = true;
+                }
             }
         });
 
@@ -60,8 +66,14 @@ public class Group_home2 extends AppCompatActivity {
         editGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(EditIntent);
+                if (adminFlag[0]) {
+                    startActivity(EditIntent);
+                }
+                else {
+                    Toast.makeText(Group_home2.this, "Only admins can edit groups", Toast.LENGTH_LONG).show();
+                }
             }
+
         });
         //Goes to GroupTransactionHistory Activity
         groupHistory.setOnClickListener(new View.OnClickListener() {

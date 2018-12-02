@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.math.BigDecimal;
 
@@ -47,6 +50,8 @@ public class EditGroup extends AppCompatActivity {
 
         final Database db = new Database();
         final Group[] allGroup = {new Group()};
+
+        final boolean[] adminFlag = {false};
 
         db.getGroup(getIntent().getStringExtra("group_ID"), new Database.DatabaseGroupListener() {
             @Override
@@ -113,13 +118,23 @@ public class EditGroup extends AppCompatActivity {
 
         removeUser.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                allGroup[0].removeUsers(userSelected);
+                if (!userSelected.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    allGroup[0].removeUsers(userSelected);
+                }
+                else{
+                    Toast.makeText(EditGroup.this, "You cannot remove yourself.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
         removeAdmin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                allGroup[0].removeAdmins(adminSelected);
+                if (!adminSelected.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    allGroup[0].removeAdmins(adminSelected);
+                }
+                else{
+                    Toast.makeText(EditGroup.this, "You cannot remove yourself.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
