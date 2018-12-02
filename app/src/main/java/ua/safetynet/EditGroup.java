@@ -39,7 +39,7 @@ public class EditGroup extends AppCompatActivity {
 
         final EditText paymentTime = findViewById(R.id.editTextRepayTime);
         final EditText withdrawalLimit = findViewById(R.id.editTextWithdrawalLimit);
-        final EditText newUser = findViewById(R.id.editTextNewUser);
+        final EditText newUserEmail = findViewById(R.id.editTextNewUser);
 
         final Button addNewUser = findViewById(R.id.bttnAddUser);
         Button addAdmin = findViewById(R.id.bttnAddAdmin);
@@ -108,12 +108,12 @@ public class EditGroup extends AppCompatActivity {
 
         addNewUser.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("EDITGROUP","," + newUser.getText().toString() + ",");
-                db.queryUserEmail(newUser.getText().toString(), new Database.DatabaseUserEmailListener(){
+                Log.d("EDITGROUP","," + newUserEmail.getText().toString() + ",");
+                db.queryUserEmail(newUserEmail.getText().toString(), new Database.DatabaseUserEmailListener(){
                     @Override
                     public void onUserEmailRetrieval(ArrayList<User> users) {
                         if (users.isEmpty()){
-                            Log.d("EDITG ROUP","empty problem!");
+                            Log.d("EDITGROUP","empty problem!");
                             Toast.makeText(EditGroup.this, "No user has the specified email", Toast.LENGTH_LONG).show();
                         }
                         else {

@@ -50,7 +50,8 @@
     <string name="remove_user">Remove user</string>
     <string name="remove_admin">Remove admin</string>
     <string name="confirm_changes">Confirm Changes</string>
-    <string name="add_user_hint">New user\'s UID</string>
+    <string name="add_user_hint">New user\'s email</string>
+    <string name="user_email">New user\'s email</string>
 
 
     <string name="confirm2">Confirm</string>
