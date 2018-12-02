@@ -1,5 +1,6 @@
 package ua.safetynet.auth;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +44,6 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -50,10 +51,14 @@ public class OnboardingActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.onboarding_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        findViewById(R.id.intro_btn_skip).setOnClickListener( (view) -> mViewPager.setCurrentItem(5,true));
+        findViewById(R.id.intro_btn_next).setOnClickListener( (view) -> mViewPager.setCurrentItem(mViewPager.getCurrentItem() +1));
 
     }
-
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,7 +81,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
