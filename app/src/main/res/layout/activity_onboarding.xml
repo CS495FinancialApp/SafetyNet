@@ -22,7 +22,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:backgroundTint="@android:color/black">
 
         <Button
             android:id="@+id/intro_btn_skip"
