@@ -3,6 +3,7 @@ package ua.safetynet.auth;
 import android.app.Activity;
 import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import ua.safetynet.R;
 public class OnboardingFragment extends Fragment {
@@ -104,17 +106,17 @@ public class OnboardingFragment extends Fragment {
         if(type == MAKE_GROUP) {
             header = "Welcome to SafetyNet";
             body = "Take some time to get familiar with the app. First you'll want to join a group.";
-            image = null;
+            image = getResources().getDrawable(R.drawable.oboarding_newgroup, null);
         }
         else if(type == PAYMENT) {
             header = "Making a deposit";
             body = "Under payments, you can deposit an amount to a group using a card, PayPal, or Venmo";
-            image = null;
+            image = getResources().getDrawable(R.drawable.onboarding_payment, null);
         }
         else if(type == PAYOUT) {
             header = "Making a withdrawal";
             body = "You can withdrawal funds from a group when needed. Just be sure to pay it back in time so your withdrawal stays anonymous";
-            image = null;
+            image = getResources().getDrawable(R.drawable.onboarding_payout, null);
         }
         else { //USERINFO
             header = "Before we start, let's get some basic information";
@@ -123,6 +125,7 @@ public class OnboardingFragment extends Fragment {
         }
         headerText.setText(header);
         bodyText.setText(body);
+        helpImage.setAdjustViewBounds(true);
         Glide.with(this).load(image).into(helpImage);
     }
 }
