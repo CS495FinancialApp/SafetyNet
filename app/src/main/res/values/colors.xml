@@ -5,4 +5,6 @@
     <color name="colorAccent">#BD0009</color>
     <color name="splashScreenBackground">#31729E</color>
     <color name="ic_launcher_background">#31729E</color>
+    <color name="onboarding_bg1">#0F9D00</color>
+    <color name="onboarding_bg2">#0D3480</color>
 </resources>

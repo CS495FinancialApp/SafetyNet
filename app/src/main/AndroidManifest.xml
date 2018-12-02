@@ -17,6 +17,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,6 +26,7 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -38,7 +40,11 @@
         <activity android:name=".Group_home2" />
         <activity android:name=".UserTransactionHistory" />
         <activity android:name=".GroupTransactionHistory" />
-        <activity android:name=".EditGroup"></activity>
+        <activity android:name=".EditGroup" />
+        <activity
+            android:name=".auth.OnboardingActivity"
+            android:label="@string/title_activity_onboarding"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

@@ -25,11 +25,24 @@ public class SplashScreenActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        if(FirebaseAuthActivity.isFirstLaunch(getBaseContext())) {
+            FirebaseAuthActivity.setFirstLaunch(getBaseContext());
+            Intent intent = new Intent(this, OnboardingActivity.class);
+            startActivityForResult(intent, 1);
+        }
+        else {
+            Intent intent = new Intent(this, FirebaseAuthActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
-        Intent intent = new Intent(this, MainPageActivity.class);
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Intent intent = new Intent(this, FirebaseAuthActivity.class);
         startActivity(intent);
         finish();
-
     }
 }
 
