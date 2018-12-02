@@ -1,6 +1,7 @@
 package ua.safetynet.auth;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ua.safetynet.R;
+import ua.safetynet.user.EditUserFragment;
 
-public class OnboardingActivity extends AppCompatActivity {
+public class OnboardingActivity extends AppCompatActivity implements EditUserFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,7 +36,7 @@ public class OnboardingActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private static int NUM_PAGES=5;
+    private static int NUM_PAGES=4;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -51,9 +55,30 @@ public class OnboardingActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.onboarding_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        findViewById(R.id.intro_btn_skip).setOnClickListener( (view) -> mViewPager.setCurrentItem(5,true));
-        findViewById(R.id.intro_btn_next).setOnClickListener( (view) -> mViewPager.setCurrentItem(mViewPager.getCurrentItem() +1));
+        Button skipBtn =  findViewById(R.id.intro_btn_skip);
+        ImageButton nextBtn = findViewById(R.id.intro_btn_next);
+        Button finishBtn = findViewById(R.id.intro_btn_finish);
+        //Set listeners for buttons
+        skipBtn.setOnClickListener( (view) -> mViewPager.setCurrentItem(4,true));
+        nextBtn.setOnClickListener( (view) -> mViewPager.setCurrentItem(mViewPager.getCurrentItem() +1));
+        finishBtn.setOnClickListener((view) -> finish());
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
 
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                nextBtn.setVisibility(i == 3 ? View.GONE : View.VISIBLE);
+                finishBtn.setVisibility(i == 3 ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
     }
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -82,6 +107,9 @@ public class OnboardingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+    }
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -102,7 +130,7 @@ public class OnboardingActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 5;
+            return 4;
         }
     }
 }
