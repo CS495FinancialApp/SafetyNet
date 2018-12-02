@@ -2,6 +2,7 @@ package ua.safetynet;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
@@ -106,7 +108,19 @@ public class EditGroup extends AppCompatActivity {
 
         addNewUser.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                allGroup[0].addUsers(addNewUser.getText().toString());
+                Log.d("EDITGROUP","," + newUser.getText().toString() + ",");
+                db.queryUserEmail(newUser.getText().toString(), new Database.DatabaseUserEmailListener(){
+                    @Override
+                    public void onUserEmailRetrieval(ArrayList<User> users) {
+                        if (users.isEmpty()){
+                            Log.d("EDITG ROUP","empty problem!");
+                            Toast.makeText(EditGroup.this, "No user has the specified email", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            allGroup[0].addUsers(users.get(0).getUserId());
+                        }
+                    }
+                });
             }
         });
 
@@ -143,6 +157,7 @@ public class EditGroup extends AppCompatActivity {
                 allGroup[0].setRepaymentTime(Integer.parseInt(paymentTime.getText().toString()));
                 allGroup[0].setWithdrawalLimit(new BigDecimal(withdrawalLimit.getText().toString()));
                 db.setGroup(allGroup[0]);
+                Toast.makeText(EditGroup.this, "Changes Saved", Toast.LENGTH_SHORT).show();
             }
         });
 
