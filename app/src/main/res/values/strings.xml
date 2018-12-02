@@ -60,6 +60,9 @@
     <string name="deposit_hint">Dollar amount for deposit</string>
     <string name="payment_time_hint">Number of days to repay a withdrawal</string>
     <string name="withdrawal_limit_hint">Dollar amount for maximum withdrawal</string>
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 
 </resources>
