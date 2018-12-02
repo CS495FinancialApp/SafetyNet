@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,24 @@ public class OnboardingFragment extends Fragment {
         bodyText = view.findViewById(R.id.onboarding_fragement_description);
         helpImage = view.findViewById(R.id.onboarding_fragment_image);
         populateView();
+        //Set background color
+        switch (type) {
+            case MAKE_GROUP:
+                view.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+                break;
+            case PAYMENT:
+                view.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.onboarding_bg1, null));
+                break;
+            case PAYOUT:
+                view.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.onboarding_bg2, null));
+                break;
+            case USERINFO:
+                view.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.onboarding_bg1, null));
+                break;
+            default:
+                view.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
+                break;
+        }
         return view;
     }
 
