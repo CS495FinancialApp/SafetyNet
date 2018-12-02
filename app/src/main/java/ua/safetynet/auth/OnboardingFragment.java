@@ -119,7 +119,7 @@ public class OnboardingFragment extends Fragment {
             image = getResources().getDrawable(R.drawable.onboarding_payout, null);
         }
         else { //USERINFO
-            header = "Before we start, let's get some basic information";
+            header = "Before we start, let's login and then get some basic information";
             body = "";
             image = null;
         }
