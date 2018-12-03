@@ -3,6 +3,7 @@ package ua.safetynet.payment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,26 +14,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.Timestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
-import ua.safetynet.group.GlideApp;
 import ua.safetynet.group.Group;
-import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.user.User;
 /**
  * @author Jeremy McCormick
@@ -48,7 +43,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
     public static final int NOIMAGE = 0;
     public static final int USER = 1;
     public static final int GROUP = 2;
-
+    private FragmentManager fragmentManager;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameText;
@@ -77,9 +72,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
      * @param list list of transactions
      * @param showType Type to show. USER, GROUP or NOIMAGE
      */
-    public TransactionRecyclerAdapter(List<Transaction> list, int showType) {
+    public TransactionRecyclerAdapter(List<Transaction> list, int showType, FragmentManager fragmentManager) {
         this.showType = showType;
         this.transactionList = list;
+        this.fragmentManager =fragmentManager;
     }
     @NonNull
     @Override
@@ -159,14 +155,9 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
 
 
         //Transfers to appropriate transaction activity when element is clicked
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), DetailedTransactionActivity.class);
-                //Pass transaction object
-                intent.putExtra("Transaction", transaction);
-                v.getContext().startActivity(intent);
-            }
+        holder.itemView.setOnClickListener((v) -> {
+            DetailedTransactionFragment fragment = DetailedTransactionFragment.newInstance(transaction);
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
         });
     }
 
