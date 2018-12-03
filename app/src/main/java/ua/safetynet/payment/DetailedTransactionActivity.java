@@ -27,18 +27,20 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TextView TransAmount = findViewById(R.id.textViewTransValue);
         TextView TransTimestamp = findViewById(R.id.textViewTransTime);
         TextView RepaymentTimestamp = findViewById(R.id.textViewTransRepay);
-        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
-        Transaction transaction = (Transaction) getIntent().getParcelableExtra("Transaction");
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar Format
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);    //Standard Date Format
+        Transaction transaction = (Transaction) getIntent().getParcelableExtra("Transaction");  //Retrieve transaction object
         Database db = new Database();
 
         TransID.setText(transaction.getTransId());
+        //Get user object for proper username
         db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
             @Override
             public void onUserRetrieval(User user) {
                 TransUser.setText(user.getName());
             }
         });
+        //Get group object for proper groupname
         db.getGroup(transaction.getGroupId(), new Database.DatabaseGroupListener() {
             @Override
             public void onGroupRetrieval(Group group) {
@@ -46,7 +48,8 @@ public class DetailedTransactionActivity extends AppCompatActivity {
             }
         });
         TransAmount.setText(format.format(transaction.getFunds()));
+        //Format timestamp into readable state
         TransTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
-        //RepaymentTimestamp.setText(transaction.getRepayTimestamp().toString());
+        //RepaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
     }
 }

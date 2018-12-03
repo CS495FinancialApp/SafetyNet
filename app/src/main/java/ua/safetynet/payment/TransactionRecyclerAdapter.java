@@ -156,12 +156,12 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             holder.repayDateText.setVisibility(View.GONE);
 
 
-        //Transfers to appropriate group activity when element is clicked
+        //Transfers to appropriate transaction activity when element is clicked
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailedTransactionActivity.class);
-                //Pass groupID for future retrieval
+                //Pass transaction object
                 intent.putExtra("Transaction", transaction);
                 v.getContext().startActivity(intent);
             }
