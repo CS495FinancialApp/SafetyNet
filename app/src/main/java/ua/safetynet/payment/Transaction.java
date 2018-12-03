@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 
 public class Transaction implements Parcelable {
 
@@ -82,7 +85,7 @@ public class Transaction implements Parcelable {
     //Check's if given transaction's anonymity has expired or not
     public boolean shouldAnonymous(){
         Timestamp now = Timestamp.now();
-        return (now.compareTo(this.getRepayTimestamp()) < 0);
+        return FALSE; //(now.compareTo(this.getRepayTimestamp()) < 0);
     }
 
     @Override

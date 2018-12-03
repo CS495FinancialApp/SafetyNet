@@ -26,7 +26,7 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TextView TransTimestamp = findViewById(R.id.textViewTransTime);
         TextView RepaymentTimestamp = findViewById(R.id.textViewTransRepay);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-        Transaction transaction = (Transaction) getIntent().getSerializableExtra("Transaction");
+        Transaction transaction = (Transaction) getIntent().getParcelableExtra("Transaction");
         Database db = new Database();
 
         /*TransID.setText(transaction.getTransId());
