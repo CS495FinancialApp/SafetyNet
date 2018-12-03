@@ -15,6 +15,10 @@ import ua.safetynet.R;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
+/**
+ * @author Jake Bailey
+ * Activity for displaying the details of a particular transaction
+ */
 public class DetailedTransactionActivity extends AppCompatActivity {
 
     @Override
@@ -51,6 +55,7 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TransAmount.setText(format.format(transaction.getFunds()));
         //Format timestamp into readable state
         TransTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
+        //If transaction is a deposit
         if(transaction.getRepayTimestamp() == null)
             RepaymentTimestamp.setVisibility(View.GONE);
         else
