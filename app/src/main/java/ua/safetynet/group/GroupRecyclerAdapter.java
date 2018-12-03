@@ -1,6 +1,5 @@
 package ua.safetynet.group;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,23 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import ua.safetynet.Group_home2;
+import ua.safetynet.GroupHomeFragment;
 import ua.safetynet.R;
-
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 /**
  * @author Jeremy McCormick
@@ -88,7 +80,7 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Group_home2.class);
+                Intent intent = new Intent(v.getContext(), GroupHomeFragment.class);
                 //Pass groupID for future retrieval
                 intent.putExtra("group_ID", group.getGroupId());
                 v.getContext().startActivity(intent);
