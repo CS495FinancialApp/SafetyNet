@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import ua.safetynet.Database;
@@ -26,10 +28,11 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TextView TransTimestamp = findViewById(R.id.textViewTransTime);
         TextView RepaymentTimestamp = findViewById(R.id.textViewTransRepay);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);
         Transaction transaction = (Transaction) getIntent().getParcelableExtra("Transaction");
         Database db = new Database();
 
-        /*TransID.setText(transaction.getTransId());
+        TransID.setText(transaction.getTransId());
         db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
             @Override
             public void onUserRetrieval(User user) {
@@ -43,7 +46,7 @@ public class DetailedTransactionActivity extends AppCompatActivity {
             }
         });
         TransAmount.setText(format.format(transaction.getFunds()));
-        TransTimestamp.setText(transaction.getTimestamp().toString());
-        RepaymentTimestamp.setText(transaction.getRepayTimestamp().toString());*/
+        TransTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
+        //RepaymentTimestamp.setText(transaction.getRepayTimestamp().toString());
     }
 }
