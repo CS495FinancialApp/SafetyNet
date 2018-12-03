@@ -1,7 +1,5 @@
 package ua.safetynet.group;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +16,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import ua.safetynet.GroupHomeFragment;
 import ua.safetynet.R;
-import ua.safetynet.user.MainPageActivity;
 
 /**
  * @author Jeremy McCormick

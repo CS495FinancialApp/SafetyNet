@@ -1,6 +1,5 @@
-package ua.safetynet;
+package ua.safetynet.group;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -17,10 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import ua.safetynet.group.EditGroupFragment;
-import ua.safetynet.group.Group;
-import ua.safetynet.user.User;
-import ua.safetynet.user.ViewUserFragment;
+import ua.safetynet.Database;
+import ua.safetynet.R;
 
 /**
  * @author Jake Bailey
