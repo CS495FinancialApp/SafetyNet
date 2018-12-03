@@ -86,7 +86,11 @@ public class Transaction implements Parcelable {
     //Check's if given transaction's anonymity has expired or not
     public boolean shouldAnonymous(){
         Timestamp now = Timestamp.now();
-        return (now.compareTo(this.getRepayTimestamp()) < 0);
+        //Transaction is a withdrawal
+        if(this.getRepayTimestamp() != null)
+            return (now.compareTo(this.getRepayTimestamp()) < 0);
+        else
+            return FALSE;
     }
 
     @Override

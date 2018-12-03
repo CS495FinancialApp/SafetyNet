@@ -50,6 +50,10 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TransAmount.setText(format.format(transaction.getFunds()));
         //Format timestamp into readable state
         TransTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
-        //RepaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
+        //Transaction is a withdrawal
+        if(transaction.getRepayTimestamp() != null)
+            RepaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
+        else
+            RepaymentTimestamp.setText("");
     }
 }
