@@ -63,7 +63,7 @@ public class GroupHomeFragment extends Fragment {
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar format
         //final Intent UserIntent = new Intent(EditGroupFragment.this, UserTransactionHistory.class);
         //final Intent EditIntent = new Intent(EditGroupFragment.this, EditGroupFragment.class);
-        //final Intent GroupIntent = new Intent(EditGroupFragment.this, GroupTransactionHistory.class);
+        //final Intent GroupIntent = new Intent(EditGroupFragment.this, GroupTransactionHistoryFragment.class);
         Database db = new Database();
 
 
@@ -89,7 +89,7 @@ public class GroupHomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Only admins can edit groups", Toast.LENGTH_LONG).show();
             }
         });
-        //Goes to GroupTransactionHistory Activity
+        //Goes to GroupTransactionHistoryFragment Activity
         groupHistory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //startActivity(GroupIntent);
