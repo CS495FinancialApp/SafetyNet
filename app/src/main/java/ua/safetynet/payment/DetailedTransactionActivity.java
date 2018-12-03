@@ -2,6 +2,7 @@ package ua.safetynet.payment;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -50,10 +51,9 @@ public class DetailedTransactionActivity extends AppCompatActivity {
         TransAmount.setText(format.format(transaction.getFunds()));
         //Format timestamp into readable state
         TransTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
-        //Transaction is a withdrawal
-        if(transaction.getRepayTimestamp() != null)
-            RepaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
+        if(transaction.getRepayTimestamp() == null)
+            RepaymentTimestamp.setVisibility(View.GONE);
         else
-            RepaymentTimestamp.setText("");
+            RepaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
     }
 }
