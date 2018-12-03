@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/RecyclerViewGroupTrans"
+        android:id="@+id/group_history_recycler"
         android:layout_width="368dp"
         android:layout_height="460dp"
         android:layout_marginStart="8dp"
