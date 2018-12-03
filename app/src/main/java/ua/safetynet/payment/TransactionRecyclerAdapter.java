@@ -1,5 +1,6 @@
 package ua.safetynet.payment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -107,9 +108,9 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
         //Check if transaction should be anonymous
-            if(transaction.shouldAnonymous())
-                holder.nameText.setText("*****");
-            else {
+            //if(transaction.shouldAnonymous())
+            //    holder.nameText.setText("*****");
+            //else {
                 //If not anonymous, get user from DB
                 Database db = new Database();
                 db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
@@ -122,7 +123,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
                             Glide.with(holder.itemView).load(R.drawable.defaultuser).into(holder.imageView);
                     }
                 });
-            }
+            //}
         }
         else {
             Database db = new Database();
@@ -155,6 +156,16 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
             holder.repayDateText.setVisibility(View.GONE);
 
 
+        //Transfers to appropriate group activity when element is clicked
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), DetailedTransactionActivity.class);
+                //Pass groupID for future retrieval
+                intent.putExtra("Transaction", transaction);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

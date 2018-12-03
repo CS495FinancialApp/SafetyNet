@@ -64,5 +64,12 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="transaction_id">Transaction ID</string>
+    <string name="transaction_user">Transaction User</string>
+    <string name="transaction_group">Transaction Group</string>
+    <string name="transaction_amount">Transaction Amount</string>
+    <string name="transaction_timestamp">Transaction Timestamp</string>
+    <string name="repayment_timestamp">Repayment Timestamp</string>
+
 
 </resources>

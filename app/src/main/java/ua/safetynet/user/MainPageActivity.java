@@ -211,8 +211,8 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
         Log.d("Main Activity","Updated user with transaction ID = "+ transactionId);
     }
     @Override
-    public void onPayoutComplete(Transaction transaction) {
-        Database db = new Database();
+    public void onPayoutComplete(final Transaction transaction) {
+        final Database db = new Database();
         //Add transaction id to user and update user
         user.addTransaction(transaction.getTransId());
         db.setUser(user);

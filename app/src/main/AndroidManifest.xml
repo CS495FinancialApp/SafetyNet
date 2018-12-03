@@ -44,7 +44,8 @@
         <activity
             android:name=".auth.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".payment.DetailedTransactionActivity"></activity>
     </application>
 
 </manifest>
