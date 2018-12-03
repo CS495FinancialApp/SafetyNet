@@ -38,7 +38,6 @@
         <activity android:name=".Withdrawal" />
         <activity android:name=".UserTransactionHistory" />
         <activity android:name=".GroupTransactionHistory" />
-        <activity android:name=".EditGroup" />
         <activity
             android:name=".auth.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
