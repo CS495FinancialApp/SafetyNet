@@ -27,7 +27,6 @@ public class GroupTransactionHistoryFragment extends Fragment {
     private static final String GROUP = "group";
     private static final String TAG = "GROUP HOME FRAGMENT";
     private Group group;
-    private RecyclerView groupTrans;
     private TextView groupName;
     private List<Transaction> transactionList;
     private RecyclerView mTransactionRecycler;
@@ -62,25 +61,25 @@ public class GroupTransactionHistoryFragment extends Fragment {
 
 
         groupName = view.findViewById(R.id.textViewGroupID);
-        groupTrans = view.findViewById(R.id.RecyclerViewGroupTrans);
         groupName.setText(group.getName());
         //Set linear layout
         mLayoutManager = new LinearLayoutManager(container.getContext());
-        mTransactionRecycler = view.findViewById(R.id.view_user_recycler);
+        mTransactionRecycler = view.findViewById(R.id.group_history_recycler);
         mTransactionRecycler.setHasFixedSize(true);
         mTransactionRecycler.setLayoutManager(mLayoutManager);
         mTransactionRecycler.setItemAnimator(new DefaultItemAnimator());
-
+        getTransactions();
         return view;
     }
     private void getTransactions() {
+        transactionList = new ArrayList<>();
         Database db = new Database();
         db.queryGroupTransactions(group.getGroupId(), (transactions) -> {
             //set transaction list
             transactionList = transactions;
             //Specify adapter
             mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.USER);
-            groupTrans.setAdapter(mAdapter);
+            mTransactionRecycler.setAdapter(mAdapter);
 
         });
     }
