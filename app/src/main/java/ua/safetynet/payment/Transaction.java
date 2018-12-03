@@ -32,6 +32,7 @@ public class Transaction implements Parcelable {
         this.groupId = null;
         this.funds = new BigDecimal(0);
         this.timestamp = null;
+        this.repayTimestamp = null;
     }
 
     public String getTransId() {
@@ -85,7 +86,7 @@ public class Transaction implements Parcelable {
     //Check's if given transaction's anonymity has expired or not
     public boolean shouldAnonymous(){
         Timestamp now = Timestamp.now();
-        return FALSE; //(now.compareTo(this.getRepayTimestamp()) < 0);
+        return (now.compareTo(this.getRepayTimestamp()) < 0);
     }
 
     @Override
