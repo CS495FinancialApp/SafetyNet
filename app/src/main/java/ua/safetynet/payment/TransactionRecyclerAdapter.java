@@ -147,7 +147,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         String dateString = dateFormat.format(transaction.getTimestamp().toDate());
         holder.dateText.setText(dateString);
         //If a withdrawl, set repayment date too
-        if(transaction.getFunds().compareTo(BigDecimal.ZERO) < 0) {
+        if(transaction.getFunds().compareTo(BigDecimal.ZERO) < 0 && transaction.getRepayTimestamp() != null) {
             String repayString = "Due On: " + dateFormat.format(transaction.getRepayTimestamp().toDate());
             holder.repayDateText.setText(repayString);
         }
