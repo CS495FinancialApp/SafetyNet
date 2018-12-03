@@ -18,6 +18,7 @@ import java.util.Locale;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
+import ua.safetynet.user.UserTransactionHistoryFragment;
 
 /**
  * @author Jake Bailey
@@ -61,9 +62,9 @@ public class GroupHomeFragment extends Fragment {
         final TextView name = view.findViewById(R.id.textViewGroupName);
         final TextView balance = view.findViewById(R.id.textViewGroupBalance);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar format
-        //final Intent UserIntent = new Intent(EditGroupFragment.this, UserTransactionHistory.class);
+        //final Intent UserIntent = new Intent(EditGroupFragment.this, UserTransactionHistoryFragment.class);
         //final Intent EditIntent = new Intent(EditGroupFragment.this, EditGroupFragment.class);
-        //final Intent GroupIntent = new Intent(EditGroupFragment.this, GroupTransactionHistoryFragment.class);
+        //final Intent GroupIntent = new Intent(EditGroupFragment.this, UserTransactionHistoryFragment.class);
         Database db = new Database();
 
 
@@ -71,11 +72,11 @@ public class GroupHomeFragment extends Fragment {
         name.setText(group.getName());
         balance.setText("Balance: " + format.format(group.getFunds()));
 
-        //Goes to UserTransactionHistory Activity
-        userHistory.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //startActivity(UserIntent);
-            }
+        //Goes to UserTransactionHistoryFragment Activity
+        userHistory.setOnClickListener((v) -> {
+           UserTransactionHistoryFragment fragment = UserTransactionHistoryFragment.newInstance(group);
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
         });
 
         editGroup.setOnClickListener((v) -> {
@@ -89,7 +90,7 @@ public class GroupHomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Only admins can edit groups", Toast.LENGTH_LONG).show();
             }
         });
-        //Goes to GroupTransactionHistoryFragment Activity
+        //Goes to UserTransactionHistoryFragment Activity
         groupHistory.setOnClickListener((v) -> {
             GroupTransactionHistoryFragment fragment = GroupTransactionHistoryFragment.newInstance(group);
             FragmentManager manager = getActivity().getSupportFragmentManager();
