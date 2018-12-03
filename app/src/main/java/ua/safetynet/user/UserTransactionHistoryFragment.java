@@ -88,7 +88,7 @@ public class UserTransactionHistoryFragment extends Fragment {
             String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
             transactionList.removeIf(transaction -> !transaction.getUserId().equals(uid));
             //Specify adapter
-            mAdapter = new TransactionRecyclerAdapter(transactionList, TransactionRecyclerAdapter.NOIMAGE);
+            mAdapter = new TransactionRecyclerAdapter(transactionList, TransactionRecyclerAdapter.NOIMAGE,getActivity().getSupportFragmentManager());
             mTransactionRecycler.setAdapter(mAdapter);
 
         });

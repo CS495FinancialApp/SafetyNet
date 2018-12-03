@@ -78,7 +78,7 @@ public class GroupTransactionHistoryFragment extends Fragment {
             //set transaction list
             transactionList = transactions;
             //Specify adapter
-            mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.USER);
+            mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.USER, getActivity().getSupportFragmentManager());
             mTransactionRecycler.setAdapter(mAdapter);
 
         });
