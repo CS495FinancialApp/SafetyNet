@@ -24,6 +24,7 @@ package ua.safetynet;
         import ua.safetynet.user.User;
 
 public class Database {
+
     public interface DatabaseUserListener {
         void onUserRetrieval(User user);
 
@@ -37,6 +38,9 @@ public class Database {
     public interface DatabaseTransactionsListener {
         void onTransactionsRetrieval(ArrayList<Transaction> transactions);
     }
+    public interface DatabaseUserEmailListener {
+        void onUserEmailRetrieval(ArrayList<User> users);
+    }
 
     /** template
     public interface DatabaseUsersListener {
@@ -49,6 +53,7 @@ public class Database {
     private CollectionReference databaseGroups;
     private CollectionReference databaseTransactions;
 
+    //create database reference points
     public Database() {
         this.databaseUsers = FirebaseFirestore.getInstance().collection("Users");
         this.databaseGroups = FirebaseFirestore.getInstance().collection("Groups");
@@ -87,6 +92,7 @@ public class Database {
             }
         });
     }
+
     /**query the firestore and return an arraylist of the groups the current user is in
      Firestore queries are incapable of performing logical OR operations, so searching from the user's group list proved impossible*/
     public void queryGroups(String userId, final Database.DatabaseGroupsListener dbListener){
@@ -114,6 +120,7 @@ public class Database {
             }
         });
     }
+
     /**
      * returns all the transactions for the currently logged in user in a specific group
      * The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
@@ -145,6 +152,7 @@ public class Database {
             }
         });
     }
+
     /**
      * Gets all transactions made by one user regardless of group with the userId being passed in.
      *
@@ -166,6 +174,7 @@ public class Database {
             }
         });
     }
+
     /**
      * returns all transactions for a specific group, regardless of the user involved.
      * @param Id
@@ -210,6 +219,32 @@ public class Database {
         });
     }
 
+    //returns a list of users with the associated email (Should only ever return 0 or 1. For use in checking whether an email exists)
+    public void queryUserEmail(String email, final Database.DatabaseUserEmailListener dbListener){
+        final Query userEmailQuery = databaseUsers
+                .whereEqualTo("email", email);
+
+        userEmailQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    ArrayList<User> userList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        User user = User.fromMap(document.getData());
+                        Log.d("DATABASE", document.toString());
+                        userList.add(user);
+                    }
+                    dbListener.onUserEmailRetrieval(userList);
+                }
+                else{
+                    //error toast message goes here
+                    Log.d("DATABASE", "Group list fetch was not successful");
+                }
+            }
+        });
+    }
+
+    //returns the groups specified by the given ID
     public void getGroup(String groupID, final Database.DatabaseGroupListener dbListener) {
         databaseGroups.document(groupID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -226,6 +261,7 @@ public class Database {
         databaseUsers.document(user.getUserId()).set(user.toMap());
     }
 
+    //Add a new transaction to the transactions table
     public void addTransaction(Transaction transaction) {
         databaseTransactions.document(transaction.getTransId()).set(transaction.toMap());
     }
