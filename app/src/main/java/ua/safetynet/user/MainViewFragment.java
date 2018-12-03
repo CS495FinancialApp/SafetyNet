@@ -200,7 +200,7 @@ public class MainViewFragment extends Fragment {
                         GroupHomeFragment homeFragment = GroupHomeFragment.newInstance(group);
                         FragmentManager fm =getActivity().getSupportFragmentManager();
                         if(fm != null)
-                            fm.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                            fm.beginTransaction().replace(R.id.fragment_container, homeFragment).addToBackStack(null).commit();
                     }));
                     mRecyclerView.setAdapter(mAdapter);
                     makeVisible();

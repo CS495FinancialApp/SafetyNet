@@ -83,7 +83,7 @@ public class GroupHomeFragment extends Fragment {
             if (isAdmin) {
                 EditGroupFragment editGroupFragment = EditGroupFragment.newInstance(group);
                 FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace(R.id.fragment_container, editGroupFragment).commit();
+                manager.beginTransaction().replace(R.id.fragment_container, editGroupFragment).addToBackStack(null).commit();
 
             } else {
                 Toast.makeText(getContext(), "Only admins can edit groups", Toast.LENGTH_LONG).show();
