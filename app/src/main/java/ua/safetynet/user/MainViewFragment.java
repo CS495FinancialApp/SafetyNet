@@ -2,23 +2,18 @@ package ua.safetynet.user;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,14 +25,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
 import ua.safetynet.Database;
+import ua.safetynet.group.GroupHomeFragment;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.GroupRecyclerAdapter;
@@ -204,7 +196,12 @@ public class MainViewFragment extends Fragment {
                     Log.d("MAIN FRAGMENT", groups.toString());
                     groupList = groups;
                     // specify an adapter (see also next example)
-                    mAdapter = new GroupRecyclerAdapter(groupList);
+                    mAdapter = new GroupRecyclerAdapter(groupList, (group -> {
+                        GroupHomeFragment homeFragment = GroupHomeFragment.newInstance(group);
+                        FragmentManager fm =getActivity().getSupportFragmentManager();
+                        if(fm != null)
+                            fm.beginTransaction().replace(R.id.fragment_container, homeFragment).addToBackStack(null).commit();
+                    }));
                     mRecyclerView.setAdapter(mAdapter);
                     makeVisible();
                 }

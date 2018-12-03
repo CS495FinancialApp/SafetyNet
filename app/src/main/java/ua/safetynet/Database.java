@@ -177,21 +177,20 @@ public class Database {
 
     /**
      * returns all transactions for a specific group, regardless of the user involved.
-     * @param Id
+     * @param groupId
      * @param dbListener
      */
-    public void queryGroupTransactions(String Id, final Database.DatabaseTransactionsListener dbListener){
-        final ArrayList<Transaction> transactionList = new ArrayList<>();
+    public void queryGroupTransactions(String groupId, final Database.DatabaseTransactionsListener dbListener){
         Query transactionQuery = databaseTransactions
-                .whereArrayContains("groupId", Id);
+                .whereEqualTo("groupId", groupId);
 
         transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
-
+                    ArrayList<Transaction> transactionList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Transaction transaction = document.toObject(Transaction.class);
+                        Transaction transaction = Transaction.fromMap(document.getData());
                         //add Transaction to an arraylist
                         transactionList.add(transaction);
                     }

@@ -35,17 +35,10 @@
         </activity>
         <activity android:name=".auth.FirebaseAuthActivity" />
         <activity android:name=".user.MainPageActivity" />
-        <activity android:name=".Withdrawal" />
-        <activity android:name=".Deposit" />
-        <activity android:name=".Group_home2" />
-        <activity android:name=".UserTransactionHistory" />
-        <activity android:name=".GroupTransactionHistory" />
-        <activity android:name=".EditGroup" />
         <activity
             android:name=".auth.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
             android:theme="@style/AppTheme" />
-        <activity android:name=".payment.DetailedTransactionActivity"></activity>
     </application>
 
 </manifest>

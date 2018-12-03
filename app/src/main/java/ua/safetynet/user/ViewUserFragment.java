@@ -154,7 +154,7 @@ public class ViewUserFragment extends Fragment {
                 public void onTransactionsRetrieval(ArrayList<Transaction> transactions) {
                     transactionList = transactions;
                     //Set adapter with group view
-                    mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.GROUP);
+                    mAdapter = new TransactionRecyclerAdapter(transactionList,TransactionRecyclerAdapter.GROUP, getActivity().getSupportFragmentManager());
                     mTransactionRecycler.setAdapter(mAdapter);
                 }
             });
