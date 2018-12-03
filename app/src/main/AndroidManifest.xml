@@ -36,8 +36,6 @@
         <activity android:name=".auth.FirebaseAuthActivity" />
         <activity android:name=".user.MainPageActivity" />
         <activity android:name=".Withdrawal" />
-        <activity android:name=".Deposit" />
-        <activity android:name=".Group_home2" />
         <activity android:name=".UserTransactionHistory" />
         <activity android:name=".GroupTransactionHistory" />
         <activity android:name=".EditGroup" />
