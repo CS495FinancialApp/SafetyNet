@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -38,6 +39,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 
 import ua.safetynet.Database;
+import ua.safetynet.GroupHomeFragment;
 import ua.safetynet.R;
 import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.GroupRecyclerAdapter;
@@ -204,7 +206,12 @@ public class MainViewFragment extends Fragment {
                     Log.d("MAIN FRAGMENT", groups.toString());
                     groupList = groups;
                     // specify an adapter (see also next example)
-                    mAdapter = new GroupRecyclerAdapter(groupList);
+                    mAdapter = new GroupRecyclerAdapter(groupList, (group -> {
+                        GroupHomeFragment homeFragment = GroupHomeFragment.newInstance(group);
+                        FragmentManager fm =getActivity().getSupportFragmentManager();
+                        if(fm != null)
+                            fm.beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                    }));
                     mRecyclerView.setAdapter(mAdapter);
                     makeVisible();
                 }
