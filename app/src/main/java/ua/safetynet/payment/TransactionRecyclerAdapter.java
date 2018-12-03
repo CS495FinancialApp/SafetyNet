@@ -108,8 +108,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<Transaction
         //Get user name or group name based on what we should be showing
         if(showType == USER) {
         //Check if transaction should be anonymous
-            if(transaction.shouldAnonymous())
+            if(transaction.shouldAnonymous()) {
                 holder.nameText.setText("*****");
+                Glide.with(holder.itemView).load(R.drawable.defaultuser).into(holder.imageView);
+            }
             else {
                 //If not anonymous, get user from DB
                 Database db = new Database();
