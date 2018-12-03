@@ -1,5 +1,6 @@
 package ua.safetynet.group;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 import ua.safetynet.GroupHomeFragment;
 import ua.safetynet.R;
+import ua.safetynet.user.MainPageActivity;
 
 /**
  * @author Jeremy McCormick
@@ -27,7 +29,7 @@ import ua.safetynet.R;
  */
 public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdapter.ViewHolder> {
     private List<Group> groupList;
-
+    private GroupClicked clickedListener;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mPicture;
         public TextView  mGroupName;
@@ -42,7 +44,8 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         }
     }
 
-    public GroupRecyclerAdapter(List<Group> list) {
+    public GroupRecyclerAdapter( List<Group> list, GroupClicked clicked) {
+        this.clickedListener = clicked;
         this.groupList = list;
     }
 
@@ -77,20 +80,23 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         holder.mAmount.setText(format.format(group.getFunds()));
 
         //Transfers to appropriate group activity when element is clicked
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), GroupHomeFragment.class);
-                //Pass groupID for future retrieval
-                intent.putExtra("group_ID", group.getGroupId());
-                v.getContext().startActivity(intent);
-            }
-        });
+        holder.itemView.setOnClickListener( (view) ->
+            clickedListener.onItemClicked(group)
+        );
     }
 
     @Override
     public int getItemCount() {
         return groupList.size();
+    }
+
+    public void goToGroupHome(Group group) {
+        GroupHomeFragment fragment = GroupHomeFragment.newInstance(group);
+
+    }
+
+    public interface GroupClicked {
+        void onItemClicked(Group group);
     }
 }
 
