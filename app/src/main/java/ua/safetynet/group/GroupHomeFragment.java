@@ -90,10 +90,10 @@ public class GroupHomeFragment extends Fragment {
             }
         });
         //Goes to GroupTransactionHistoryFragment Activity
-        groupHistory.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //startActivity(GroupIntent);
-            }
+        groupHistory.setOnClickListener((v) -> {
+            GroupTransactionHistoryFragment fragment = GroupTransactionHistoryFragment.newInstance(group);
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
         });
 
         return view;
