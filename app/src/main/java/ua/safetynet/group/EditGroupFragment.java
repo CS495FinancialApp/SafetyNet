@@ -146,7 +146,7 @@ public class EditGroupFragment extends Fragment {
                     @Override
                     public void onUserEmailRetrieval(ArrayList<User> users) {
                         if (users.isEmpty()){
-                            Log.d("EDITGROUP","empty problem!");
+                            Log.d(TAG,"empty problem!");
                             Toast.makeText(view.getContext(), "No user has the specified email", Toast.LENGTH_LONG).show();
                         }
                         else {
