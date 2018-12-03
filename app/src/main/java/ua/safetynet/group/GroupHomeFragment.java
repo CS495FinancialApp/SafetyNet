@@ -3,6 +3,7 @@ package ua.safetynet.group;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,9 +63,6 @@ public class GroupHomeFragment extends Fragment {
         final TextView name = view.findViewById(R.id.textViewGroupName);
         final TextView balance = view.findViewById(R.id.textViewGroupBalance);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar format
-        //final Intent UserIntent = new Intent(EditGroupFragment.this, UserTransactionHistoryFragment.class);
-        //final Intent EditIntent = new Intent(EditGroupFragment.this, EditGroupFragment.class);
-        //final Intent GroupIntent = new Intent(EditGroupFragment.this, UserTransactionHistoryFragment.class);
         Database db = new Database();
 
 
@@ -74,9 +72,7 @@ public class GroupHomeFragment extends Fragment {
 
         //Goes to UserTransactionHistoryFragment Activity
         userHistory.setOnClickListener((v) -> {
-           UserTransactionHistoryFragment fragment = UserTransactionHistoryFragment.newInstance(group);
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+           addUserHistoryFragment();
         });
 
         editGroup.setOnClickListener((v) -> {
@@ -92,11 +88,20 @@ public class GroupHomeFragment extends Fragment {
         });
         //Goes to UserTransactionHistoryFragment Activity
         groupHistory.setOnClickListener((v) -> {
-            GroupTransactionHistoryFragment fragment = GroupTransactionHistoryFragment.newInstance(group);
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+            addGroupHistoryFragment();
         });
-
+        addGroupHistoryFragment();
         return view;
+    }
+
+    public void addGroupHistoryFragment() {
+        GroupTransactionHistoryFragment groupFragment = GroupTransactionHistoryFragment.newInstance(group);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.group_home_fragment_container, groupFragment).commit();
+    }
+    public void addUserHistoryFragment() {
+        UserTransactionHistoryFragment userFragment = UserTransactionHistoryFragment.newInstance(group);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.group_home_fragment_container, userFragment).commit();
     }
 }

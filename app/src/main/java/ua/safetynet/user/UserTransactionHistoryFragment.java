@@ -33,7 +33,6 @@ public class UserTransactionHistoryFragment extends Fragment {
     private static final String GROUP = "group";
     private static final String TAG = "USER HOME FRAGMENT";
     private Group group;
-    private TextView groupName;
     private List<Transaction> transactionList;
     private RecyclerView mTransactionRecycler;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -66,9 +65,6 @@ public class UserTransactionHistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_transaction_history, container, false);
 
-
-        groupName = view.findViewById(R.id.textViewGroupID);
-        groupName.setText(group.getName());
         //Set linear layout
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mTransactionRecycler = view.findViewById(R.id.group_history_recycler);
