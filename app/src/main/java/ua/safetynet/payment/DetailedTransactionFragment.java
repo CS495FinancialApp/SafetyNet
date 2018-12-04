@@ -1,14 +1,17 @@
 package ua.safetynet.payment;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +29,6 @@ import ua.safetynet.user.User;
 public class DetailedTransactionFragment extends Fragment {
     private static final String TRANSACTION = "transaction";
     private Transaction transaction;
-
     public DetailedTransactionFragment() {
         // Required empty public constructor
     }
@@ -60,6 +62,8 @@ public class DetailedTransactionFragment extends Fragment {
         TextView transTimestamp = view.findViewById(R.id.textViewTransTime);
         TextView repaymentTimestamp = view.findViewById(R.id.textViewTransRepay);
         TextView repaymentLabel = view.findViewById(R.id.textViewTransLabel6);
+        Button repayButton = view.findViewById(R.id.payoff_btn);
+        repayButton.setVisibility(View.GONE);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar Format
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);    //Standard Date Format
         Database db = new Database();
@@ -70,6 +74,12 @@ public class DetailedTransactionFragment extends Fragment {
             @Override
             public void onUserRetrieval(User user) {
                 transUser.setText(user.getName());
+                //If is users transaction and is a withdrawal, show repay button
+                if(user.getTransactions().contains(transaction.getTransId()) && transaction.getFunds().compareTo(BigDecimal.ZERO) < 0) {
+                    repayButton.setVisibility(View.VISIBLE);
+                    //set on click for repay btn
+                    repayButton.setOnClickListener(v -> startRepay(transaction.getFunds().negate(),transaction.getGroupId()));
+                }
             }
         });
         //Get group object for proper groupname
@@ -89,6 +99,12 @@ public class DetailedTransactionFragment extends Fragment {
         }
         else
             repaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
+
         return view;
+    }
+    private void startRepay(BigDecimal amt, String groupId) {
+        PaymentFragment paymentFragment = PaymentFragment.newInstance(amt, groupId);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, paymentFragment).addToBackStack(null).commit();
     }
 }

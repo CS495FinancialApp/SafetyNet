@@ -73,7 +73,9 @@
         android:layout_marginStart="163dp"
         android:layout_marginTop="65dp"
         android:layout_marginEnd="163dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/repayment_timestamp"
+        app:layout_constraintBottom_toTopOf="@+id/payoff_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTransTime" />
@@ -155,4 +157,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTransTime" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransTime"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/payoff_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Repay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
