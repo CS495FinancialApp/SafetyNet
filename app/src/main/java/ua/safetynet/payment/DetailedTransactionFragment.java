@@ -54,7 +54,8 @@ public class DetailedTransactionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_transaction,container, false );
-
+        //Set repay button to gone initially
+        view.findViewById(R.id.payoff_btn).setVisibility(View.GONE);
         TextView transID = view.findViewById(R.id.textViewTransID);
         TextView transUser = view.findViewById(R.id.textViewTransUser);
         TextView transGroup = view.findViewById(R.id.textViewTransGroup);
@@ -63,11 +64,9 @@ public class DetailedTransactionFragment extends Fragment {
         TextView repaymentTimestamp = view.findViewById(R.id.textViewTransRepay);
         TextView repaymentLabel = view.findViewById(R.id.textViewTransLabel6);
         Button repayButton = view.findViewById(R.id.payoff_btn);
-        repayButton.setVisibility(View.GONE);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar Format
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);    //Standard Date Format
         Database db = new Database();
-
         transID.setText(transaction.getTransId());
         //Get user object for proper username
         db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
@@ -75,7 +74,7 @@ public class DetailedTransactionFragment extends Fragment {
             public void onUserRetrieval(User user) {
                 transUser.setText(user.getName());
                 //If is users transaction and is a withdrawal, show repay button
-                if(user.getTransactions().contains(transaction.getTransId()) && transaction.getFunds().compareTo(BigDecimal.ZERO) < 0) {
+                if(user.getTransactions().contains(transaction.getTransId()) && transaction.getRepayTimestamp() != null) {
                     repayButton.setVisibility(View.VISIBLE);
                     //set on click for repay btn
                     repayButton.setOnClickListener(v -> startRepay(transaction.getFunds().negate(),transaction.getGroupId()));
