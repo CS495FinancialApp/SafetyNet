@@ -138,12 +138,11 @@ public class GroupHomeFragment extends Fragment {
         transaction.replace(R.id.group_home_fragment_container, userFragment).commit();
     }
 
+    //creates a confirmation dialog for leaving the group
     private void createDialog(){
-        Log.d("GroupHomeFragment", "PositiveBalance");
         AlertDialog.Builder alertDlg = new AlertDialog.Builder(getActivity());
         alertDlg.setMessage("Are you sure you want to leave the group?");
         alertDlg.setCancelable(false);
-        Log.d("GroupHomeFragment", "Step 1");
         alertDlg.setPositiveButton("Leave Group", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -154,7 +153,6 @@ public class GroupHomeFragment extends Fragment {
                 }
             }
         });
-        Log.d("GroupHomeFragment", "Step 2");
         alertDlg.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
