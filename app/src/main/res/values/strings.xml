@@ -70,7 +70,9 @@
     <string name="transaction_group">Transaction Group</string>
     <string name="transaction_amount">Transaction Amount</string>
     <string name="transaction_timestamp">Transaction Timestamp</string>
+    <string name="timestamp_label">Transaction took place on</string>
     <string name="repayment_timestamp">Repayment Timestamp</string>
+    <string name="repayment_label">Payout should be payed back by</string>
 
 
 </resources>

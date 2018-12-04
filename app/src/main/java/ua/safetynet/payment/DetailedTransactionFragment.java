@@ -59,6 +59,7 @@ public class DetailedTransactionFragment extends Fragment {
         TextView transAmount = view.findViewById(R.id.textViewTransValue);
         TextView transTimestamp = view.findViewById(R.id.textViewTransTime);
         TextView repaymentTimestamp = view.findViewById(R.id.textViewTransRepay);
+        TextView repaymentLabel = view.findViewById(R.id.textViewTransLabel6);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);    //Dollar Format
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US);    //Standard Date Format
         Database db = new Database();
@@ -82,8 +83,10 @@ public class DetailedTransactionFragment extends Fragment {
         //Format timestamp into readable state
         transTimestamp.setText(dateFormat.format(transaction.getTimestamp().toDate()));
         //If transaction is a deposit
-        if(transaction.getRepayTimestamp() == null)
+        if(transaction.getRepayTimestamp() == null) {
+            repaymentLabel.setVisibility(View.GONE);
             repaymentTimestamp.setVisibility(View.GONE);
+        }
         else
             repaymentTimestamp.setText(dateFormat.format(transaction.getRepayTimestamp().toDate()));
         return view;

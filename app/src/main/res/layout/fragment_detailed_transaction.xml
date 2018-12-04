@@ -77,4 +77,82 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTransTime" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel1"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="163dp"
+        android:text="@string/transaction_id"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="155dp"
+        android:text="@string/transaction_user"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransID" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="155dp"
+        android:text="@string/transaction_group"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransUser" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="155dp"
+        android:text="@string/transaction_amount"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransGroup" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="155dp"
+        android:text="@string/timestamp_label"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransValue" />
+
+    <TextView
+        android:id="@+id/textViewTransLabel6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="155dp"
+        android:text="@string/repayment_label"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransTime" />
 </android.support.constraint.ConstraintLayout>
