@@ -57,8 +57,8 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.mockito:mockito-core:2.23.4"
-    androidTestImplementation "org.mockito:mockito-android:2.23.4"
+    testImplementation 'org.mockito:mockito-core:2.23.4'
+    androidTestImplementation 'org.mockito:mockito-android:2.23.4'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

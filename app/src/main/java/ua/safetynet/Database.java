@@ -127,7 +127,7 @@ public class Database {
      * @param dbListener
      * @param groupId
      */
-    public void queryUserTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
+    public void queryUserGroupTransactions(final Database.DatabaseTransactionsListener dbListener, String groupId){
         final ArrayList<Transaction> transactionList = new ArrayList<>();
         Query transactionQuery = databaseTransactions
                 .whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -218,7 +218,7 @@ public class Database {
         });
     }
 
-    //returns a list of users with the associated email (Should only ever return 0 or 1. For use in checking whether an email exists)
+    //returns an array of users with the associated email (Should only ever return 0 or 1 users in the array. For use in checking whether an email exists)
     public void queryUserEmail(String email, final Database.DatabaseUserEmailListener dbListener){
         final Query userEmailQuery = databaseUsers
                 .whereEqualTo("email", email);

@@ -52,7 +52,7 @@
     <string name="confirm_changes">Confirm Changes</string>
     <string name="add_user_hint">New user\'s email</string>
     <string name="user_email">New user\'s email</string>
-
+    <string name="leave_group">Leave Group</string>
 
     <string name="confirm2">Confirm</string>
     <string name="withdrawal_question2">How much to withdrawal?</string>
