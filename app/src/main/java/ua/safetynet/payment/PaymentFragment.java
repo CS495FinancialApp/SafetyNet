@@ -84,7 +84,7 @@ public class PaymentFragment extends Fragment {
     private SharedPreferences sharedPrefs;
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
-
+    private boolean readOnly = false;
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -111,6 +111,7 @@ public class PaymentFragment extends Fragment {
             amount = new BigDecimal(getArguments().getString(AMOUNT));
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
+            readOnly = true;
         }
         if (userId == null) {
             userId = FirebaseAuth.getInstance().getUid();
@@ -160,6 +161,12 @@ public class PaymentFragment extends Fragment {
         //Setup spinner for group list
         spinner = view.findViewById(R.id.payment_group_spinner);
         setupGroupSpinner();
+        //Setup as read only if we passed in values
+        if(readOnly) {
+            //make amount read only
+            amountText.setEnabled(false);
+            amountText.setKeyListener(null);
+        }
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,18 +313,21 @@ public class PaymentFragment extends Fragment {
                 groupList = groups;
                 ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
                 spinner.setAdapter(adapter);
+                //Setup preselction now that we have group list
+                //setSelected if a groupId is passed in
+                if (groupId == null)
+                    spinner.setSelected(false);
+                else {
+                    //Create group to compare to and set to passed in groupID
+                    Group compGroup = new Group();
+                    compGroup.setGroupId(groupId);
+                    int index = spinner.getItems().indexOf(compGroup);
+                    //Set selected index and make read only
+                    spinner.setSelectedIndex(index);
+                    spinner.setEnabled(false);
+                }
             }
         });
-        //setSelected if a groupId is passed in
-        if (groupId == null)
-            spinner.setSelected(false);
-        else {
-            //Create group to compare to and set to passed in groupID
-            Group compGroup = new Group();
-            compGroup.setGroupId(groupId);
-            int index = spinner.getItems().indexOf(compGroup);
-            spinner.setSelectedIndex(index);
-        }
         //Set selected listener to set groupId when item selected
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
             @Override

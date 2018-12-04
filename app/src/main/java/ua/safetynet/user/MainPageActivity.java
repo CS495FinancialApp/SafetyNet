@@ -205,10 +205,29 @@ public class MainPageActivity extends AppCompatActivity implements CreateGroupFr
     }
     @Override
     public void onPaymentComplete(String transactionId) {
+        //Add transaction id to user
         user.addTransaction(transactionId);
         Database db = new Database();
-        db.setUser(user);
         Log.d("Main Activity","Updated user with transaction ID = "+ transactionId);
+        //Get list of transactions then delete the one it is paying off and the payoff
+        db.queryUserTransactions(user.getUserId(), (transactions -> {
+            //Find trans that was just made
+            Transaction payoff = null;
+            for(Transaction transaction : transactions){
+                if(transaction.getTransId().equals(transactionId))
+                    payoff = transaction;
+            }
+            //Find if one is equal to the paid amt and the user
+            for(Transaction transaction : transactions){
+                if(payoff != null && transaction.getUserId().equals(user.getUserId()) && transaction.getFunds().equals(payoff.getFunds().negate())) {
+                    FirebaseFirestore fs = FirebaseFirestore.getInstance();
+                    //Delete both transactions
+                    fs.collection("transactions").document(payoff.getTransId()).delete();
+                    fs.collection("transactions").document(transaction.getTransId()).delete();
+                }
+            }
+        }));
+        db.setUser(user);
     }
     @Override
     public void onPayoutComplete(final Transaction transaction) {
