@@ -57,7 +57,11 @@ public class DatabaseTest {
 
     @Before
     public void dbSetup(){
-        FirebaseApp.initializeApp(RuntimeEnvironment.systemContext);
+        FirebaseFirestoreSettings.Builder settings = new FirebaseFirestoreSettings.Builder();
+        settings.setPersistenceEnabled(true);
+        FirebaseApp.initializeApp(RuntimeEnvironment.application);
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        fs.setFirestoreSettings(settings.build());
         db = new Database();
         ids =new ArrayList<>();
     }
@@ -86,7 +90,7 @@ public class DatabaseTest {
                 latch.countDown();
             }
         );
-        try{Thread.sleep(500);latch.await(10,TimeUnit.SECONDS );}
+        try{Thread.sleep(500);latch.await(2,TimeUnit.SECONDS );}
         catch (InterruptedException e) {e.printStackTrace();}
     }
     @Test
@@ -171,7 +175,7 @@ public class DatabaseTest {
         ids.add("test7");
         ids.add("test8");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");
@@ -201,7 +205,7 @@ public class DatabaseTest {
         ids.add("test7");
         ids.add("test8");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");
