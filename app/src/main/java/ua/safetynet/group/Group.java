@@ -136,7 +136,7 @@ public class Group implements Parcelable {
         if(image != null) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            final StorageReference groupImageRef = storageRef.child("groupimages/" + getGroupId() + ".jpg");
+            final StorageReference groupImageRef = storageRef.child("groupimages/" + this.getGroupId() + ".jpg");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 99, baos);
             byte[] data = baos.toByteArray();
@@ -154,9 +154,9 @@ public class Group implements Parcelable {
                         @Override
                         public void onSuccess(Uri uri) {
                             setImageUri(uri);
+                            Log.d("Group", "onSuccess: Image Sucessfully Uploaded uri="+uri.toString());
                         }
                     });
-                    Log.d("Group", "onSuccess: Image Sucessfully Uploaded");
                 }
             });
         }
@@ -199,7 +199,7 @@ public class Group implements Parcelable {
         map.put("repaymentTime", Integer.toString(this.repaymentTime));
         map.put("funds", this.funds.toString());
         map.put("limit", this.withdrawalLimit.toString());
-        map.put("imageuri",this.imageUri);
+        if(this.imageUri != null) map.put("imageuri",this.imageUri.toString());
         map.put("users", this.users);
         map.put("admins", this.admins);
         map.put("withdrawals", this.withdrawals);

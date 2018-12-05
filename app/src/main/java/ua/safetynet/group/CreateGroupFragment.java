@@ -1,17 +1,33 @@
 package ua.safetynet.group;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import ua.safetynet.Database;
 import ua.safetynet.R;
@@ -25,12 +41,18 @@ import ua.safetynet.R;
  * create an instance of this fragment.
  */
 public class CreateGroupFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
+    private FrameLayout bttnCreateGroup;
+    private EditText groupName;
+    private EditText withdrawalLimitText;
+    private EditText repayTime;
+    private BigDecimal withdrawLimit;
+    public static final int PICK_IMAGE = 1;
+    private static final String TAG = "CREATE GROUP";
+    private ImageView groupImage;
+    private Bitmap image;
+    private Group newGroup;
     private String mParam1;
     private String mParam2;
 
@@ -72,27 +94,45 @@ public class CreateGroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView =  inflater.inflate(R.layout.fragment_create_group, container, false);
+        View view =  inflater.inflate(R.layout.fragment_create_group, container, false);
+        //Make new group object for setting data to
+        newGroup = new Group();
         //button for submitting a group
-        Button bttn_Create_Group = (Button) rootView.findViewById(R.id.bttn_Create_Group);
+        bttnCreateGroup = view.findViewById(R.id.create_group_button);
         //text box for group name
-        final EditText groupName = (EditText) rootView.findViewById(R.id.txtGroupName);
+        groupName = view.findViewById(R.id.new_group_name_text);
+        //Text box for repay time and limit
+        repayTime = view.findViewById(R.id.new_group_repay_time);
+        withdrawalLimitText = view.findViewById(R.id.new_group_withdrawal_limit);
+        //Image view and set onclick to select new image
+        groupImage = view.findViewById(R.id.new_group_image);
+        groupImage.setOnClickListener((v -> selectImage()));
+        Glide.with(getContext()).load(R.drawable.group_default_logo).into(groupImage);
+        image = ((BitmapDrawable) getResources().getDrawable(R.drawable.group_default_logo,null )).getBitmap();
+        //Set up listener to format w/d amount
+        setupAmountEditTextListener();
         //group submission button listener
-        bttn_Create_Group.setOnClickListener(new View.OnClickListener() {
+        bttnCreateGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //create the database connection
-                Database database = new Database();
-                Group group = new Group();
-                group.setName(groupName.getText().toString().trim());
-                group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                //create the database connection and set group info
+                DocumentReference groupRef = FirebaseFirestore.getInstance().collection("Groups").document();
+                //Set groupid to doc Id
+                newGroup.setGroupId(groupRef.getId());
+                newGroup.setName(groupName.getText().toString().trim());
+                newGroup.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                newGroup.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                newGroup.setRepaymentTime(Integer.parseInt(repayTime.getText().toString()));
+                newGroup.setWithdrawalLimit(withdrawLimit);
+                newGroup.setImage(image);
                 //send the data after getting data from the blanks
-                database.createGroup(group);
+                groupRef.set(newGroup.toMap());
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
+                //Go back from this page
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-        return rootView;
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -132,5 +172,77 @@ public class CreateGroupFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    /**
+     * Adds text changed listener to amount text box. Formats it in a money style with digits shifting down
+     * as you enter them
+     */
+    public void setupAmountEditTextListener() {
+        withdrawalLimitText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            private String current = "";
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    //Throws an error if backspacing with all 0's, check for this and return if so
+                    String emptyTest = s.toString().replaceAll("[^1-9]", "");
+                    if (emptyTest.isEmpty())
+                        return;
+                    withdrawalLimitText.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[^0-9]", "");
+                    BigDecimal parsed = new BigDecimal(cleanString).setScale(2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
+                    withdrawLimit = parsed;
+                    String formatted = NumberFormat.getCurrencyInstance().format(parsed);
+                    current = formatted;
+                    withdrawalLimitText.setText(formatted);
+                    withdrawalLimitText.setSelection(formatted.length());
+                    withdrawalLimitText.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+    private void selectImage() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK);
+        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+
+        startActivityForResult(pickIntent, PICK_IMAGE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE) {
+            if(data == null) {
+                Log.d(TAG, "Couldn't get image from storage");
+                Toast.makeText(getContext(), "Could not get photo from storage",Toast.LENGTH_SHORT ).show();
+                return;
+            }
+            Uri imageUri = data.getData();
+            if(imageUri != null) {
+                Log.d(TAG, "Got new image from picker");
+                Bitmap newImage = null;
+                try {
+                    newImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Glide.with(getContext()).asBitmap().load(newImage).into(groupImage);
+                image = newImage;
+            }
+            else
+                Log.d(TAG, "Could not image from return bundle");
+        }
+        else
+            Log.d(TAG, "Request code not equal to PICK IMAGE");
     }
 }

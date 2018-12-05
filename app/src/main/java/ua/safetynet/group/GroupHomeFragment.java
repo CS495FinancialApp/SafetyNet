@@ -81,9 +81,7 @@ public class GroupHomeFragment extends Fragment {
         balance.setText("Balance: " + format.format(group.getFunds()));
 
         //Goes to UserTransactionHistoryFragment Activity
-        userHistory.setOnClickListener((v) -> {
-           addUserHistoryFragment();
-        });
+        userHistory.setOnClickListener((v) -> addUserHistoryFragment());
 
         editGroup.setOnClickListener((v) -> {
             Log.d(TAG, "Edit group clicked");
@@ -97,9 +95,8 @@ public class GroupHomeFragment extends Fragment {
             }
         });
         //Goes to UserTransactionHistoryFragment Activity
-        groupHistory.setOnClickListener((v) -> {
-            addGroupHistoryFragment();
-        });
+        groupHistory.setOnClickListener((v) -> addGroupHistoryFragment());
+
         //Removes the current user from the group
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
