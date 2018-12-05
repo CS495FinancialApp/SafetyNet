@@ -1,11 +1,10 @@
 package ua.safetynet;
 
 import android.support.test.filters.LargeTest;
+import android.support.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.rule.ActivityTestRule;
 
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,49 +14,23 @@ import org.junit.runner.RunWith;
 import ua.safetynet.user.MainPageActivity;
 
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import android.content.Context;
+
 import android.util.Log;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-import org.junit.After;
+
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
-import org.mockito.stubbing.Answer;
 
-import static org.mockito.Mockito.*;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
 
-import ua.safetynet.Database;
+
+
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
@@ -68,7 +41,7 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4ClassRunner.class)
 public class DatabaseTesting {
     Database db;
     User dbUser;
@@ -76,7 +49,6 @@ public class DatabaseTesting {
 
     @Before
     public void dbSetup(){
-        MockitoAnnotations.initMocks(this);
         db = new Database();
         ids = new ArrayList<>();
     }
@@ -188,7 +160,7 @@ public class DatabaseTesting {
         ids.add("test7");
         ids.add("test8");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");
@@ -218,7 +190,7 @@ public class DatabaseTesting {
         ids.add("test7");
         ids.add("test8");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");

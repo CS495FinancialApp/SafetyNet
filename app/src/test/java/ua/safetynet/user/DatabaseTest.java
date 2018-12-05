@@ -27,13 +27,17 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowLooper;
 
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -64,6 +68,7 @@ public class DatabaseTest {
 
     @Test
     public void testDbUser() {
+        CountDownLatch latch = new CountDownLatch(1);
         //Make a new user and add him to the db
         ids.add("test1");
         ids.add("test2");
@@ -75,7 +80,6 @@ public class DatabaseTest {
         db.setUser(user); //Add new user to db
 
         //Get user from db
-
         db.getUser("1", (dbUser) -> {
                 Log.d("TESTING","DB userId is: " + dbUser.getName());
                 Assert.assertEquals(user.getUserId(), dbUser.getUserId());
@@ -83,9 +87,11 @@ public class DatabaseTest {
                 Assert.assertEquals(user.getEmail(),dbUser.getEmail());
                 Assert.assertEquals(user.getGroups(),ids);
                 Assert.assertEquals(user.getTransactions(), ids);
+                latch.countDown();
             }
         );
-
+        try{Thread.sleep(500);latch.await(10,TimeUnit.SECONDS );}
+        catch (InterruptedException e) {e.printStackTrace();}
     }
     @Test
     public void testDbGroup() {
@@ -210,7 +216,7 @@ public class DatabaseTest {
         trans.setRepayTimestamp(timestamp);
         db.addTransaction(trans); //Add new user to db
 
-        db.queryUserGroupTransactions((transDb -> {
+        db.queryUserGroupTransactions("user1","group1",(transDb -> {
                     Log.d("TESTING","DB userId is: " + transDb.get(0).getTransId());
                     Assert.assertEquals(trans.getTransId(), transDb.get(0).getTransId());
                     Assert.assertEquals(trans.getUserId(), transDb.get(0).getUserId());
@@ -219,7 +225,6 @@ public class DatabaseTest {
                     Assert.assertEquals(trans.getTimestamp(), transDb.get(0).getTimestamp());
                     Assert.assertEquals(trans.getRepayTimestamp(), transDb.get(0).getRepayTimestamp());
 
-                })
-        , "test1");
+                }));
     }
 }
