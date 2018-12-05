@@ -16,11 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -40,7 +43,7 @@ import ua.safetynet.R;
 public class CreateGroupFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private Button bttnCreateGroup;
+    private FrameLayout bttnCreateGroup;
     private EditText groupName;
     private EditText withdrawalLimitText;
     private EditText repayTime;
@@ -49,6 +52,7 @@ public class CreateGroupFragment extends Fragment {
     private static final String TAG = "CREATE GROUP";
     private ImageView groupImage;
     private Bitmap image;
+    private Group newGroup;
     private String mParam1;
     private String mParam2;
 
@@ -91,6 +95,8 @@ public class CreateGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_create_group, container, false);
+        //Make new group object for setting data to
+        newGroup = new Group();
         //button for submitting a group
         bttnCreateGroup = view.findViewById(R.id.create_group_button);
         //text box for group name
@@ -98,28 +104,32 @@ public class CreateGroupFragment extends Fragment {
         //Text box for repay time and limit
         repayTime = view.findViewById(R.id.new_group_repay_time);
         withdrawalLimitText = view.findViewById(R.id.new_group_withdrawal_limit);
-        //Image view
+        //Image view and set onclick to select new image
         groupImage = view.findViewById(R.id.new_group_image);
+        groupImage.setOnClickListener((v -> selectImage()));
         Glide.with(getContext()).load(R.drawable.group_default_logo).into(groupImage);
-
+        image = ((BitmapDrawable) getResources().getDrawable(R.drawable.group_default_logo,null )).getBitmap();
         //Set up listener to format w/d amount
         setupAmountEditTextListener();
         //group submission button listener
         bttnCreateGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //create the database connection
-                Database database = new Database();
-                Group group = new Group();
-                group.setName(groupName.getText().toString().trim());
-                group.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                group.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                group.setRepaymentTime(Integer.parseInt(repayTime.toString()));
-                group.setWithdrawalLimit(withdrawLimit);
-
+                //create the database connection and set group info
+                DocumentReference groupRef = FirebaseFirestore.getInstance().collection("Groups").document();
+                //Set groupid to doc Id
+                newGroup.setGroupId(groupRef.getId());
+                newGroup.setName(groupName.getText().toString().trim());
+                newGroup.addUsers(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                newGroup.addAdmins(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                newGroup.setRepaymentTime(Integer.parseInt(repayTime.getText().toString()));
+                newGroup.setWithdrawalLimit(withdrawLimit);
+                newGroup.setImage(image);
                 //send the data after getting data from the blanks
-                database.createGroup(group);
+                groupRef.set(newGroup.toMap());
                 Toast.makeText(getActivity(), "Group added!!", Toast.LENGTH_LONG).show();
+                //Go back from this page
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
         return view;
@@ -162,9 +172,6 @@ public class CreateGroupFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-    private void makeDbGroup() {
-
     }
     /**
      * Adds text changed listener to amount text box. Formats it in a money style with digits shifting down
@@ -230,6 +237,7 @@ public class CreateGroupFragment extends Fragment {
                     e.printStackTrace();
                 }
                 Glide.with(getContext()).asBitmap().load(newImage).into(groupImage);
+                image = newImage;
             }
             else
                 Log.d(TAG, "Could not image from return bundle");
