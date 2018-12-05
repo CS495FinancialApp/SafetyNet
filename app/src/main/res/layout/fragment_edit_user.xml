@@ -7,7 +7,7 @@
     android:id="@+id/fragment_edit_user"
     tools:context=".user.EditUserFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <RelativeLayout
         android:id="@+id/edit_user_image_bg"
         android:layout_width="match_parent"
