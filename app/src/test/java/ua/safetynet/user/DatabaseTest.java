@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import androidx.test.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -27,6 +27,8 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.mockito.Mockito.*;
 
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import androidx.test.core.app.ApplicationProvider;
 import ua.safetynet.Database;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
@@ -46,21 +49,17 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(JUnit4.class)
+@RunWith(RobolectricTestRunner.class)
 public class DatabaseTest {
-    @Mock
     Database db;
-    @Mock
     User dbUser;
     ArrayList<String> ids;
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
     public void dbSetup(){
-        MockitoAnnotations.initMocks(this);
-        db = mock(Database.class);
-        ids = mock(ArrayList.class);
+        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
+        db = new Database();
+        ids =new ArrayList<>();
     }
 
     @Test
