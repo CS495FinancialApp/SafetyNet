@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,7 +17,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import androidx.test.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -41,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
-import androidx.test.core.app.ApplicationProvider;
 import ua.safetynet.Database;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
@@ -61,7 +57,7 @@ public class DatabaseTest {
 
     @Before
     public void dbSetup(){
-        FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
+        FirebaseApp.initializeApp(RuntimeEnvironment.systemContext);
         db = new Database();
         ids =new ArrayList<>();
     }
