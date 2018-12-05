@@ -33,23 +33,28 @@
             android:scaleType="centerCrop"
             android:src="@drawable/defaultuser" />
     </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/edit_user_image_bg">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_group_image_bg"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="-1dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:textSize="23dp"
-                android:textColor="#000"
+                android:gravity="center"
                 android:text="Please Enter The Group Information"
-                />
+                android:textColor="#000"
+                android:textSize="23dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -60,11 +65,12 @@
                     android:id="@+id/new_group_name_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:hint="@string/groupName"
                     android:imeOptions="actionDone"
-                    android:hint="@string/groupName" />
+                    android:inputType="textPersonName" />
 
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,11 +80,12 @@
                     android:id="@+id/new_group_withdrawal_limit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
+                    android:hint="@string/withdrawal_limit"
                     android:imeOptions="actionDone"
-                    android:hint="@string/withdrawal_limit"/>
+                    android:inputType="numberDecimal" />
 
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,9 +95,9 @@
                     android:id="@+id/new_group_repay_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:hint="@string/payment_time_days"
                     android:imeOptions="actionDone"
-                    android:hint="@string/payment_time_days"/>
+                    android:inputType="number" />
 
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -98,22 +105,23 @@
 
 
     <FrameLayout
+        android:id="@+id/create_group_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/create_group_button"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginBottom="1dp"
-        android:backgroundTint="@color/colorPrimaryDark">
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimaryDark">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/createGroupButton"
-            android:textColor="@color/bt_white_pressed" />
+            android:textColor="@color/bt_white_pressed"
+            android:textStyle="bold" />
     </FrameLayout>
 </RelativeLayout>
