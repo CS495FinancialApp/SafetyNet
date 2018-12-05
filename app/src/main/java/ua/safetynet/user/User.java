@@ -195,6 +195,8 @@ public class User implements  Parcelable {
      */
     
     public static User fromMap(Map<String, Object> map) {
+        if(map == null)
+            return new User();
         User user = new User();
         if(map.get("userId") != null) user.setUserId(map.get("userId").toString());
         if(map.get("name") != null) user.setName(map.get("name").toString());

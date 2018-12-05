@@ -212,7 +212,9 @@ public class Database {
         databaseUsers.document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = User.fromMap(documentSnapshot.getData());
+                User user = null;
+                if(documentSnapshot != null)
+                    user = User.fromMap(documentSnapshot.getData());
                 dbListener.onUserRetrieval(user);
             }
         });
