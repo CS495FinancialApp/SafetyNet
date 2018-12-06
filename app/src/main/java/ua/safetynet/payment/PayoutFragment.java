@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
@@ -76,6 +77,7 @@ public class PayoutFragment extends Fragment {
     private OnPayoutCompleteListener mListener;
     private TransactionDialog transactionDialog;
     private SharedPreferences sharedPrefs;
+    private ProgressBar progressBar;
     public PayoutFragment() {
         // Required empty public constructor
     }
@@ -140,6 +142,9 @@ public class PayoutFragment extends Fragment {
         String formatted = NumberFormat.getCurrencyInstance().format(amount);
         amountText.setText(formatted);
         setupAmountEditTextListener();
+        //Setup progress bar
+        progressBar = view.findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.GONE);
         //Setup withdraw button listener
         Button withdrawButton = view.findViewById(R.id.payout_withdrawal_btn);
         withdrawButton.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +219,9 @@ public class PayoutFragment extends Fragment {
     }
 
     private void makeWithdrawal() {
+        //Set progress bar on
+        progressBar.setVisibility(View.VISIBLE);
+        //Get client token and create client obj
         clientToken = sharedPrefs.getString("paypal", null);
         AsyncHttpClient client = new AsyncHttpClient(APIPORT);
         JSONObject jsonReq = makePayoutsJson(emailText.getText().toString(), amount.toPlainString());
@@ -233,10 +241,15 @@ public class PayoutFragment extends Fragment {
                 Log.d(TAG, trans.toMap().toString());
                 transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),trans);
                 transactionDialog.show();
+                //turn off progress bar
+                progressBar.setVisibility(View.GONE);
+                //Call on complete
                 mListener.onPayoutComplete(trans);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject json) {
+                //turn off progress bar
+                progressBar.setVisibility(View.GONE);
                 Log.d(TAG, "Could not create payout" + json.toString() + t.getMessage());
             }
         });
