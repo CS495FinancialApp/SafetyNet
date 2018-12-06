@@ -1,9 +1,4 @@
-/***
- * @author Jeremy McCormick
- * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
- * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
- * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
- */
+
 package ua.safetynet.payment;
 
 import android.app.Activity;
@@ -11,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -22,8 +18,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +51,16 @@ import cz.msebera.android.httpclient.Header;
 import ua.safetynet.group.Group;
 import ua.safetynet.user.User;
 
-
+/**
+ * @author Jeremy McCormick
+ * Fragment class facilitating payments through Braintree gateway. Takes card, paypal and Venmo
+ * Has to first fetch a client token from the server to authenticate with the Braintree Drop-In UI
+ * Drop In UI returns a payment method nonce which can then be sent to the server to make the transaction
+ */
 public class PaymentFragment extends Fragment {
     //Interface to define callback in which transaction Id will be returned
     public interface OnPaymentCompleteListener {
-        public void onPaymentComplete(String transactionId);
+        void onPaymentComplete(String transactionId);
     }
 
 
@@ -75,9 +80,13 @@ public class PaymentFragment extends Fragment {
     private User user = null;
     private String clientToken = null;
     private EditText amountText;
+    private ArrayList<Group> groupList = new ArrayList<>();
+    private TransactionDialog transactionDialog;
+    private SharedPreferences sharedPrefs;
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
-
+    private ProgressBar progressBar;
+    private boolean readOnly = false;
     public PaymentFragment() {
         // Required empty public constructor
     }
@@ -104,6 +113,7 @@ public class PaymentFragment extends Fragment {
             amount = new BigDecimal(getArguments().getString(AMOUNT));
             groupId = getArguments().getString(GROUPID);
             userId = getArguments().getString(USERID);
+            readOnly = true;
         }
         if (userId == null) {
             userId = FirebaseAuth.getInstance().getUid();
@@ -117,7 +127,17 @@ public class PaymentFragment extends Fragment {
                         updateUser(user);
                     }
                 });
-        getClientToken();
+        //Call the fetch regardless in case it has expired
+        new ClientTokenFetch(getContext()).fetchBraintreeToken();
+        //Setup shared prefs to get token from
+        try {
+            sharedPrefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+            clientToken = sharedPrefs.getString("braintree", null);
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -143,11 +163,21 @@ public class PaymentFragment extends Fragment {
         //Setup spinner for group list
         spinner = view.findViewById(R.id.payment_group_spinner);
         setupGroupSpinner();
+        //set progress bar
+        progressBar = view.findViewById(R.id.progressBar1);
+        progressBar.setVisibility(View.GONE);
+        //Setup as read only if we passed in values
+        if(readOnly) {
+            //make amount read only
+            amountText.setEnabled(false);
+            amountText.setKeyListener(null);
+        }
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkInputs())
+                if(checkInputs()) {
                     launchDropIn();
+                }
             }
         });
         return view;
@@ -179,31 +209,15 @@ public class PaymentFragment extends Fragment {
     }
 
     /**
-     * Uses HTTP library to make call to server to fetch client token. Passes userId to server
-     * so Braintree can treat them as a returning customer
-     */
-    private void getClientToken() {
-        AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
-        client.get(SERVERURL + SERVERTOKEN + userId, new AsyncHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
-                Log.d(TAG, "Failed to fetch client token");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                clientToken = new String(responseBody);
-            }
-        });
-    }
-
-    /**
      * Creates the actual transaction once we have recieved a payment method nonce from drop in UI
      * Sends the user and group ID to server for logging with the transaction.
      * Calls onPaymentComplete Listener with transaction data if successful
      * @param nonce Payment method nonce
      */
     private void createTransaction(PaymentMethodNonce nonce) {
+        //Set progress bar to start here
+        progressBar.setVisibility(View.VISIBLE);
+        clientToken = sharedPrefs.getString("braintree", null);
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
         params.put("payment_method_nonce", nonce.getNonce());
@@ -216,11 +230,17 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
                 Log.d(TAG, "Failed to send nonce to server. Status Code: " + statusCode);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
+                //Stop progress bar
+                progressBar.setVisibility(View.GONE);
+                //Call onPaymentComplete listener to update user with transaction data
+                transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
+                transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
             }
         });
@@ -296,26 +316,37 @@ public class PaymentFragment extends Fragment {
      * Populates the group selection spinner
      */
     public void setupGroupSpinner() {
+        //Get list of groups from database
         Database db = new Database();
         db.queryGroups(new Database.DatabaseGroupsListener() {
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
-                ArrayList<String> groupsNames = new ArrayList<>();
-                for(Group g : groups) {
-                    groupsNames.add(g.getName());
+                groupList = groups;
+                ArrayAdapter<Group> adapter  = new ArrayAdapter<Group>(getContext(),android.R.layout.simple_spinner_item, groupList);
+                spinner.setAdapter(adapter);
+                //Setup preselction now that we have group list
+                //setSelected if a groupId is passed in
+                if (groupId == null)
+                    spinner.setSelected(false);
+                else {
+                    //Create group to compare to and set to passed in groupID
+                    Group compGroup = new Group();
+                    compGroup.setGroupId(groupId);
+                    int index = spinner.getItems().indexOf(compGroup);
+                    //Set selected index and make read only
+                    spinner.setSelectedIndex(index);
+                    spinner.setEnabled(false);
                 }
-                spinner.setItems(groupsNames);
             }
         });
-        if (groupId == null)
-            spinner.setSelected(false);
-        else {
-            //Create group to compare to and set to passed in groupID
-            Group compGroup = new Group();
-            compGroup.setGroupId(groupId);
-            int index = spinner.getItems().indexOf(compGroup);
-            spinner.setSelectedIndex(index);
-        }
+        //Set selected listener to set groupId when item selected
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Group>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Group item) {
+                groupId = item.getGroupId();
+                Log.d(TAG, "Group slected from spinner ID="+groupId);
+            }
+        });
     }
 
     /**
@@ -327,7 +358,25 @@ public class PaymentFragment extends Fragment {
             Toast.makeText(getContext(),"Please enter amount", Toast.LENGTH_SHORT).show();
             return false;
         }
+        else if(groupId == null || groupId.isEmpty()) {
+            Toast.makeText(getContext(), "Must Select a Group", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
+    }
+
+    @Override
+    public void onStop() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        if(transactionDialog != null)
+            transactionDialog.dismiss();
+        super.onPause();
     }
 
     /**

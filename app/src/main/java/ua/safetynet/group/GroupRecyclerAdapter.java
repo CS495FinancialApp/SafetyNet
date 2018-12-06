@@ -1,7 +1,5 @@
 package ua.safetynet.group;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,23 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
 import com.bumptech.glide.request.RequestOptions;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import ua.safetynet.Group_home2;
 import ua.safetynet.R;
-
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 /**
  * @author Jeremy McCormick
@@ -35,7 +25,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
  */
 public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdapter.ViewHolder> {
     private List<Group> groupList;
-
+    private GroupClicked clickedListener;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView mPicture;
         public TextView  mGroupName;
@@ -50,7 +40,8 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         }
     }
 
-    public GroupRecyclerAdapter(List<Group> list) {
+    public GroupRecyclerAdapter( List<Group> list, GroupClicked clicked) {
+        this.clickedListener = clicked;
         this.groupList = list;
     }
 
@@ -75,7 +66,6 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Group group = groupList.get(position);
-        holder.mPicture.setImageBitmap(group.getImage());
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference groupImageRef = storageRef.child("groupimages/" + group.getGroupId() + ".jpg");
@@ -85,19 +75,24 @@ public class GroupRecyclerAdapter extends RecyclerView.Adapter<GroupRecyclerAdap
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         holder.mAmount.setText(format.format(group.getFunds()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), Group_home2.class);
-                intent.putExtra("group_ID", group.getGroupId());
-                v.getContext().startActivity(intent);
-            }
-        });
+        //Transfers to appropriate group activity when element is clicked
+        holder.itemView.setOnClickListener( (view) ->
+            clickedListener.onItemClicked(group)
+        );
     }
 
     @Override
     public int getItemCount() {
         return groupList.size();
+    }
+
+    public void goToGroupHome(Group group) {
+        GroupHomeFragment fragment = GroupHomeFragment.newInstance(group);
+
+    }
+
+    public interface GroupClicked {
+        void onItemClicked(Group group);
     }
 }
 

@@ -1,35 +1,37 @@
 package ua.safetynet.user;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Locale;
+
 import ua.safetynet.Database;
+import ua.safetynet.group.GroupHomeFragment;
 import ua.safetynet.R;
+import ua.safetynet.auth.FirebaseAuthActivity;
 import ua.safetynet.group.GroupRecyclerAdapter;
 import ua.safetynet.group.Group;
 
@@ -48,6 +50,8 @@ public class MainViewFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private TextView mainBalance;
+    private ProgressBar progressBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -90,20 +94,50 @@ public class MainViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_view, container, false);
 
-        TextView mainBalance = rootView.findViewById(R.id.main_balance_amount);
-        String text = "<font color=#ad3535>-</font> <font color=#000000>$55.27</font>";
-        mainBalance.setText(Html.fromHtml(text,0));
-        mainBalance.setTextSize(45);
+        mainBalance = rootView.findViewById(R.id.main_balance_amount);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+
+        try {
+            String test = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+        catch (NullPointerException e) {
+            //Somehow the current user is null, log out and start sign in
+            Log.d("MAIN FRAG", "Current user is null, logging out and starting sign in");
+            AuthUI.getInstance().signOut(getActivity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    startActivity(new Intent(getActivity(), FirebaseAuthActivity.class));
+                }
+            });
+            return rootView;
+        }
+        Database db = new Database();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        db.queryGroups(userId,new Database.DatabaseGroupsListener() {
+
+            @Override
+            public void onGroupsRetrieval(ArrayList<Group> groups) {
+                BigDecimal bal = new BigDecimal("0");
+                for (int count = 0; count < groups.size(); count++){
+                    bal.add(groups.get(count).getFunds());
+                }
+                mainBalance.setText(format.format(bal));
+                mainBalance.setTextSize(45);
+            }
+        });
 
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
+        //Get loading spinner
+        progressBar = rootView.findViewById(R.id.main_view_progressbar);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(container.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         makeGroupList();
-
-
+        //Hide view components so we can show spinner before data is gotten
+        mRecyclerView.setVisibility(View.GONE);
+        mainBalance.setVisibility(View.GONE);
         // Inflate the layout for this fragment
         return rootView;
 
@@ -162,10 +196,21 @@ public class MainViewFragment extends Fragment {
                     Log.d("MAIN FRAGMENT", groups.toString());
                     groupList = groups;
                     // specify an adapter (see also next example)
-                    mAdapter = new GroupRecyclerAdapter(groupList);
+                    mAdapter = new GroupRecyclerAdapter(groupList, (group -> {
+                        GroupHomeFragment homeFragment = GroupHomeFragment.newInstance(group);
+                        FragmentManager fm =getActivity().getSupportFragmentManager();
+                        if(fm != null)
+                            fm.beginTransaction().replace(R.id.fragment_container, homeFragment).addToBackStack(null).commit();
+                    }));
                     mRecyclerView.setAdapter(mAdapter);
+                    makeVisible();
                 }
             });
         }
+    }
+    private void makeVisible(){
+        progressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mainBalance.setVisibility(View.VISIBLE);
     }
 }
