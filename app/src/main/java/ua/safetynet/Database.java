@@ -140,7 +140,7 @@ public class Database {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Transaction transaction = new Transaction();
-                        transaction = transaction.fromMap(document.getData());
+                        transaction = Transaction.fromMap(document.getData());
                         //add Transaction to an arraylist
                         transactionList.add(transaction);
                     }
@@ -172,7 +172,7 @@ public class Database {
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Transaction transaction = new Transaction();
-                        transaction = transaction.fromMap(document.getData());
+                        transaction = Transaction.fromMap(document.getData());
                         //add Transaction to an arraylist
                         transactionList.add(transaction);
                     }

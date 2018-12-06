@@ -53,7 +53,7 @@ public class OnboardingActivity extends AppCompatActivity implements EditUserFra
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.onboarding_container);
+        mViewPager = findViewById(R.id.onboarding_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         Button skipBtn =  findViewById(R.id.intro_btn_skip);
         ImageButton nextBtn = findViewById(R.id.intro_btn_next);

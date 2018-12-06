@@ -59,7 +59,7 @@ import ua.safetynet.user.User;
 public class PaymentFragment extends Fragment {
     //Interface to define callback in which transaction Id will be returned
     public interface OnPaymentCompleteListener {
-        public void onPaymentComplete(String transactionId);
+        void onPaymentComplete(String transactionId);
     }
 
 

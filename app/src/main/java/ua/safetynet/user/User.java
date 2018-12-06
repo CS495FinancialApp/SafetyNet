@@ -193,7 +193,7 @@ public class User implements  Parcelable {
      * @param map map of user data
      * @return new user object from passed in map
      */
-    
+    @SuppressWarnings("unchecked")
     public static User fromMap(Map<String, Object> map) {
         if(map == null)
             return new User();
