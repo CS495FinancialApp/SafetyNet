@@ -62,6 +62,30 @@ public class GroupTest {
         Assert.assertEquals(group.getUsers(), mapGroup.getUsers());
         Assert.assertEquals(group.getAdmins(), mapGroup.getAdmins());
     }
+    @Test
+    public void testToFromMapNull() {
+        group = new Group();
+        group.setGroupId(null);
+        group.setName(null);
+        group.setWithdrawalLimit(new BigDecimal(0));
+        group.setFunds(new BigDecimal(0));
+        group.setRepaymentTime(0);
+        trans = new ArrayList<String>();
+        group.setWithdrawals(trans);
+        users = new ArrayList<String>();
+        group.setUsers(users);
+        admins = new ArrayList<String>();
+        group.setAdmins(admins);
+        Group mapGroup= Group.fromMap(group.toMap());
+        Assert.assertEquals(group.getGroupId(), mapGroup.getGroupId());
+        Assert.assertEquals(group.getName(), mapGroup.getName());
+        Assert.assertEquals(group.getFunds(), mapGroup.getFunds());
+        Assert.assertEquals(group.getRepaymentTime(), mapGroup.getRepaymentTime());
+        Assert.assertEquals(group.getWithdrawalLimit(), mapGroup.getWithdrawalLimit());
+        Assert.assertEquals(group.getWithdrawals(), mapGroup.getWithdrawals());
+        Assert.assertEquals(group.getUsers(), mapGroup.getUsers());
+        Assert.assertEquals(group.getAdmins(), mapGroup.getAdmins());
+    }
 }
 
 

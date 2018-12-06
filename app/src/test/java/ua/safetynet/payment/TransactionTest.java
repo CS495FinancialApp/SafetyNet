@@ -45,4 +45,17 @@ public class TransactionTest {
         Transaction mapTransaction = Transaction.fromMap(map);
         Assert.assertTrue(transaction.equals(mapTransaction));
     }
+    @Test
+    public void testToFromMapNull() {
+        transaction = new Transaction();
+        transaction.setUserId(null);
+        transaction.setGroupId(null);
+        transaction.setTransId(null);
+        transaction.setFunds(new BigDecimal(0));
+        transaction.setTimestamp(now);
+        transaction.setRepayTimestamp(later);
+        Map<String, Object> map = transaction.toMap();
+        Transaction mapTransaction = Transaction.fromMap(map);
+        Assert.assertTrue(transaction.equals(mapTransaction));
+    }
 }

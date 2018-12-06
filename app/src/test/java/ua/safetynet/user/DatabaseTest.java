@@ -195,10 +195,40 @@ public class DatabaseTest {
 
     }
     @Test
+    public void testQueryGroupTransactions() {
+        //Make a new user and add him to the db
+        ids.add("test9");
+        ids.add("test10");
+        BigDecimal bigDecimal = new BigDecimal(5);
+        Timestamp timestamp = null;
+        ua.safetynet.payment.Transaction trans;
+        trans = new ua.safetynet.payment.Transaction();
+        trans.setTransId("transtest");
+        trans.setUserId("user1");
+        trans.setGroupId("group1");
+        trans.setFunds(bigDecimal);
+        trans.setTimestamp(timestamp);
+        trans.setRepayTimestamp(timestamp);
+        db.addTransaction(trans); //Add new user to db
+
+        db.queryGroupTransactions("group1", (transDb -> {
+                    Log.d("TESTING","DB userId is: " + transDb.get(0).getTransId());
+                    Assert.assertEquals(trans.getTransId(), transDb.get(0).getTransId());
+                    Assert.assertEquals(trans.getUserId(), transDb.get(0).getUserId());
+                    Assert.assertEquals(trans.getGroupId(), transDb.get(0).getGroupId());
+                    Assert.assertEquals(trans.getFunds(), transDb.get(0).getFunds());
+                    Assert.assertEquals(trans.getTimestamp(), transDb.get(0).getTimestamp());
+                    Assert.assertEquals(trans.getRepayTimestamp(), transDb.get(0).getRepayTimestamp());
+
+                })
+        );
+
+    }
+    @Test
     public void testQueryUserGroupTransactions() {
         //Make a new user and add him to the db
-        ids.add("test7");
-        ids.add("test8");
+        ids.add("test11");
+        ids.add("test12");
         BigDecimal bigDecimal = new BigDecimal(5);
         Timestamp timestamp = null;
         ua.safetynet.payment.Transaction trans;
