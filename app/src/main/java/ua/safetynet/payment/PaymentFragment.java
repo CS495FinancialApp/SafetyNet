@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,7 @@ public class PaymentFragment extends Fragment {
     private SharedPreferences sharedPrefs;
     MaterialSpinner spinner;
     OnPaymentCompleteListener mPaymentListener;
+    private ProgressBar progressBar;
     private boolean readOnly = false;
     public PaymentFragment() {
         // Required empty public constructor
@@ -161,6 +163,9 @@ public class PaymentFragment extends Fragment {
         //Setup spinner for group list
         spinner = view.findViewById(R.id.payment_group_spinner);
         setupGroupSpinner();
+        //set progress bar
+        progressBar = view.findViewById(R.id.progressBar1);
+        progressBar.setVisibility(View.GONE);
         //Setup as read only if we passed in values
         if(readOnly) {
             //make amount read only
@@ -170,8 +175,9 @@ public class PaymentFragment extends Fragment {
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkInputs())
+                if(checkInputs()) {
                     launchDropIn();
+                }
             }
         });
         return view;
@@ -209,6 +215,8 @@ public class PaymentFragment extends Fragment {
      * @param nonce Payment method nonce
      */
     private void createTransaction(PaymentMethodNonce nonce) {
+        //Set progress bar to start here
+        progressBar.setVisibility(View.VISIBLE);
         clientToken = sharedPrefs.getString("braintree", null);
         AsyncHttpClient client = new AsyncHttpClient(SERVERPORT);
         RequestParams params = new RequestParams();
@@ -222,15 +230,24 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
                 Log.d(TAG, "Failed to send nonce to server. Status Code: " + statusCode);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
                 String transactionId = new String(responseBytes);
+                //Stop progress bar
+                progressBar.setVisibility(View.GONE);
                 //Call onPaymentComplete listener to update user with transaction data
                 transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
                 transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
+                try {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } catch (NullPointerException e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
 

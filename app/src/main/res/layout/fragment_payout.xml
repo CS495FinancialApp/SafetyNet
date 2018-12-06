@@ -5,7 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".payment.PayoutFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="162dp"
+        android:layout_height="194dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="330dp" />
 
     <EditText
         android:id="@+id/payout_amount_text"
