@@ -154,6 +154,39 @@ public class Database {
     }
 
     /**
+     * returns all the transactions for the currently logged in user in a specific group
+     * The payments activity currently outputs userid instead of userId, so all references in to and from map are done as such
+     * @param dbListener
+     * @param groupId
+     */
+    public void queryUserGroupTransactions( String userId, String groupId, final Database.DatabaseTransactionsListener dbListener){
+        final ArrayList<Transaction> transactionList = new ArrayList<>();
+        Query transactionQuery = databaseTransactions
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("groupId", groupId);
+
+        transactionQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Transaction transaction = new Transaction();
+                        transaction = transaction.fromMap(document.getData());
+                        //add Transaction to an arraylist
+                        transactionList.add(transaction);
+                    }
+                    dbListener.onTransactionsRetrieval(transactionList);
+                }
+                else{
+                    //error toast message goes here
+                }
+            }
+        });
+    }
+
+
+    /**
      * Gets all transactions made by one user regardless of group with the userId being passed in.
      *
      */

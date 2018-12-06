@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,7 +17,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -27,11 +24,17 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowLooper;
 
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -46,25 +49,26 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(JUnit4.class)
+@RunWith(RobolectricTestRunner.class)
 public class DatabaseTest {
-    @Mock
     Database db;
-    @Mock
     User dbUser;
     ArrayList<String> ids;
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
     public void dbSetup(){
-        MockitoAnnotations.initMocks(this);
-        db = mock(Database.class);
-        ids = mock(ArrayList.class);
+        FirebaseFirestoreSettings.Builder settings = new FirebaseFirestoreSettings.Builder();
+        settings.setPersistenceEnabled(true);
+        FirebaseApp.initializeApp(RuntimeEnvironment.application);
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        fs.setFirestoreSettings(settings.build());
+        db = new Database();
+        ids =new ArrayList<>();
     }
 
     @Test
     public void testDbUser() {
+        CountDownLatch latch = new CountDownLatch(1);
         //Make a new user and add him to the db
         ids.add("test1");
         ids.add("test2");
@@ -76,7 +80,6 @@ public class DatabaseTest {
         db.setUser(user); //Add new user to db
 
         //Get user from db
-
         db.getUser("1", (dbUser) -> {
                 Log.d("TESTING","DB userId is: " + dbUser.getName());
                 Assert.assertEquals(user.getUserId(), dbUser.getUserId());
@@ -84,9 +87,11 @@ public class DatabaseTest {
                 Assert.assertEquals(user.getEmail(),dbUser.getEmail());
                 Assert.assertEquals(user.getGroups(),ids);
                 Assert.assertEquals(user.getTransactions(), ids);
+                latch.countDown();
             }
         );
-
+        try{Thread.sleep(500);latch.await(2,TimeUnit.SECONDS );}
+        catch (InterruptedException e) {e.printStackTrace();}
     }
     @Test
     public void testDbGroup() {
@@ -170,7 +175,7 @@ public class DatabaseTest {
         ids.add("test7");
         ids.add("test8");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");
@@ -230,7 +235,7 @@ public class DatabaseTest {
         ids.add("test11");
         ids.add("test12");
         BigDecimal bigDecimal = new BigDecimal(5);
-        Timestamp timestamp = null;
+        Timestamp timestamp = Timestamp.now();
         ua.safetynet.payment.Transaction trans;
         trans = new ua.safetynet.payment.Transaction();
         trans.setTransId("transtest");
@@ -241,7 +246,7 @@ public class DatabaseTest {
         trans.setRepayTimestamp(timestamp);
         db.addTransaction(trans); //Add new user to db
 
-        db.queryUserGroupTransactions((transDb -> {
+        db.queryUserGroupTransactions("user1","group1",(transDb -> {
                     Log.d("TESTING","DB userId is: " + transDb.get(0).getTransId());
                     Assert.assertEquals(trans.getTransId(), transDb.get(0).getTransId());
                     Assert.assertEquals(trans.getUserId(), transDb.get(0).getUserId());
@@ -250,7 +255,6 @@ public class DatabaseTest {
                     Assert.assertEquals(trans.getTimestamp(), transDb.get(0).getTimestamp());
                     Assert.assertEquals(trans.getRepayTimestamp(), transDb.get(0).getRepayTimestamp());
 
-                })
-        , "test1");
+                }));
     }
 }
