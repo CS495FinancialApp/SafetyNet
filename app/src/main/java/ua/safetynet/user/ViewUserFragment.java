@@ -90,7 +90,7 @@ public class ViewUserFragment extends Fragment {
         });
         nameText = view.findViewById(R.id.view_user_name);
         userImageView = view.findViewById(R.id.view_user_image);
-
+        //Populate top header with info
         populateHeader();
         //Setup recycler view
         mTransactionRecycler = view.findViewById(R.id.view_user_recycler);

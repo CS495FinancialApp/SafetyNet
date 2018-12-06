@@ -18,6 +18,9 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 import ua.safetynet.R;
 
+/**
+ * Class to fetch client tokens for paypal and braintree and then store them in shared prefs
+ */
 public class ClientTokenFetch {
     private String braintreeClientToken;
     private String paypalClientToken;

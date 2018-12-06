@@ -30,6 +30,10 @@ import ua.safetynet.R;
 import ua.safetynet.user.EditUserFragment;
 import ua.safetynet.user.MainPageActivity;
 
+/***
+ * @author Jeremy McCormick
+ * Activity to handle login process for app. Splash Screen activity or onboarding activity should transfer here next
+ */
 
 public class FirebaseAuthActivity extends AppCompatActivity implements EditUserFragment.OnFragmentInteractionListener
 {
@@ -45,6 +49,10 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
         setContentView(R.layout.activity_firebase_auth);
         firebaseAuth = FirebaseAuth.getInstance();
     }
+
+    /**
+     * onStart start AuthUI activity if not already logged in
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -68,7 +76,12 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
         }
     }
 
-    // [START auth_fui_result]
+    /***
+     * Handle result from AuthUI activity
+     * @param requestCode request Code
+     * @param resultCode resulting code
+     * @param data data returned
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -108,6 +121,10 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
             }
         }
     }
+
+    /**
+     * Start edit user prefilled with firebase info, so user can put in new info
+     */
     private void setupNewUser() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -120,10 +137,20 @@ public class FirebaseAuthActivity extends AppCompatActivity implements EditUserF
 
     }
 
+    /**
+     * Check if first launch of the app
+     * @param context context
+     * @return if it is the first launch
+     */
     public static boolean isFirstLaunch(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("firstlaunch", true);
     }
+
+    /**
+     * Set that the app is no longer launching for first time
+     * @param context context
+     */
     public static void setFirstLaunch(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

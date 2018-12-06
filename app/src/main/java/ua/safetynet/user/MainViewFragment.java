@@ -96,7 +96,7 @@ public class MainViewFragment extends Fragment {
 
         mainBalance = rootView.findViewById(R.id.main_balance_amount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-
+        //Try to get uid, start login if cant
         try {
             String test = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
@@ -126,7 +126,7 @@ public class MainViewFragment extends Fragment {
                 mainBalance.setTextSize(45);
             }
         });
-
+        //Setup Recycler view
         mRecyclerView = rootView.findViewById(R.id.main_recyclerview);
         mRecyclerView.setHasFixedSize(true);
         //Get loading spinner

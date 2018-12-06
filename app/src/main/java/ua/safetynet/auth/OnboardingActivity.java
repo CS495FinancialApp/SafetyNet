@@ -26,6 +26,11 @@ import android.widget.TextView;
 import ua.safetynet.R;
 import ua.safetynet.user.EditUserFragment;
 
+/**
+ * @author  Jeremy McCormick
+ * Activity to handle ViewPager of onboarding fragments. Will show quick
+ * tutorial of how to use and navigate app
+ */
 public class OnboardingActivity extends AppCompatActivity implements EditUserFragment.OnFragmentInteractionListener{
 
     /**
@@ -44,6 +49,10 @@ public class OnboardingActivity extends AppCompatActivity implements EditUserFra
      */
     private ViewPager mViewPager;
 
+    /**
+     * Setup view and click listeners
+     * @param savedInstanceState bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +79,7 @@ public class OnboardingActivity extends AppCompatActivity implements EditUserFra
 
             @Override
             public void onPageSelected(int i) {
+                //Swap out finish and next buttons
                 nextBtn.setVisibility(i == 3 ? View.GONE : View.VISIBLE);
                 finishBtn.setVisibility(i == 3 ? View.VISIBLE : View.GONE);
             }

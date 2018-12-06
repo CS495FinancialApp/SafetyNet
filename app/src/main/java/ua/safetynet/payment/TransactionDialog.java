@@ -56,11 +56,19 @@ public class TransactionDialog {
         });
         dialog = builder.create();
     }
+
+    /**
+     * Show dialog
+     */
     public void show() {
         if(dialog == null)
             return;
         dialog.show();
     }
+
+    /**
+     * Dismiss Dialog
+     */
     public void dismiss() {
         if(dialog == null)
             return;

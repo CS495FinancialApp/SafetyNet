@@ -18,8 +18,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import ua.safetynet.R;
+
+/**
+ * @author Jeremy McCormick
+ * Fragment for onbaording to show the actual information and images
+ * Changes view shown based on type passed into new instance
+ */
 public class OnboardingFragment extends Fragment {
     public static final int MAKE_GROUP = 0;
     public static final int PAYMENT = 1;
@@ -34,6 +39,12 @@ public class OnboardingFragment extends Fragment {
     public OnboardingFragment() {
 
     }
+
+    /**
+     * New instance, must pass type to set which card it shows
+     * @param type which tutorial slide to show
+     * @return
+     */
     public static OnboardingFragment newInstance(int type) {
         OnboardingFragment onFragment = new OnboardingFragment();
         Bundle args = new Bundle();
@@ -99,6 +110,9 @@ public class OnboardingFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Populate view based on which type passed in
+     */
     private void populateView() {
         String header;
         String body;

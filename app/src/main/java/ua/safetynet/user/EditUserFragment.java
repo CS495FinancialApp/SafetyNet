@@ -56,7 +56,11 @@ public class EditUserFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+    /**
+     * Creates new edit user fragment with a passed in user obj
+     * @param user user to edit
+     * @return
+     */
     public static EditUserFragment newInstance(User user) {
         EditUserFragment fragment = new EditUserFragment();
         Bundle args = new Bundle();
@@ -84,6 +88,7 @@ public class EditUserFragment extends Fragment {
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        //Get view objects
         nameText = view.findViewById(R.id.edit_user_name);
         emailText = view.findViewById(R.id.edit_user_email);
         phoneText = view.findViewById(R.id.edit_user_phone);
@@ -104,7 +109,6 @@ public class EditUserFragment extends Fragment {
         populateText();
         setupPhoneInput();
     }
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -128,6 +132,9 @@ public class EditUserFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * Populate views based on passed in user obj or data from Firebase
+     */
     private void populateText() {
 
         if(user == null) {
@@ -158,16 +165,27 @@ public class EditUserFragment extends Fragment {
 
     }
 
+    /**
+     * Setup phone input listener to format phone #
+     */
     private void setupPhoneInput() {
         if(phoneText != null)
             phoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher("US"));
     }
+
+    /**
+     * Start activity to select user image
+     */
     private void selectImage() {
         Intent pickIntent = new Intent(Intent.ACTION_PICK);
         pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
 
         startActivityForResult(pickIntent, PICK_IMAGE);
     }
+
+    /**
+     * Store or update iser with new information from form
+     */
     private void storeUser() {
         if(user==null) {
             user = new User();
