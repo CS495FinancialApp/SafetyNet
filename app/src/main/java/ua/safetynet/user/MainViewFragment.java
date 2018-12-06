@@ -113,13 +113,14 @@ public class MainViewFragment extends Fragment {
         }
         Database db = new Database();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //Get list of groups from database for main balance
         db.queryGroups(userId,new Database.DatabaseGroupsListener() {
 
             @Override
             public void onGroupsRetrieval(ArrayList<Group> groups) {
                 BigDecimal bal = new BigDecimal("0");
                 for (int count = 0; count < groups.size(); count++){
-                    bal.add(groups.get(count).getFunds());
+                    bal = bal.add(groups.get(count).getFunds());
                 }
                 mainBalance.setText(format.format(bal));
                 mainBalance.setTextSize(45);
