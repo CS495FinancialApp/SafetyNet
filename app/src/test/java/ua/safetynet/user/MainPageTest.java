@@ -4,6 +4,7 @@ package ua.safetynet.user;
 import android.support.v4.app.Fragment;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +27,12 @@ public class MainPageTest {
 
     @Before
     public void setUp() {
-        FirebaseApp.initializeApp(RuntimeEnvironment.application);
+        try {
+            FirebaseApp.initializeApp(RuntimeEnvironment.application);
+        } catch (IllegalStateException e) {
+            e.getMessage();
+        }
+
         activity = Robolectric.setupActivity(MainPageActivity.class);
     }
 
