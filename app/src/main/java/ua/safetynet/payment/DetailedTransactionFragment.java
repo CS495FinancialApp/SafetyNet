@@ -72,7 +72,10 @@ public class DetailedTransactionFragment extends Fragment {
         db.getUser(transaction.getUserId(), new Database.DatabaseUserListener() {
             @Override
             public void onUserRetrieval(User user) {
-                transUser.setText(user.getName());
+                if(transaction.shouldAnonymous())
+                    transUser.setText("*****");
+                else
+                    transUser.setText(user.getName());
                 //If is users transaction and is a withdrawal, show repay button
                 if(user.getTransactions().contains(transaction.getTransId()) && transaction.getRepayTimestamp() != null) {
                     repayButton.setVisibility(View.VISIBLE);
