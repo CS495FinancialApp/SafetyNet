@@ -242,12 +242,6 @@ public class PaymentFragment extends Fragment {
                 transactionDialog = new TransactionDialog(getContext(), groupList.get(spinner.getSelectedIndex()).getName(),amount,transactionId);
                 transactionDialog.show();
                 mPaymentListener.onPaymentComplete(transactionId);
-                try {
-                    getActivity().getSupportFragmentManager().popBackStack();
-                } catch (NullPointerException e)
-                {
-                    e.printStackTrace();
-                }
             }
         });
 
